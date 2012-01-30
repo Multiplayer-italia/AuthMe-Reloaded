@@ -28,8 +28,7 @@ public class CacheDataSource implements DataSource {
     public CacheDataSource(DataSource source) {
         this.source = source;
     }
-    
-    
+        
     @Override
     public synchronized boolean isAuthAvailable(String user) {
         return cache.containsKey(user) ? true : source.isAuthAvailable(user);
