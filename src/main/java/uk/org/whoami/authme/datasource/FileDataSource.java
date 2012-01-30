@@ -33,7 +33,7 @@ public class FileDataSource implements DataSource {
 
     /* file layout:
      *
-     * PLAYERNAME:HASHSUM:IP:LOGININMILLIESECONDS
+     * PLAYERNAME:HASHSUM:IP:LOGININMILLIESECONDS:COORDS
      *
      * Old but compatible:
      * PLAYERNAME:HASHSUM:IP
@@ -45,10 +45,6 @@ public class FileDataSource implements DataSource {
     public FileDataSource() throws IOException {
         source = new File(Settings.AUTH_FILE);
         source.createNewFile();
-    }
-    @Override
-    public boolean updateQuitLoc(PlayerAuth auth) {
-        return true;
     }
     
     @Override
@@ -88,8 +84,15 @@ public class FileDataSource implements DataSource {
 
         BufferedWriter bw = null;
         try {
+            if( auth.getQuitLocY() == 0 ) {
             bw = new BufferedWriter(new FileWriter(source, true));
             bw.write(auth.getNickname() + ":" + auth.getHash() + ":" + auth.getIp() + ":" + auth.getLastLogin() + "\n");
+            System.out.println("[Debug save1] "+auth.getQuitLocX());
+            } else {
+            bw = new BufferedWriter(new FileWriter(source, true));
+            bw.write(auth.getNickname() + ":" + auth.getHash() + ":" + auth.getIp() + ":" + auth.getLastLogin() + ":" + auth.getQuitLocX() + ":" + auth.getQuitLocY() + ":" + auth.getQuitLocZ() + "\n");                
+            System.out.println("[Debug save2] "+auth.getQuitLocX());
+            }
         } catch (IOException ex) {
             ConsoleLogger.showError(ex.getMessage());
             return false;
@@ -180,6 +183,46 @@ public class FileDataSource implements DataSource {
         return true;
     }
 
+   @Override
+   public boolean updateQuitLoc(PlayerAuth auth) {
+       System.out.println("[Debug update] "+auth.getQuitLocX());
+       if (!isAuthAvailable(auth.getNickname())) {
+            return false;
+        }
+
+        PlayerAuth newAuth = null;
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(source));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                String[] args = line.split(":");
+                if (args[0].equals(auth.getNickname())) {
+                    System.out.println("[Debug update] "+auth.getQuitLocX());
+                    newAuth = new PlayerAuth(args[0], args[1], args[2], Long.parseLong(args[3]), auth.getQuitLocX(), auth.getQuitLocY(), auth.getQuitLocZ());
+                    break;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return false;
+        } catch (IOException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return false;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                }
+            }
+        }
+        removeAuth(auth.getNickname());
+        saveAuth(newAuth);
+        return true;
+    }
+        
     @Override
     public int purgeDatabase(long until) {
         BufferedReader br = null;

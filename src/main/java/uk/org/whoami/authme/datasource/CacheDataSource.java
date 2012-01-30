@@ -76,7 +76,8 @@ public class CacheDataSource implements DataSource {
     
     @Override
     public boolean updateQuitLoc(PlayerAuth auth) {
-        if (!source.updateQuitLoc(auth)) {
+        /*
+        if (source.updateQuitLoc(auth)) {
             System.out.println("[debug name chace]"+auth.getNickname()+"[debug loc]"+auth.getQuitLocX());
             cache.get(auth.getNickname()).setQuitLocX(auth.getQuitLocY());
             cache.get(auth.getNickname()).setQuitLocY(auth.getQuitLocY());
@@ -84,6 +85,8 @@ public class CacheDataSource implements DataSource {
             return true;
             
         }
+         * 
+         */
         return false;
     }
 

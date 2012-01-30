@@ -23,14 +23,15 @@ commands:
         description: AuthMe op commands
         usage: '/authme reload|register playername password|changepassword playername password|unregister playername'
 permissions:
-    authme.*:
-        description: Gives access to all authme commands
+    authme.player.*:
+        description: Gives access to all authme player commands
+        default: true
         children:
             authme.register: true
             authme.login: true
             authme.changepassword: true
             authme.logout: true
-            authme.unregister: true
+            authme.unregister: true   
     authme.admin.*:
          description: Gives access to all authme admin commands
          children:
