@@ -1,0 +1,14 @@
+syntax: glob
+target/**
+lib/**
+build/**
+nbproject/**
+dist/**
+nbproject/**
+build.xml
+jarlib/**
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
