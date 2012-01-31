@@ -105,7 +105,7 @@ public class AuthMePlayerListener extends PlayerListener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -133,7 +133,12 @@ public class AuthMePlayerListener extends PlayerListener {
             }
             player.sendMessage(m._("reg_msg"));
         }
+        if (!settings.isChatAllowed()) {
+            System.out.println("debug chat: chat not allow");
         event.setCancelled(true);
+        }
+        System.out.println("debug chat: chat");
+        
     }
 
     @EventHandler
@@ -316,13 +321,14 @@ public class AuthMePlayerListener extends PlayerListener {
         
         
         Player player = event.getPlayer();
+        String name = player.getName().toLowerCase();
     //
     // Fix for Exact spawn usses that bukkit has
     // Fix for Quit location when player where kicked for timeout
-    LimboPlayer limboCheck = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase());
-    if (limboCheck == null ) {    
+    
+    if (PlayerCache.getInstance().isAuthenticated(name) ) {  
         if(settings.isForceExactSpawnEnabled() || settings.isSaveQuitLocationEnabled() ) {
-            PlayerAuth auth = new PlayerAuth(event.getPlayer().getName(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
+            PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
             data.updateQuitLoc(auth);
         }
     }
@@ -331,7 +337,7 @@ public class AuthMePlayerListener extends PlayerListener {
             return;
         }
 
-        String name = player.getName().toLowerCase();
+        
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
             player.getInventory().setArmorContents(limbo.getArmour());
@@ -350,9 +356,6 @@ public class AuthMePlayerListener extends PlayerListener {
 
         Player player = event.getPlayer();
         
-        if(event.isCancelled()) {
-            System.out.println("Event cancelled "+event.getReason());
-        }
         
         if (CitizensCommunicator.isNPC(player)) {
             return;

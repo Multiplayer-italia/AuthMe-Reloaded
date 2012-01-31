@@ -92,48 +92,56 @@ public class LoginCommand implements CommandExecutor {
                    // TODO: completly rewrite this part, too much if, else ...
                    // check quit location, check correct spawn, 
                    //
-                    if (settings.isTeleportToSpawnEnabled()) {          
-                        if (!settings.isForceSpawnLocOnJoinEnabled()) {
+                    if (settings.isTeleportToSpawnEnabled() && !settings.isForceSpawnLocOnJoinEnabled()) {                  
                              if(settings.isForceExactSpawnEnabled() ) {
-                                 // This is initial work around for prevent ppl to quit bukkit bug
+                                 // This is initial work around for prevent ppl to quit on bukkit bug
                                  // take last quit location from database and subtract y from safe spawn             
                                  // if the error range is smaller then 1, player can come back in his quit location
                                  // otherwise he try to spawn in a unsafe location!
-                                if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1) || database.getAuth(name).getQuitLocY() == 0 ) {
+                                
                                  if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
+                                     if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)  ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
-                                 } else {
-                                 player.teleport(limbo.getLoc());
-                                 }
-                                } else {
+                                     System.out.println("quit location from db:"+quitLoc);
+                                     } else {
                                     player.sendMessage(m._("unsafe_spawn"));
                                     player.teleport(player.getWorld().getSpawnLocation());
-                                }
+                                    }
+                                 } else {
+                                 player.teleport(limbo.getLoc());
+                                 System.out.println("quit location from bukkit:"+limbo.getLoc());
+                                 }
+                             
                              } else {
                                  if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0 ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
+                                     System.out.println("quit location from db:"+quitLoc);
                                  } else {
+                                  System.out.println("quit location from bukkit:"+limbo.getLoc());
                                  player.teleport(limbo.getLoc());
                                  }
-                             }
-                        }
-                    } else if (settings.isForceExactSpawnEnabled()) {
-                                if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1) || database.getAuth(name).getQuitLocY() == 0 ) {
-                                 if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0 ) {
+                             }  
+                    } else if ( settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
+                              if( settings.isForceExactSpawnEnabled() ) {
+                                 if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)) {  
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
-                                     player.teleport(quitLoc);
-                                 } else {
-                                 player.teleport(limbo.getLoc());
-                                 }
-                                } else {
+                                     player.teleport(quitLoc); }
+                                 else {
                                     player.sendMessage(m._("unsafe_spawn"));
-                                    player.teleport(player.getWorld().getSpawnLocation());
-                                }                        
-                    }
-                    sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
-                    LimboCache.getInstance().deleteLimboPlayer(name);
+                                    player.teleport(player.getWorld().getSpawnLocation());} 
+                              }
+                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
+                          player.teleport(quitLoc);  
+                          System.out.println("quit location from db:"+quitLoc);
+                        } else {
+                                player.teleport(limbo.getLoc());
+                                System.out.println("quit location from bukkit:"+limbo.getLoc()); }  
+                    
+                sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
+                LimboCache.getInstance().deleteLimboPlayer(name);
+                   
                 }
                 player.sendMessage(m._("login"));
                 ConsoleLogger.info(player.getDisplayName() + " logged in!");

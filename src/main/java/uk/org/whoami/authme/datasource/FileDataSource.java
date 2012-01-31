@@ -88,11 +88,11 @@ public class FileDataSource implements DataSource {
             if( auth.getQuitLocY() == 0 ) {
             bw = new BufferedWriter(new FileWriter(source, true));
             bw.write(auth.getNickname() + ":" + auth.getHash() + ":" + auth.getIp() + ":" + auth.getLastLogin() + "\n");
-            System.out.println("[Debug save1] "+auth.getQuitLocX());
+            //System.out.println("[Debug save1] "+auth.getQuitLocY());
             } else {
             bw = new BufferedWriter(new FileWriter(source, true));
             bw.write(auth.getNickname() + ":" + auth.getHash() + ":" + auth.getIp() + ":" + auth.getLastLogin() + ":" + auth.getQuitLocX() + ":" + auth.getQuitLocY() + ":" + auth.getQuitLocZ() + "\n");                
-            System.out.println("[Debug save2] "+auth.getQuitLocX());
+            //System.out.println("[Debug save2] "+auth.getQuitLocY());
             }
         } catch (IOException ex) {
             ConsoleLogger.showError(ex.getMessage());
@@ -186,11 +186,11 @@ public class FileDataSource implements DataSource {
 
    @Override
    public boolean updateQuitLoc(PlayerAuth auth) {
-       System.out.println("[Debug update] "+auth.getQuitLocX());
+       
        if (!isAuthAvailable(auth.getNickname())) {
             return false;
         }
-
+       
         PlayerAuth newAuth = null;
 
         BufferedReader br = null;
@@ -200,7 +200,7 @@ public class FileDataSource implements DataSource {
             while ((line = br.readLine()) != null) {
                 String[] args = line.split(":");
                 if (args[0].equals(auth.getNickname())) {
-                    System.out.println("[Debug update] "+auth.getQuitLocX());
+                    //System.out.println("[Debug update] "+auth.getQuitLocX());
                     newAuth = new PlayerAuth(args[0], args[1], args[2], Long.parseLong(args[3]), auth.getQuitLocX(), auth.getQuitLocY(), auth.getQuitLocZ());
                     break;
                 }
@@ -334,6 +334,8 @@ public class FileDataSource implements DataSource {
                             return new PlayerAuth(args[0], args[1], args[2], 0);
                         case 4:
                             return new PlayerAuth(args[0], args[1], args[2], Long.parseLong(args[3]));
+                        case 7:
+                            return new PlayerAuth(args[0], args[1], args[2], Long.parseLong(args[3]), Integer.parseInt(args[5]), Integer.parseInt(args[5]), Integer.parseInt(args[6]));                            
                     }
                 }
             }

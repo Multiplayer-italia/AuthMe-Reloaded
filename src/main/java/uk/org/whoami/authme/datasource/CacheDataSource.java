@@ -75,17 +75,15 @@ public class CacheDataSource implements DataSource {
     
     @Override
     public boolean updateQuitLoc(PlayerAuth auth) {
-        /*
+       //System.out.println("[debug name chace non work]"+auth.getNickname()+"[debug loc]"+auth.getQuitLocX());
         if (source.updateQuitLoc(auth)) {
-            System.out.println("[debug name chace]"+auth.getNickname()+"[debug loc]"+auth.getQuitLocX());
-            cache.get(auth.getNickname()).setQuitLocX(auth.getQuitLocY());
+            //System.out.println("[debug name chace]"+auth.getNickname()+"[debug loc]"+auth.getQuitLocX());
+            cache.get(auth.getNickname()).setQuitLocX(auth.getQuitLocX());
             cache.get(auth.getNickname()).setQuitLocY(auth.getQuitLocY());
             cache.get(auth.getNickname()).setQuitLocZ(auth.getQuitLocZ());
             return true;
             
         }
-         * 
-         */
         return false;
     }
 

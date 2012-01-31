@@ -64,6 +64,7 @@ public final class Settings extends Configuration {
         isForceSpawnLocOnJoinEnabled();
         isForceExactSpawnEnabled();
         isSaveQuitLocationEnabled();
+        getmaxRegPerIp();
         getPasswordHash();
         getDataSource();
         isCachingEnabled();
@@ -111,7 +112,7 @@ public final class Settings extends Configuration {
         }
         return getBoolean(key, false);
     }
-
+    
     public int getSessionTimeout() {
         String key = "settings.sessions.timeout";
         if (getString(key) == null) {
@@ -136,6 +137,14 @@ public final class Settings extends Configuration {
         return getInt(key, 3);
     }
 
+    public int getmaxRegPerIp() {
+        String key = "settings.restrictions.maxRegPerIp";
+        if (getString(key) == null) {
+            setProperty(key, 1);
+        }
+        return getInt(key, 1);        
+    }
+    
     public int getMaxNickLength() {
         String key = "settings.restrictions.maxNicknameLength";
         if (getString(key) == null) {
@@ -195,9 +204,9 @@ public final class Settings extends Configuration {
     public boolean isForceSingleSessionEnabled() {
         String key = "settings.restrictions.ForceSingleSession";
         if (getString(key) == null) {
-            setProperty(key, false);
+            setProperty(key, true);
         }
-        return getBoolean(key, false);
+        return getBoolean(key, true);
     }
     
     public boolean isForceExactSpawnEnabled() {
