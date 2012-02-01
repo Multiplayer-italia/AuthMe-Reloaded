@@ -316,6 +316,39 @@ public class MySQLDataSource implements DataSource {
         return true;
     }
     
+    //
+    // Check how many registration by given ip has been done
+    //
+    
+    @Override
+    public int getIps(String ip) {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        int countIp=0;
+        try {
+            con = conPool.getValidConnection();
+            pst = con.prepareStatement("SELECT * FROM " + tableName + " WHERE "
+                    + columnIp + "=?;");
+            pst.setString(1, ip);
+            rs = pst.executeQuery();
+            while(rs.next()) {
+                countIp++;    
+            } 
+             return countIp;
+        } catch (SQLException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return 0;
+        } catch (TimeoutException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return 0;
+        } finally {
+            close(rs);
+            close(pst);
+            close(con);
+        }         
+    }
+    
     @Override
     public synchronized void close() {
         try {

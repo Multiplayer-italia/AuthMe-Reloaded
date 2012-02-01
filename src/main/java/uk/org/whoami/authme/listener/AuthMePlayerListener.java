@@ -105,7 +105,7 @@ public class AuthMePlayerListener extends PlayerListener {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -134,10 +134,11 @@ public class AuthMePlayerListener extends PlayerListener {
             player.sendMessage(m._("reg_msg"));
         }
         if (!settings.isChatAllowed()) {
-            System.out.println("debug chat: chat not allow");
-        event.setCancelled(true);
+            System.out.println("debug chat: chat isnt allowed");
+            event.setCancelled(true);
+            return;
         }
-        System.out.println("debug chat: chat");
+        System.out.println("debug chat: chat is allow?");
         
     }
 
@@ -200,8 +201,6 @@ public class AuthMePlayerListener extends PlayerListener {
         if (CitizensCommunicator.isNPC(player)) {
             return;
         }
-        
-       
 
         int min = settings.getMinNickLength();
         int max = settings.getMaxNickLength();
@@ -251,7 +250,13 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
         String ip = player.getAddress().getAddress().getHostAddress();
-
+       
+       
+       if(settings.isAllowRestrictedIp() && !settings.getRestrictedIp(name, ip)) {
+            player.kickPlayer( "You are not the Owner of this account, please try another name!");
+            return;           
+       }
+       
         if (CitizensCommunicator.isNPC(player)) {
             return;
         }

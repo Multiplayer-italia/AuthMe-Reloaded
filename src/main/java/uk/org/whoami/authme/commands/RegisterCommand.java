@@ -82,13 +82,19 @@ public class RegisterCommand implements CommandExecutor {
         //
         // Check if player exeded the max number of registration
         //
-        /*
-        String ipAddress = player.getAddress().toString();
-        database.
-        if(settings.getmaxRegPerIp() > 1 ){
+        
+        if(settings.getmaxRegPerIp() > 0 ){
             
+        String ipAddress = player.getAddress().getAddress().getHostAddress();
+        
+            if(database.getIps(ipAddress) >= settings.getmaxRegPerIp()) {
+                //System.out.println("number of reg "+database.getIps(ipAddress));
+                player.sendMessage(m._("max_reg"));
+                return true;
+            }
+                   
         }
-        */
+
         try {
             String hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[0]);
 

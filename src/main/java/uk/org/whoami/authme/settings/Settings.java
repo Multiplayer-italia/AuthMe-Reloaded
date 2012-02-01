@@ -18,6 +18,9 @@ package uk.org.whoami.authme.settings;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.bukkit.util.config.Configuration;
 
 import uk.org.whoami.authme.ConsoleLogger;
@@ -57,6 +60,8 @@ public final class Settings extends Configuration {
         getMaxNickLength();
         getMinNickLength();
         getNickRegex();
+        isAllowRestrictedIp();
+        getRestrictedIp("accountest" , "127.0.0.1");
         isMovementAllowed();
         getMovementRadius();
         isKickNonRegisteredEnabled();
@@ -356,7 +361,35 @@ public final class Settings extends Configuration {
         }
         return getString(key);
     }
-
+    
+    public Boolean isAllowRestrictedIp() {
+        String key = "settings.restrictions.AllowRestrictedUser";
+        if (getString(key) == null) {
+            setProperty(key, false);
+        }
+        return getBoolean(key, false);
+    }        
+         
+    
+    public Boolean getRestrictedIp(String name, String ip) {
+        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
+            if(restricted.isEmpty()) {
+                setProperty("settings.restrictions.RestrictedUser","");           
+            }     
+            
+              Iterator<String> iter = restricted.iterator();
+                while (iter.hasNext()) {
+                   String[] args =  iter.next().split(";");
+                  
+                   if(args[0].equals(name)) {
+                       if(args[1].equals(ip)) {
+                           return true;
+                       } else return false;
+                   } else return true;
+                }
+            return false;
+    }
+    
     public static Settings getInstance() {
         if (singleton == null) {
             singleton = new Settings();

@@ -223,7 +223,38 @@ public class FileDataSource implements DataSource {
         saveAuth(newAuth);
         return true;
     }
-        
+    
+    @Override
+    public int getIps(String ip) {
+        BufferedReader br = null;
+        int countIp = 0;
+        try {
+            br = new BufferedReader(new FileReader(source));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] args = line.split(":");
+                System.out.println(ip+" match? "+args[2]);
+                if (args.length > 3 && args[2].equals(ip)) {
+                    countIp++;
+                }
+            }
+            return countIp;
+        } catch (FileNotFoundException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return 0;
+        } catch (IOException ex) {
+            ConsoleLogger.showError(ex.getMessage());
+            return 0;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                }
+            }
+        } 
+    }
+   
     @Override
     public int purgeDatabase(long until) {
         BufferedReader br = null;

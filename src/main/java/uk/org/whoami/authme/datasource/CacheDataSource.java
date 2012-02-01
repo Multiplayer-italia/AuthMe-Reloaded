@@ -86,7 +86,12 @@ public class CacheDataSource implements DataSource {
         }
         return false;
     }
-
+    
+    @Override
+    public int getIps(String ip) {
+        return source.getIps(ip);
+    }
+    
     @Override
     public int purgeDatabase(long until) {
         int cleared = source.purgeDatabase(until);

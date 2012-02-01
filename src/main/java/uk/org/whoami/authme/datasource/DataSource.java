@@ -40,7 +40,9 @@ public interface DataSource {
     boolean removeAuth(String user);
    
     boolean updateQuitLoc(PlayerAuth auth);
-
+    
+    int getIps(String ip);
+    
     void close();
 
     void reload();
