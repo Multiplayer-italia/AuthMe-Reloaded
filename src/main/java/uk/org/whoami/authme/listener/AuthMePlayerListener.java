@@ -43,6 +43,8 @@ import org.bukkit.Bukkit;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import uk.org.whoami.authme.AuthMe;
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboPlayer;
@@ -105,12 +107,13 @@ public class AuthMePlayerListener extends PlayerListener {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
         }
-
+        
+        
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
@@ -128,11 +131,9 @@ public class AuthMePlayerListener extends PlayerListener {
             if (!settings.isForcedRegistrationEnabled()) {
                 return;
             }
-            if (settings.isChatAllowed()) {
-                return;
-            }
             player.sendMessage(m._("reg_msg"));
         }
+        
         if (!settings.isChatAllowed()) {
             System.out.println("debug chat: chat isnt allowed");
             event.setCancelled(true);
@@ -142,7 +143,7 @@ public class AuthMePlayerListener extends PlayerListener {
         
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -241,7 +242,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer() == null) {
             return;
@@ -266,6 +267,10 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (data.isAuthAvailable(name)) {
+           if(!settings.unLoggedInGroup().isEmpty()){
+               Utils newGroup = new Utils(player.getName());
+               newGroup.setGroup(player, Utils.groupType.NOTLOGGEDIN);
+            } 
             if (settings.isSessionsEnabled()) {
                 PlayerAuth auth = data.getAuth(name);
                 long timeout = settings.getSessionTimeout() * 60000;
@@ -293,7 +298,11 @@ public class AuthMePlayerListener extends PlayerListener {
                 PlayerCache.getInstance().removePlayer(name);
             }
           }
-        } else {
+        } else {  
+            if(!settings.unRegisteredGroup().isEmpty()){
+               Utils newGroup = new Utils(player.getName());
+               newGroup.setGroup(player, Utils.groupType.UNREGISTERED);
+            }
             if (!settings.isForcedRegistrationEnabled()) {
                 return;
             }
@@ -304,7 +313,7 @@ public class AuthMePlayerListener extends PlayerListener {
         player.getInventory().setContents(new ItemStack[36]);
         player.setGameMode(GameMode.SURVIVAL);
         if (settings.isTeleportToSpawnEnabled() || settings.isForceSpawnLocOnJoinEnabled()) {
-            player.teleport(player.getWorld().getSpawnLocation());
+            player.teleport(player.getWorld().getSpawnLocation());  
         }
 
         String msg = data.isAuthAvailable(name) ? m._("login_msg") : m._("reg_msg");

@@ -21,13 +21,13 @@ import java.util.Date;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import uk.org.whoami.authme.ConsoleLogger;
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
@@ -123,7 +123,11 @@ public class LoginCommand implements CommandExecutor {
                                  player.teleport(limbo.getLoc());
                                  }
                              }  
-                    } else if ( settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
+                    } else {
+                        if(settings.isForceSpawnLocOnJoinEnabled()) {
+                            player.teleport(player.getWorld().getSpawnLocation());  
+                        } else {
+                        if ( settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
                               if( settings.isForceExactSpawnEnabled() ) {
                                  if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)) {  
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
@@ -138,13 +142,18 @@ public class LoginCommand implements CommandExecutor {
                         } else {
                                 player.teleport(limbo.getLoc());
                                 System.out.println("quit location from bukkit:"+limbo.getLoc()); }  
-                    
+                        }
+                    } 
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
                 LimboCache.getInstance().deleteLimboPlayer(name);
                    
                 }
                 player.sendMessage(m._("login"));
                 ConsoleLogger.info(player.getDisplayName() + " logged in!");
+            if(!settings.loggedInGroup().isEmpty()){
+               Utils newGroup = new Utils(player.getName());
+               newGroup.setGroup(player, Utils.groupType.LOGGEDIN);
+            }                
             } else {
                 ConsoleLogger.info(player.getDisplayName() + " used the wrong password");
                 if (settings.isKickOnWrongPasswordEnabled()) {

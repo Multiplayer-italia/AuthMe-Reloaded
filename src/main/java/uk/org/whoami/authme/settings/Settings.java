@@ -83,6 +83,10 @@ public final class Settings extends Configuration {
         getMySQLColumnPassword();
         getMySQLColumnIp();
         getMySQLColumnLastLogin();
+        unRegisteredGroup();
+        registeredGroup();
+        unLoggedInGroup();
+        loggedInGroup();
         save();
     }
 
@@ -374,7 +378,7 @@ public final class Settings extends Configuration {
     public Boolean getRestrictedIp(String name, String ip) {
         List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
             if(restricted.isEmpty()) {
-                setProperty("settings.restrictions.RestrictedUser","");           
+                setProperty("settings.restrictions.RestrictedUser",restricted);           
             }     
             
               Iterator<String> iter = restricted.iterator();
@@ -390,6 +394,42 @@ public final class Settings extends Configuration {
             return false;
     }
     
+    //
+    // Config option of different group settings about UNREGISTERED, REGISTERED
+    // LOGGEDIN and NOTLOGGEDIN state.
+    //
+    public String unRegisteredGroup() {
+        String key = "GroupOptions.UnregisteredPlayerGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);        
+    }
+    
+    public String registeredGroup() {
+         String key = "GroupOptions.RegisteredPlayerGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);     
+    }
+    
+     public String unLoggedInGroup() {
+         String key = "GroupOptions.UnLoggedInPlayerGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);     
+    }
+
+     public String loggedInGroup() {
+         String key = "GroupOptions.LoggedInPlayerGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);     
+    }
+     
     public static Settings getInstance() {
         if (singleton == null) {
             singleton = new Settings();

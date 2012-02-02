@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import uk.org.whoami.authme.ConsoleLogger;
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
@@ -119,7 +120,11 @@ public class RegisterCommand implements CommandExecutor {
             }
 
             player.sendMessage(m._("registered"));
-            ConsoleLogger.info(player.getDisplayName() + " registered");
+            ConsoleLogger.info(player.getDisplayName() + " registered "+player.getAddress().getAddress().getHostAddress());
+            if(!settings.registeredGroup().isEmpty()){
+               Utils newGroup = new Utils(player.getName());
+               newGroup.setGroup(player, Utils.groupType.REGISTERED);
+            }
         } catch (NoSuchAlgorithmException ex) {
             ConsoleLogger.showError(ex.getMessage());
             sender.sendMessage(m._("error"));

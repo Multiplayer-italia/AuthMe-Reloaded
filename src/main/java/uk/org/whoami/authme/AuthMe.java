@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -47,11 +48,15 @@ import uk.org.whoami.authme.settings.Settings;
 import uk.org.whoami.authme.task.MessageTask;
 import uk.org.whoami.authme.task.TimeoutTask;
 
+import net.milkbowl.vault.permission.Permission;
+
 public class AuthMe extends JavaPlugin {
 
     private DataSource database;
     private Settings settings;
     private Messages m;
+    public static Permission permission;
+    
 
     @Override
     public void onEnable() {
@@ -95,7 +100,15 @@ public class AuthMe extends JavaPlugin {
         pm.registerEvents(new AuthMePlayerListener(this, database),this);
         pm.registerEvents(new AuthMeBlockListener(database),this);
         pm.registerEvents(new AuthMeEntityListener(database),this);
-
+        
+        //Find Permissions
+        RegisteredServiceProvider<Permission> permissionProvider =
+                getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null)
+            permission = permissionProvider.getProvider();
+        
+        System.out.println("[debug perm]"+permission);
+        
         this.getCommand("authme").setExecutor(new AdminCommand(database));
         this.getCommand("register").setExecutor(new RegisterCommand(database));
         this.getCommand("login").setExecutor(new LoginCommand(database));
@@ -169,4 +182,6 @@ public class AuthMe extends JavaPlugin {
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
         }
     }
+    
+   
 }
