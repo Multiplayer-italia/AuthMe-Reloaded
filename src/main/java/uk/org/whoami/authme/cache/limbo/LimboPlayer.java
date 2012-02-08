@@ -27,15 +27,25 @@ public class LimboPlayer {
     private Location loc;
     private int timeoutTaskId = -1;
     private int gameMode = 0;
+    private boolean operator;
+    private String group;
 
-    public LimboPlayer(String name, Location loc, ItemStack[] inventory, ItemStack[] armour, int gameMode) {
+    public LimboPlayer(String name, Location loc, ItemStack[] inventory, ItemStack[] armour, int gameMode, boolean operator, String group) {
         this.name = name;
         this.loc = loc;
         this.inventory = inventory;
         this.armour = armour;
         this.gameMode = gameMode;
+        this.operator = operator;
+        this.group = group;
+        //System.out.println("il gruppo in limboPlayer "+group);
     }
-
+    
+    public LimboPlayer(String name, String group) {
+        this.name = name;
+        this.group = group;
+    }
+    
     public String getName() {
         return name;
     }
@@ -63,4 +73,12 @@ public class LimboPlayer {
     public int getGameMode() {
         return gameMode;
     }
+    
+    public boolean getOperator() {
+        return operator;
+    }
+    
+    public String getGroup() {
+        return group;
+    }    
 }

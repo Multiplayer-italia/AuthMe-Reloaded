@@ -54,6 +54,7 @@ public class AuthMe extends JavaPlugin {
 
     private DataSource database;
     private Settings settings;
+    private Utils utils;
     private Messages m;
     public static Permission permission;
     
@@ -106,8 +107,12 @@ public class AuthMe extends JavaPlugin {
                 getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null)
             permission = permissionProvider.getProvider();
+        else {
+            ConsoleLogger.showError("Vault and Permissions plugins is needed for enable AuthMe Reloaded!");
+            this.getServer().getPluginManager().disablePlugin(this);            
+        }
         
-        System.out.println("[debug perm]"+permission);
+        //System.out.println("[debug perm]"+permission);
         
         this.getCommand("authme").setExecutor(new AdminCommand(database));
         this.getCommand("register").setExecutor(new RegisterCommand(database));
@@ -137,6 +142,8 @@ public class AuthMe extends JavaPlugin {
         if (database != null) {
             database.close();
         }
+        //utils = Utils.getInstance();
+       
         ConsoleLogger.info("Authme " + this.getDescription().getVersion() + " disabled");
     }
 

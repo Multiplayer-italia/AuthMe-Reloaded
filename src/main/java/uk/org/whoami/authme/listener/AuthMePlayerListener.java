@@ -36,14 +36,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.Bukkit;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import uk.org.whoami.authme.AuthMe;
+import uk.co.whoami.authme.cache.backup.DataFileCache;
+import uk.co.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -60,9 +59,11 @@ import uk.org.whoami.authme.task.TimeoutTask;
 public class AuthMePlayerListener extends PlayerListener {
 
     private Settings settings = Settings.getInstance();
+    private Utils utils = Utils.getInstance();
     private Messages m = Messages.getInstance();
     private JavaPlugin plugin;
     private DataSource data;
+    private FileCache playerBackup = new FileCache();
 
     public AuthMePlayerListener(JavaPlugin plugin, DataSource data) {
         this.plugin = plugin;
@@ -135,11 +136,11 @@ public class AuthMePlayerListener extends PlayerListener {
         }
         
         if (!settings.isChatAllowed()) {
-            System.out.println("debug chat: chat isnt allowed");
+            //System.out.println("debug chat: chat isnt allowed");
             event.setCancelled(true);
             return;
         }
-        System.out.println("debug chat: chat is allow?");
+        //System.out.println("debug chat: chat is allow?");
         
     }
 
@@ -189,7 +190,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         
         if (event.getResult() != Result.ALLOWED || event.getPlayer() == null) {
@@ -202,7 +203,19 @@ public class AuthMePlayerListener extends PlayerListener {
         if (CitizensCommunicator.isNPC(player)) {
             return;
         }
-
+        
+        // Big problem on this chek
+        //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
+        if(player.isOnline() && settings.isForceSingleSessionEnabled()) {
+               event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick")); 
+               return;
+               
+        }
+        
+        if(data.isAuthAvailable(name)) {
+            LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
+        }
+        
         int min = settings.getMinNickLength();
         int max = settings.getMaxNickLength();
         String regex = settings.getNickRegex();
@@ -215,13 +228,7 @@ public class AuthMePlayerListener extends PlayerListener {
             event.disallow(Result.KICK_OTHER, "Your nickname contains illegal characters. Allowed chars: " + regex);
             return;
         }
-        // Big problem on this chek
-        //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
-        if(player.isOnline() && settings.isForceSingleSessionEnabled()) {
-               event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick")); 
-               return;
-               
-        } 
+ 
        /* OLD METHOD 
         for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
             System.out.println("[Debug name 3] "+player.getName());
@@ -266,11 +273,7 @@ public class AuthMePlayerListener extends PlayerListener {
             return;
         }
 
-        if (data.isAuthAvailable(name)) {
-           if(!settings.unLoggedInGroup().isEmpty()){
-               Utils newGroup = new Utils(player.getName());
-               newGroup.setGroup(player, Utils.groupType.NOTLOGGEDIN);
-            } 
+        if (data.isAuthAvailable(name)) {     
             if (settings.isSessionsEnabled()) {
                 PlayerAuth auth = data.getAuth(name);
                 long timeout = settings.getSessionTimeout() * 60000;
@@ -297,11 +300,12 @@ public class AuthMePlayerListener extends PlayerListener {
                  // player
                 PlayerCache.getInstance().removePlayer(name);
             }
-          }
+          } 
+          
         } else {  
             if(!settings.unRegisteredGroup().isEmpty()){
-               Utils newGroup = new Utils(player.getName());
-               newGroup.setGroup(player, Utils.groupType.UNREGISTERED);
+               
+               utils.setGroup(player, Utils.groupType.UNREGISTERED);
             }
             if (!settings.isForcedRegistrationEnabled()) {
                 return;
@@ -309,9 +313,15 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         LimboCache.getInstance().addLimboPlayer(player);
+        DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
+        playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
         player.getInventory().setArmorContents(new ItemStack[0]);
         player.getInventory().setContents(new ItemStack[36]);
         player.setGameMode(GameMode.SURVIVAL);
+        if(player.isOp()) {
+         //System.out.println("player is an operator");
+         player.setOp(false);
+        }
         if (settings.isTeleportToSpawnEnabled() || settings.isForceSpawnLocOnJoinEnabled()) {
             player.teleport(player.getWorld().getSpawnLocation());  
         }
@@ -340,12 +350,12 @@ public class AuthMePlayerListener extends PlayerListener {
     // Fix for Exact spawn usses that bukkit has
     // Fix for Quit location when player where kicked for timeout
     
-    if (PlayerCache.getInstance().isAuthenticated(name) ) {  
+    if (PlayerCache.getInstance().isAuthenticated(name) ) { 
         if(settings.isForceExactSpawnEnabled() || settings.isSaveQuitLocationEnabled() ) {
             PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
             data.updateQuitLoc(auth);
         }
-    }
+    } 
     
         if (CitizensCommunicator.isNPC(player)) {
             return;
@@ -356,8 +366,14 @@ public class AuthMePlayerListener extends PlayerListener {
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());
+            utils.addNormal(player, limbo.getGroup());
+            player.setOp(limbo.getOperator());
+            //System.out.println("debug quit group reset "+limbo.getGroup());
             plugin.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
             LimboCache.getInstance().deleteLimboPlayer(name);
+            if(playerBackup.doesCacheExist(name)) {
+                        playerBackup.removeCache(name);
+            }
         }
         PlayerCache.getInstance().removePlayer(name);
     }
@@ -390,8 +406,15 @@ public class AuthMePlayerListener extends PlayerListener {
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());
             player.teleport(limbo.getLoc());
+            utils.addNormal(player, limbo.getGroup());
+            player.setOp(limbo.getOperator());
+            //System.out.println("debug quit group reset "+limbo.getGroup());     
             plugin.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
             LimboCache.getInstance().deleteLimboPlayer(name);
+             if(playerBackup.doesCacheExist(name)) {
+                        playerBackup.removeCache(name);
+                    }   
+                
         }
         PlayerCache.getInstance().removePlayer(name);
     }

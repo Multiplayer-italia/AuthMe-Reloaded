@@ -59,6 +59,7 @@ public final class Settings extends Configuration {
         isChatAllowed();
         getMaxNickLength();
         getMinNickLength();
+        getPasswordMinLen();
         getNickRegex();
         isAllowRestrictedIp();
         getRestrictedIp("accountest" , "127.0.0.1");
@@ -69,8 +70,11 @@ public final class Settings extends Configuration {
         isForceSpawnLocOnJoinEnabled();
         isForceExactSpawnEnabled();
         isSaveQuitLocationEnabled();
+        isForceSurvivalModeEnabled();
+        isResetInventoryIfCreative();
         getmaxRegPerIp();
         getPasswordHash();
+        getUnloggedinGroup();
         getDataSource();
         isCachingEnabled();
         getMySQLHost();
@@ -85,8 +89,6 @@ public final class Settings extends Configuration {
         getMySQLColumnLastLogin();
         unRegisteredGroup();
         registeredGroup();
-        unLoggedInGroup();
-        loggedInGroup();
         save();
     }
 
@@ -245,11 +247,27 @@ public final class Settings extends Configuration {
     public boolean isTeleportToSpawnEnabled() {
         String key = "settings.restrictions.teleportUnAuthedToSpawn";
         if (getString(key) == null) {
-            setProperty(key, true);
+            setProperty(key, false);
         }
-        return getBoolean(key, true);
+        return getBoolean(key, false);
+    }
+    
+    public boolean isForceSurvivalModeEnabled() {
+        String key = "settings.GameMode.ForceSurvivalMode";
+        if (getString(key) == null) {
+            setProperty(key, false);
+        }
+        return getBoolean(key, false);        
     }
 
+    public boolean isResetInventoryIfCreative() {
+        String key = "settings.GameMode.ResetInventotyIfCreative";
+        if (getString(key) == null) {
+            setProperty(key, false);
+        }
+        return getBoolean(key, false);        
+    }
+    
     public HashAlgorithm getPasswordHash() {
         String key = "settings.security.passwordHash";
         if (getString(key) == null) {
@@ -264,6 +282,23 @@ public final class Settings extends Configuration {
         }
     }
 
+    public int getPasswordMinLen() {
+        String key = "settings.security.minPasswordLength";
+        if (getString(key) == null) {
+            setProperty(key, 4);
+        }
+        return getInt(key, 4);        
+    }
+    
+    public String getUnloggedinGroup() {
+        String key = "settings.security.unLoggedinGroup";
+        if (getString(key) == null) {
+            setProperty(key, "unLoggedinGroup");
+        }
+        return getString(key, "unLoggedinGroup*");
+            
+    }
+    
     public boolean isCachingEnabled() {
         String key = "DataSource.caching";
         if (getString(key) == null) {
@@ -413,23 +448,7 @@ public final class Settings extends Configuration {
         }
         return getString(key);     
     }
-    
-     public String unLoggedInGroup() {
-         String key = "GroupOptions.UnLoggedInPlayerGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);     
-    }
-
-     public String loggedInGroup() {
-         String key = "GroupOptions.LoggedInPlayerGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);     
-    }
-     
+        
     public static Settings getInstance() {
         if (singleton == null) {
             singleton = new Settings();

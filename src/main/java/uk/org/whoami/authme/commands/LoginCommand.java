@@ -26,6 +26,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import uk.co.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
@@ -41,8 +42,10 @@ public class LoginCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
     private Settings settings = Settings.getInstance();
+    private Utils utils = Utils.getInstance();
     private DataSource database;
-
+    private FileCache playerCache = new FileCache();
+    
     public LoginCommand(DataSource database) {
         this.database = database;
     }
@@ -88,6 +91,12 @@ public class LoginCommand implements CommandExecutor {
                     player.getInventory().setContents(limbo.getInventory());
                     player.getInventory().setArmorContents(limbo.getArmour());
                     player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
+                    player.setOp(limbo.getOperator());
+  /*                  if (limbo.getOperator()) {
+                         System.out.println("player is an operator after login success");
+                    }*/
+                    utils.addNormal(player, limbo.getGroup());
+                   //System.out.println("il gruppo in logincommand "+limbo.getGroup());
                    //
                    // TODO: completly rewrite this part, too much if, else ...
                    // check quit location, check correct spawn, 
@@ -146,14 +155,14 @@ public class LoginCommand implements CommandExecutor {
                     } 
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
                 LimboCache.getInstance().deleteLimboPlayer(name);
-                   
+                if(playerCache.doesCacheExist(name)) {
+                        playerCache.removeCache(name);
+                    }   
                 }
                 player.sendMessage(m._("login"));
                 ConsoleLogger.info(player.getDisplayName() + " logged in!");
-            if(!settings.loggedInGroup().isEmpty()){
-               Utils newGroup = new Utils(player.getName());
-               newGroup.setGroup(player, Utils.groupType.LOGGEDIN);
-            }                
+               
+                
             } else {
                 ConsoleLogger.info(player.getDisplayName() + " used the wrong password");
                 if (settings.isKickOnWrongPasswordEnabled()) {

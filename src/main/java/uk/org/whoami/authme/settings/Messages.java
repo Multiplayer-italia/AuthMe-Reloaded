@@ -62,6 +62,8 @@ public class Messages extends Configuration {
         map.put("unsafe_spawn","Your Quit location was unsafe, teleporting you to World Spawn");
         map.put("unvalid_session","Session Dataes doesnt corrispond Plaese wait the end of session");
         map.put("max_reg","You have Exeded the max number of Registration for your Account"); 
+        map.put("password_error","Password doesnt match");
+        map.put("pass_len","Your password dind't reach the minimum length");
     }
 
     private void loadFile() {

@@ -71,8 +71,13 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0) {
+        if (args.length == 0 || args.length < 2 ) {
             player.sendMessage(m._("usage_reg"));
+            return true;
+        }
+        
+        if(Integer.parseInt(args[0]) < settings.getPasswordMinLen() ) {
+            player.sendMessage(m._("pass_len"));
             return true;
         }
 
@@ -97,8 +102,14 @@ public class RegisterCommand implements CommandExecutor {
         }
 
         try {
-            String hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[0]);
-
+            String hash;
+            if (args[0].equals(args[1])) {
+                hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[0]);
+            } else {
+                player.sendMessage(m._("password_error"));
+                return true;
+            }
+         
             PlayerAuth auth = new PlayerAuth(name, hash, ip, new Date().getTime());
             if (!database.saveAuth(auth)) {
                 player.sendMessage(m._("error"));
@@ -121,10 +132,7 @@ public class RegisterCommand implements CommandExecutor {
 
             player.sendMessage(m._("registered"));
             ConsoleLogger.info(player.getDisplayName() + " registered "+player.getAddress().getAddress().getHostAddress());
-            if(!settings.registeredGroup().isEmpty()){
-               Utils newGroup = new Utils(player.getName());
-               newGroup.setGroup(player, Utils.groupType.REGISTERED);
-            }
+
         } catch (NoSuchAlgorithmException ex) {
             ConsoleLogger.showError(ex.getMessage());
             sender.sendMessage(m._("error"));
