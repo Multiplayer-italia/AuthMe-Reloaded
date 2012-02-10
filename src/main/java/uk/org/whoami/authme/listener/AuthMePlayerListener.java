@@ -41,8 +41,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import uk.co.whoami.authme.cache.backup.DataFileCache;
-import uk.co.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.AuthMe;
+import uk.org.whoami.authme.cache.backup.DataFileCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -193,39 +194,115 @@ public class AuthMePlayerListener extends PlayerListener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         
+       
+        
         if (event.getResult() != Result.ALLOWED || event.getPlayer() == null) {
+            //System.out.println("non permesso?");
             return;
         }
 
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
-
+        
         if (CitizensCommunicator.isNPC(player)) {
             return;
         }
+
+        if(data.isAuthAvailable(name) && !LimboCache.getInstance().hasLimboPlayer(name)) {
+            if(!settings.isSessionsEnabled()) {
+            //System.out.println("resetta il nickn");  
+            LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
+            } else if(PlayerCache.getInstance().isAuthenticated(name)) {
+                if(LimboCache.getInstance().hasLimboPlayer(player.getName().toLowerCase())) {
+                        LimboCache.getInstance().deleteLimboPlayer(name);  
+                    } 
+                //System.out.println("nick gia autenticato");
+                LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
+            }
+        }
         
+        
+       
         // Big problem on this chek
         //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
-        if(player.isOnline() && settings.isForceSingleSessionEnabled()) {
-               event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick")); 
-               return;
+        if(player.isOnline() && settings.isForceSingleSessionEnabled() ) {
+        
+        //Start a new thread
+        Thread group = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    //System.out.println("nick gia in uso");
+                    final LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
+                    //sleep of thread
+                    Thread.currentThread().sleep(2);      
+                    //assign the group
+                    
+                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+                    utils.addNormal(player, limbo.getGroup());
+                    LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
+                    }
+                }
+                catch (Exception e) {
+                }
+            }
+        };
+        group.start();
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
+            /*if(utils.addNormal(player, limbo.getGroup()))
+                
+            System.out.println("groupp"+limbo.getGroup()+"nome"+player);
+            else
+            LimboCache.getInstance().deleteLimboPlayer(name);*/
+            return;
                
         }
         
-        if(data.isAuthAvailable(name)) {
-            LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
-        }
         
+      if (PlayerCache.getInstance().isAuthenticated(name)) {   
+            //System.out.println("gia tutenticato");
+           
+        //Start a new thread
+        Thread group = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    final LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
+                    //sleep of thread
+                    Thread.currentThread().sleep(2);      
+                    //assign the group
+                    
+                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+                     utils.addNormal(player, limbo.getGroup());
+                    LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
+                    }
+                }
+                catch (Exception e) {
+                }
+            }
+        };
+        group.start();
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
+            //utils.addNormal(player, limbo.getGroup());
+            return;
+        }     
         int min = settings.getMinNickLength();
         int max = settings.getMaxNickLength();
         String regex = settings.getNickRegex();
 
         if (name.length() > max || name.length() < min) {
-            event.disallow(Result.KICK_OTHER, "Your nickname has the wrong length. MaxLen: " + max + ", MinLen: " + min);
+            
+            LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+            utils.addNormal(player, limbo.getGroup());
+            LimboCache.getInstance().deleteLimboPlayer(name);
             return;
         }
         if (!player.getName().matches(regex) || name.equals("Player")) {
+             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+            
             event.disallow(Result.KICK_OTHER, "Your nickname contains illegal characters. Allowed chars: " + regex);
+            utils.addNormal(player, limbo.getGroup());
+            LimboCache.getInstance().deleteLimboPlayer(name);
             return;
         }
  
@@ -242,8 +319,11 @@ public class AuthMePlayerListener extends PlayerListener {
         }
        */
         if (settings.isKickNonRegisteredEnabled()) {
-            if (!data.isAuthAvailable(name)) {
+            if (!data.isAuthAvailable(name)) {     
                 event.disallow(Result.KICK_OTHER, m._("reg_only"));
+                  LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+                utils.addNormal(player, limbo.getGroup());
+                LimboCache.getInstance().deleteLimboPlayer(name);
                 return;
             }
         }
@@ -268,11 +348,11 @@ public class AuthMePlayerListener extends PlayerListener {
         if (CitizensCommunicator.isNPC(player)) {
             return;
         }
-        
+ /* Why it has to return if a player is already authenticated? when should this happen?       
         if (PlayerCache.getInstance().isAuthenticated(name)) {      
             return;
         }
-
+*/
         if (data.isAuthAvailable(name)) {     
             if (settings.isSessionsEnabled()) {
                 PlayerAuth auth = data.getAuth(name);
@@ -299,6 +379,8 @@ public class AuthMePlayerListener extends PlayerListener {
                  // and session isent ended he is kick out for invalid session, even if he is the rigth
                  // player
                 PlayerCache.getInstance().removePlayer(name);
+                  LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
+                 LimboCache.getInstance().addLimboPlayer(player);
             }
           } 
           
@@ -363,6 +445,7 @@ public class AuthMePlayerListener extends PlayerListener {
 
         
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
+            //System.out.println("e' nel quit");
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());
@@ -402,6 +485,7 @@ public class AuthMePlayerListener extends PlayerListener {
              
         String name = player.getName().toLowerCase();
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
+            //System.out.println("e' nel kick");
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());

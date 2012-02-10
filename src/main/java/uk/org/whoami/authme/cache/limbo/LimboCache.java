@@ -22,7 +22,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import uk.co.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.settings.Settings;
 
 public class LimboCache {

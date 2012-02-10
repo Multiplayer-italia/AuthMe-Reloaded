@@ -76,7 +76,7 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
         
-        if(Integer.parseInt(args[0]) < settings.getPasswordMinLen() ) {
+        if(args[0].length() < settings.getPasswordMinLen() ) {
             player.sendMessage(m._("pass_len"));
             return true;
         }

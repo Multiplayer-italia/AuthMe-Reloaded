@@ -32,14 +32,7 @@ public class Utils {
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
                 AuthMe.permission.playerAddGroup(player, settings.unRegisteredGroup());
                 break;
-            }
-            case REGISTERED: {
-
-                String currentGroup = AuthMe.permission.getPrimaryGroup(player);
-                AuthMe.permission.playerRemoveGroup(player, currentGroup);
-                AuthMe.permission.playerAddGroup(player, settings.registeredGroup());
-                break;
-            }                   
+            }                
         }
         return;
     }
@@ -63,12 +56,14 @@ public class Utils {
     }
     
     public boolean addNormal(Player player, String group) {
-        
+       // System.out.println("dentro add normal");
        /* if (AuthMe.permission.playerRemove(this.player, "-*"))
             return true;
        */ 
         if(AuthMe.permission.playerRemoveGroup(player,this.unLoggedGroup) && AuthMe.permission.playerAddGroup(player,group)) {
+        //System.out.println("vecchio "+this.unLoggedGroup+ "nuovo" + group);
             return true;
+        
         }
         return false;
     }    

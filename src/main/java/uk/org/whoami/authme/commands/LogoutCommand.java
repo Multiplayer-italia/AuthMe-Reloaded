@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -40,6 +41,7 @@ public class LogoutCommand implements CommandExecutor {
     private Settings settings = Settings.getInstance();
     private JavaPlugin plugin;
     private DataSource database;
+    private Utils utils = Utils.getInstance();
 
     public LogoutCommand(JavaPlugin plugin, DataSource database) {
         this.plugin = plugin;
@@ -71,7 +73,8 @@ public class LogoutCommand implements CommandExecutor {
         database.updateSession(auth);
 
         PlayerCache.getInstance().removePlayer(name);
-
+        
+        LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
         LimboCache.getInstance().addLimboPlayer(player);
         player.getInventory().setArmorContents(new ItemStack[0]);
         player.getInventory().setContents(new ItemStack[36]);

@@ -88,7 +88,6 @@ public final class Settings extends Configuration {
         getMySQLColumnIp();
         getMySQLColumnLastLogin();
         unRegisteredGroup();
-        registeredGroup();
         save();
     }
 
@@ -439,14 +438,6 @@ public final class Settings extends Configuration {
             setProperty(key, "");
         }
         return getString(key);        
-    }
-    
-    public String registeredGroup() {
-         String key = "GroupOptions.RegisteredPlayerGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);     
     }
         
     public static Settings getInstance() {

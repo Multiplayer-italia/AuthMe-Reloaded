@@ -38,7 +38,7 @@ public class Messages extends Configuration {
         map.put("not_logged_in", "&cNot logged in!");
         map.put("reg_disabled", "&cRegistration is disabled");
         map.put("user_regged", "&cUsername already registered");
-        map.put("usage_reg", "&cUsage: /register password");
+        map.put("usage_reg", "&cUsage: /register password ConfirmPassword");
         map.put("usage_log", "&cUsage: /login password");
         map.put("user_unknown", "&cUsername not registered");
         map.put("pwd_changed", "&cPassword changed!");

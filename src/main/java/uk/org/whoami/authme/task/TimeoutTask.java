@@ -19,7 +19,7 @@ package uk.org.whoami.authme.task;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import uk.co.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboPlayer;

@@ -49,6 +49,7 @@ import uk.org.whoami.authme.task.MessageTask;
 import uk.org.whoami.authme.task.TimeoutTask;
 
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Server;
 
 public class AuthMe extends JavaPlugin {
 
@@ -56,6 +57,7 @@ public class AuthMe extends JavaPlugin {
     private Settings settings;
     private Utils utils;
     private Messages m;
+    public static Server server;
     public static Permission permission;
     
 
@@ -63,7 +65,8 @@ public class AuthMe extends JavaPlugin {
     public void onEnable() {
         settings = Settings.getInstance();
         m = Messages.getInstance();
-
+        server = getServer();
+        
         switch (settings.getDataSource()) {
             case FILE:
                 try {
@@ -189,6 +192,6 @@ public class AuthMe extends JavaPlugin {
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
         }
     }
-    
-   
+  
+  
 }

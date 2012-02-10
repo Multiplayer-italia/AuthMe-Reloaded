@@ -26,7 +26,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import uk.co.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.co.whoami.authme.cache.backup;
+package uk.org.whoami.authme.cache.backup;
 
 /**
  *
