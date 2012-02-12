@@ -233,7 +233,7 @@ public class FileDataSource implements DataSource {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] args = line.split(":");
-                System.out.println(ip+" match? "+args[2]);
+                //System.out.println(ip+" match? "+args[2]);
                 if (args.length > 3 && args[2].equals(ip)) {
                     countIp++;
                 }

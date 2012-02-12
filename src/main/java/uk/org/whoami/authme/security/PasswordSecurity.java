@@ -16,6 +16,7 @@
 
 package uk.org.whoami.authme.security;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,7 +70,15 @@ public class PasswordSecurity {
     private static String getSaltedHash(String message, String salt) throws NoSuchAlgorithmException {
         return "$SHA$" + salt + "$" + getSHA256(getSHA256(message) + salt);
     }
-
+    
+    //
+    // VBULLETIN 3.X 4.X METHOD
+    //
+    
+    private static String getSaltedMd5(String message, String salt) throws NoSuchAlgorithmException {
+        return "$MD5vb$" + salt + "$" + getMD5(getMD5(message) + salt);
+    }
+    
     private static String getXAuth(String message, String salt) {
         String hash = getWhirlpool(salt + message).toLowerCase();
         int saltPos = (message.length() >= hash.length() ? hash.length() - 1 : message.length());
@@ -95,17 +104,27 @@ public class PasswordSecurity {
             case SHA256:
                 String salt = createSalt(16);
                 return getSaltedHash(password, salt);
+            case MD5vb:
+                String salt2 = createSalt(16);
+                return getSaltedMd5(password, salt2);
             case WHIRLPOOL:
                 return getWhirlpool(password);
             case XAUTH:
                 String xsalt = createSalt(12);
                 return getXAuth(password, xsalt);
+            case PHPBB:
+                return getPhpBB(password);
             default:
                 throw new NoSuchAlgorithmException("Unknown hash algorithm");
         }
     }
 
     public static boolean comparePasswordWithHash(String password, String hash) throws NoSuchAlgorithmException {
+        if(hash.contains("$H$")) {
+           PhpBB checkHash = new PhpBB();
+            return checkHash.phpbb_check_hash(password, hash);
+        }
+            
         if (hash.length() == 32) {
             return hash.equals(getMD5(password));
         }
@@ -125,14 +144,22 @@ public class PasswordSecurity {
             if (line.length > 3 && line[1].equals("SHA")) {
                 return hash.equals(getSaltedHash(password, line[2]));
             } else {
-                return false;
+                if(line[1].equals("MD5vb")) {
+                    return hash.equals(getSaltedMd5(password, line[2]));
+                }
             }
         }
         return false;
     }
 
+    private static String getPhpBB(String password) {
+        PhpBB hash = new PhpBB();
+        String phpBBhash = hash.phpbb_hash(password);
+        return phpBBhash;
+    }
+
     public enum HashAlgorithm {
 
-        MD5, SHA1, SHA256, WHIRLPOOL, XAUTH
+        MD5, SHA1, SHA256, WHIRLPOOL, XAUTH, MD5vb, PHPBB
     }
 }

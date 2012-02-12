@@ -341,7 +341,12 @@ public class AuthMePlayerListener extends PlayerListener {
        
        
        if(settings.isAllowRestrictedIp() && !settings.getRestrictedIp(name, ip)) {
-            player.kickPlayer( "You are not the Owner of this account, please try another name!");
+        LimboCache.getInstance().addLimboPlayer(player);
+        DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
+        playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
+        player.getInventory().setArmorContents(new ItemStack[0]);
+        player.getInventory().setContents(new ItemStack[36]);           
+        player.kickPlayer( "You are not the Owner of this account, please try another name!");
             return;           
        }
        
