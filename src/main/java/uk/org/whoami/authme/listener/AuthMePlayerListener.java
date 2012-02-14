@@ -319,11 +319,14 @@ public class AuthMePlayerListener extends PlayerListener {
         }
        */
         if (settings.isKickNonRegisteredEnabled()) {
-            if (!data.isAuthAvailable(name)) {     
+            if (!data.isAuthAvailable(name)) {    
                 event.disallow(Result.KICK_OTHER, m._("reg_only"));
-                  LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+/*      what should i do in this line? 
+                 * LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
                 utils.addNormal(player, limbo.getGroup());
                 LimboCache.getInstance().deleteLimboPlayer(name);
+                 * 
+                 */
                 return;
             }
         }
