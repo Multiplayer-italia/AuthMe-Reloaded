@@ -32,7 +32,7 @@ permissions:
             authme.login: true
             authme.changepassword: true
             authme.logout: true
-            authme.unregister: false   
+            authme.unregister: true
     authme.admin.*:
          description: Gives access to all authme admin commands
          children:

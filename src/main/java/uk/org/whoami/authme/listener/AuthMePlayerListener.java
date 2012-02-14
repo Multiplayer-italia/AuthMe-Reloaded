@@ -191,8 +191,8 @@ public class AuthMePlayerListener extends PlayerListener {
         }
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerLogin(PlayerLoginEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerLogin(final PlayerLoginEvent event) {
         
        
         
@@ -210,7 +210,7 @@ public class AuthMePlayerListener extends PlayerListener {
 
         if(data.isAuthAvailable(name) && !LimboCache.getInstance().hasLimboPlayer(name)) {
             if(!settings.isSessionsEnabled()) {
-            //System.out.println("resetta il nickn");  
+            //System.out.println("resetta il nick");  
             LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
             } else if(PlayerCache.getInstance().isAuthenticated(name)) {
                 if(LimboCache.getInstance().hasLimboPlayer(player.getName().toLowerCase())) {
@@ -226,29 +226,38 @@ public class AuthMePlayerListener extends PlayerListener {
         // Big problem on this chek
         //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
         if(player.isOnline() && settings.isForceSingleSessionEnabled() ) {
-        
+             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
+             //System.out.println(" limbo ? "+limbo.getGroup());
+             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
+                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+                        utils.addNormal(player, limbo.getGroup());
+                        LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
+                    }            
         //Start a new thread
-        Thread group = new Thread() {
+ /*       Thread group = new Thread() {
             @Override
             public void run() {
                 try {
-                    //System.out.println("nick gia in uso");
+                    System.out.println("nick gia in uso");
                     final LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
                     //sleep of thread
-                    Thread.currentThread().sleep(2);      
+
+                    //Thread.currentThread().sleep(2);      
                     //assign the group
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
                     
                     if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
                     utils.addNormal(player, limbo.getGroup());
                     LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
-                    }
+                    } 
                 }
                 catch (Exception e) {
                 }
             }
         };
         group.start();
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
+  */
+            //event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
             /*if(utils.addNormal(player, limbo.getGroup()))
                 
             System.out.println("groupp"+limbo.getGroup()+"nome"+player);
@@ -258,7 +267,8 @@ public class AuthMePlayerListener extends PlayerListener {
                
         }
         
-        
+        // is needed this check?
+        /*
       if (PlayerCache.getInstance().isAuthenticated(name)) {   
             //System.out.println("gia tutenticato");
            
@@ -285,24 +295,27 @@ public class AuthMePlayerListener extends PlayerListener {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
             //utils.addNormal(player, limbo.getGroup());
             return;
-        }     
+        }  
+         * 
+         */
         int min = settings.getMinNickLength();
         int max = settings.getMaxNickLength();
         String regex = settings.getNickRegex();
 
         if (name.length() > max || name.length() < min) {
             
-            LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
-            utils.addNormal(player, limbo.getGroup());
-            LimboCache.getInstance().deleteLimboPlayer(name);
+            //LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+            //utils.addNormal(player, limbo.getGroup());
+            //LimboCache.getInstance().deleteLimboPlayer(name);
+             event.disallow(Result.KICK_OTHER, "Your nickname is too Short or too long");
             return;
         }
         if (!player.getName().matches(regex) || name.equals("Player")) {
-             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
+          //LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
             
             event.disallow(Result.KICK_OTHER, "Your nickname contains illegal characters. Allowed chars: " + regex);
-            utils.addNormal(player, limbo.getGroup());
-            LimboCache.getInstance().deleteLimboPlayer(name);
+           // utils.addNormal(player, limbo.getGroup());
+          //  LimboCache.getInstance().deleteLimboPlayer(name);
             return;
         }
  
@@ -371,7 +384,7 @@ public class AuthMePlayerListener extends PlayerListener {
             // TODO: rewrite how session work!
             //
              if((cur - lastLogin < timeout || timeout == 0) && !auth.getIp().equals("198.18.0.1") ) {
-                if (auth.getNickname().equals(name) && auth.getIp().equals(ip) ) {
+                if (auth.getNickname().equalsIgnoreCase(name) && auth.getIp().equals(ip) ) {
                   //  System.out.println("[Debug same name] "+auth.getNickname()+ "  "+name);
                   //  System.out.println("[Debug same ip] "+auth.getIp()+ "  "+ip);
                     PlayerCache.getInstance().addPlayer(auth);

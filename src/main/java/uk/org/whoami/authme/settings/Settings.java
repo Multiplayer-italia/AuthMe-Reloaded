@@ -408,7 +408,11 @@ public final class Settings extends Configuration {
         return getBoolean(key, false);
     }        
          
-    
+     
+    //
+    // Config option for setting and check restricted user by
+    // username;ip
+    //   
     public Boolean getRestrictedIp(String name, String ip) {
         List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
             if(restricted.isEmpty()) {
@@ -419,13 +423,35 @@ public final class Settings extends Configuration {
                 while (iter.hasNext()) {
                    String[] args =  iter.next().split(";");
                   
-                   if(args[0].equals(name)) {
-                       if(args[1].equals(ip)) {
+                   if(args[0].equals(name) && args[1].equals(ip)) {
                            return true;
-                       } else return false;
-                   } else return true;
+                   } 
                 }
             return false;
+    }
+    
+    //
+    // Config option for set playername that should bypass registration
+    // this is needed for mods like buildcraft but it is very doungerous!
+    // return true if input name is found inside string list
+    //
+    public Boolean getUnrestrictedName() {
+        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
+            if(restricted.isEmpty()) {
+                setProperty("settings.restrictions.RestrictedUser",restricted);           
+            }             return false;
+    }
+
+    //
+    // Config option for set player permissions on join, it will check
+    // if given permissions is founded in String arraty list.
+    // return true if input permissions is found inside string list
+    //
+    public Boolean getJoinPermissions() {
+        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
+            if(restricted.isEmpty()) {
+                setProperty("settings.restrictions.RestrictedUser",restricted);           
+            }             return false;
     }
     
     //
