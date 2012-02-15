@@ -192,7 +192,7 @@ public class AuthMePlayerListener extends PlayerListener {
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(final PlayerLoginEvent event) {
+    public void onPlayerLogin(PlayerLoginEvent event) {
         
        
         
@@ -307,7 +307,7 @@ public class AuthMePlayerListener extends PlayerListener {
             //LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
             //utils.addNormal(player, limbo.getGroup());
             //LimboCache.getInstance().deleteLimboPlayer(name);
-             event.disallow(Result.KICK_OTHER, "Your nickname is too Short or too long");
+            event.disallow(Result.KICK_OTHER, "Your nickname is too Short or too long");
             return;
         }
         if (!player.getName().matches(regex) || name.equals("Player")) {
@@ -363,7 +363,7 @@ public class AuthMePlayerListener extends PlayerListener {
         player.getInventory().setArmorContents(new ItemStack[0]);
         player.getInventory().setContents(new ItemStack[36]);           
         player.kickPlayer( "You are not the Owner of this account, please try another name!");
-            return;           
+        return;           
        }
        
         if (CitizensCommunicator.isNPC(player)) {

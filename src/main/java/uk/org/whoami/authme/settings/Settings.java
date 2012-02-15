@@ -19,6 +19,7 @@ package uk.org.whoami.authme.settings;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.bukkit.util.config.Configuration;
@@ -65,6 +66,7 @@ public final class Settings extends Configuration {
         getRestrictedIp("accountest" , "127.0.0.1");
         isMovementAllowed();
         getMovementRadius();
+        getJoinPermissions();
         isKickNonRegisteredEnabled();
         isForceSingleSessionEnabled();
         isForceSpawnLocOnJoinEnabled();
@@ -88,6 +90,8 @@ public final class Settings extends Configuration {
         getMySQLColumnIp();
         getMySQLColumnLastLogin();
         unRegisteredGroup();
+        getUnrestrictedName();
+        getRegisteredGroup();
         save();
     }
 
@@ -411,10 +415,11 @@ public final class Settings extends Configuration {
      
     //
     // Config option for setting and check restricted user by
-    // username;ip
+    // username;ip , return false if ip and name doesnt amtch with
+    // player that join the server, so player has a restricted access
     //   
     public Boolean getRestrictedIp(String name, String ip) {
-        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
+        List<String> restricted = getStringList("settings.restrictions.AllowedRestrictedUser", new ArrayList<String>());
             if(restricted.isEmpty()) {
                 setProperty("settings.restrictions.RestrictedUser",restricted);           
             }     
@@ -422,8 +427,9 @@ public final class Settings extends Configuration {
               Iterator<String> iter = restricted.iterator();
                 while (iter.hasNext()) {
                    String[] args =  iter.next().split(";");
-                  
+                  //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
                    if(args[0].equals(name) && args[1].equals(ip)) {
+                       //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
                            return true;
                    } 
                 }
@@ -435,11 +441,13 @@ public final class Settings extends Configuration {
     // this is needed for mods like buildcraft but it is very doungerous!
     // return true if input name is found inside string list
     //
-    public Boolean getUnrestrictedName() {
-        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
-            if(restricted.isEmpty()) {
-                setProperty("settings.restrictions.RestrictedUser",restricted);           
-            }             return false;
+    public List<String> getUnrestrictedName() {
+        List<String> unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
+            if(unrestricted.isEmpty()) {
+                unrestricted = Arrays.asList("mynameisunrestricted");
+                setProperty("settings.unrestrictions.UnrestrictedName",unrestricted);           
+            }             
+            return unrestricted;
     }
 
     //
@@ -447,16 +455,16 @@ public final class Settings extends Configuration {
     // if given permissions is founded in String arraty list.
     // return true if input permissions is found inside string list
     //
-    public Boolean getJoinPermissions() {
-        List<String> restricted = getStringList("settings.restrictions.RestrictedUser", new ArrayList<String>());
+    public List<String> getJoinPermissions() {
+        List<String> restricted = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
             if(restricted.isEmpty()) {
-                setProperty("settings.restrictions.RestrictedUser",restricted);           
-            }             return false;
+                setProperty("GroupOptions.Permissions.PermissionsOnJoin",restricted);           
+            }
+       return restricted;
     }
     
     //
     // Config option of different group settings about UNREGISTERED, REGISTERED
-    // LOGGEDIN and NOTLOGGEDIN state.
     //
     public String unRegisteredGroup() {
         String key = "GroupOptions.UnregisteredPlayerGroup";
@@ -465,7 +473,15 @@ public final class Settings extends Configuration {
         }
         return getString(key);        
     }
-        
+   
+    public String getRegisteredGroup() {
+        String key = "GroupOptions.RegisteredPlayerGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);        
+    }    
+
     public static Settings getInstance() {
         if (singleton == null) {
             singleton = new Settings();

@@ -121,7 +121,7 @@ public class RegisterCommand implements CommandExecutor {
             if (limbo != null) {
                 player.getInventory().setContents(limbo.getInventory());
                 player.getInventory().setArmorContents(limbo.getArmour());
-                player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
+                player.setGameMode(GameMode.getByValue(limbo.getGameMode()));      
                 if (settings.isTeleportToSpawnEnabled()) {
                     player.teleport(limbo.getLoc());
                 }
@@ -129,8 +129,10 @@ public class RegisterCommand implements CommandExecutor {
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
                 LimboCache.getInstance().deleteLimboPlayer(name);
             }
-
-            player.sendMessage(m._("registered"));
+            if(!settings.getRegisteredGroup().isEmpty()){
+            Utils.getInstance().setGroup(player, Utils.groupType.REGISTERED);
+            }
+            player.sendMessage(m._("registered"));    
             ConsoleLogger.info(player.getDisplayName() + " registered "+player.getAddress().getAddress().getHostAddress());
 
         } catch (NoSuchAlgorithmException ex) {

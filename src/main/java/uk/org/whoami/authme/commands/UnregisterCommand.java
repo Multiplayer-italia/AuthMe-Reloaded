@@ -27,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import uk.org.whoami.authme.ConsoleLogger;
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
 import uk.org.whoami.authme.datasource.DataSource;
@@ -90,7 +91,9 @@ public class UnregisterCommand implements CommandExecutor {
                     LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
                 }
                 sched.scheduleSyncDelayedTask(plugin, new MessageTask(plugin, name, m._("reg_msg"), interval));
-
+                if(!settings.unRegisteredGroup().isEmpty()){
+                Utils.getInstance().setGroup(player, Utils.groupType.UNREGISTERED);
+                }
                 player.sendMessage("unregistered");
                 ConsoleLogger.info(player.getDisplayName() + " unregistered himself");
             } else {

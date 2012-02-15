@@ -32,6 +32,12 @@ public class Utils {
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
                 AuthMe.permission.playerAddGroup(player, settings.unRegisteredGroup());
                 break;
+            }
+            case REGISTERED: {
+                String currentGroup = AuthMe.permission.getPrimaryGroup(player);
+                AuthMe.permission.playerRemoveGroup(player, currentGroup);
+                AuthMe.permission.playerAddGroup(player, settings.getRegisteredGroup());
+                break;
             }                
         }
         return;
