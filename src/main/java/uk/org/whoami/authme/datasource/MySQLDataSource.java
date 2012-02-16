@@ -88,9 +88,9 @@ public class MySQLDataSource implements DataSource {
                     + columnPassword + " VARCHAR(255) NOT NULL,"
                     + columnIp + " VARCHAR(40) NOT NULL,"
                     + columnLastLogin + " BIGINT,"
-                    + "x smallint(6),"
-                    + "y smallint(6),"
-                    + "z smallint(6),"
+                    + "x smallint(6) DEFAULT '0',"
+                    + "y smallint(6) DEFAULT '0',"
+                    + "z smallint(6) DEFAULT '0',"
                     + "CONSTRAINT table_const_prim PRIMARY KEY (id));");
 
             rs = con.getMetaData().getColumns(null, null, tableName, columnIp);
@@ -108,7 +108,7 @@ public class MySQLDataSource implements DataSource {
             rs = con.getMetaData().getColumns(null, null, tableName, "x");
             if (!rs.next()) {
                 st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN x smallint(6) NOT NULL AFTER "
-                        + columnLastLogin +" , ADD y smallint(6) NOT NULL AFTER x , ADD z smallint(6) NOT NULL AFTER y;");
+                        + columnLastLogin +" , ADD y smallint(6) NOT NULL DEFAULT '0' AFTER x , ADD z  DEFAULT '0' smallint(6) NOT NULL DEFAULT '0' AFTER y;");
             }            
         } finally {
             close(rs);

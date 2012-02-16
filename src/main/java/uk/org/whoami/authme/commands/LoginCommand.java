@@ -112,23 +112,23 @@ public class LoginCommand implements CommandExecutor {
                                      if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)  ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
-                                     System.out.println("quit location from db:"+quitLoc);
+                                     //System.out.println("quit location from db:"+quitLoc);
                                      } else {
                                     player.sendMessage(m._("unsafe_spawn"));
                                     player.teleport(player.getWorld().getSpawnLocation());
                                     }
                                  } else {
                                  player.teleport(limbo.getLoc());
-                                 System.out.println("quit location from bukkit:"+limbo.getLoc());
+                                 //System.out.println("quit location from bukkit:"+limbo.getLoc());
                                  }
                              
                              } else {
                                  if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0 ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
-                                     System.out.println("quit location from db:"+quitLoc);
+                                     //System.out.println("quit location from db:"+quitLoc);
                                  } else {
-                                  System.out.println("quit location from bukkit:"+limbo.getLoc());
+                                  //System.out.println("quit location from bukkit:"+limbo.getLoc());
                                  player.teleport(limbo.getLoc());
                                  }
                              }  
@@ -147,10 +147,11 @@ public class LoginCommand implements CommandExecutor {
                               }
                           Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                           player.teleport(quitLoc);  
-                          System.out.println("quit location from db:"+quitLoc);
+                          //System.out.println("quit location from db:"+quitLoc);
                         } else {
                                 player.teleport(limbo.getLoc());
-                                System.out.println("quit location from bukkit:"+limbo.getLoc()); }  
+                                //System.out.println("quit location from bukkit:"+limbo.getLoc()); 
+                                }  
                         }
                     } 
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());

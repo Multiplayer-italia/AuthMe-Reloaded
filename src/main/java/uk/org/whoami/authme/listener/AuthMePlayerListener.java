@@ -80,7 +80,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
         
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -119,7 +119,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -154,7 +154,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -204,10 +204,10 @@ public class AuthMePlayerListener extends PlayerListener {
         final Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
         
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
-
+        
         if(data.isAuthAvailable(name) && !LimboCache.getInstance().hasLimboPlayer(name)) {
             if(!settings.isSessionsEnabled()) {
             //System.out.println("resetta il nick");  
@@ -366,7 +366,7 @@ public class AuthMePlayerListener extends PlayerListener {
         return;           
        }
        
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
  /* Why it has to return if a player is already authenticated? when should this happen?       
@@ -460,7 +460,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
     } 
     
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -491,7 +491,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         
         
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
         
@@ -533,7 +533,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -559,7 +559,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -585,7 +585,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -609,7 +609,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 
@@ -633,7 +633,7 @@ public class AuthMePlayerListener extends PlayerListener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
             return;
         }
 

@@ -45,7 +45,7 @@ public class Messages extends Configuration {
         map.put("reg_only", "Registered players only! Please visit http://example.com to register");
         map.put("valid_session", "&cSession login");
         map.put("login_msg", "&cPlease login with \"/login password\"");
-        map.put("reg_msg", "&cPlease register with \"/register password\"");
+        map.put("reg_msg", "&cPlease register with \"/register password ConfirmPassword\"");
         map.put("timeout", "Login Timeout");
         map.put("wrong_pwd", "&cWrong password");
         map.put("logout", "&cSuccessful logout");
@@ -55,7 +55,7 @@ public class Messages extends Configuration {
         map.put("login", "&cSuccessful login!");
         map.put("no_perm", "&cNo Permission");
         map.put("same_nick", "Same nick is already playing");
-        map.put("reg_voluntarily", "You can register your nickname with the server with the command \"/register password\"");
+        map.put("reg_voluntarily", "You can register your nickname with the server with the command \"/register password ConfirmPassword\"");
         map.put("reload", "Configuration and database has been reloaded");
         map.put("error", "An error ocurred; Please contact the admin");
         map.put("unknown_user", "User is not in database");

@@ -37,7 +37,10 @@ public final class Settings extends Configuration {
     public static final String AUTH_FILE = Settings.PLUGIN_FOLDER + "/auths.db";
     public static final String MESSAGE_FILE = Settings.PLUGIN_FOLDER + "/messages.yml";
     public static final String SETTINGS_FILE = Settings.PLUGIN_FOLDER + "/config.yml";
+    private List<String> joinPerm = null;
+    private List<String> unrestricted = null;
     private static Settings singleton;
+    
 
     private Settings() {
         super(new File(Settings.PLUGIN_FOLDER + "/config.yml"));
@@ -66,7 +69,7 @@ public final class Settings extends Configuration {
         getRestrictedIp("accountest" , "127.0.0.1");
         isMovementAllowed();
         getMovementRadius();
-        getJoinPermissions();
+        getcJoinPermissions();
         isKickNonRegisteredEnabled();
         isForceSingleSessionEnabled();
         isForceSpawnLocOnJoinEnabled();
@@ -90,7 +93,7 @@ public final class Settings extends Configuration {
         getMySQLColumnIp();
         getMySQLColumnLastLogin();
         unRegisteredGroup();
-        getUnrestrictedName();
+        getcUnrestrictedName();
         getRegisteredGroup();
         save();
     }
@@ -441,26 +444,35 @@ public final class Settings extends Configuration {
     // this is needed for mods like buildcraft but it is very doungerous!
     // return true if input name is found inside string list
     //
-    public List<String> getUnrestrictedName() {
-        List<String> unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
+    private List<String> getcUnrestrictedName() {
+        this.unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
             if(unrestricted.isEmpty()) {
-                unrestricted = Arrays.asList("mynameisunrestricted");
+                //unrestricted = Arrays.asList("mynameisunrestricted");
                 setProperty("settings.unrestrictions.UnrestrictedName",unrestricted);           
             }             
             return unrestricted;
     }
-
+    
+    public List<String> getUnrestrictedName(){
+        return this.unrestricted;
+        
+    }
+    
     //
     // Config option for set player permissions on join, it will check
     // if given permissions is founded in String arraty list.
     // return true if input permissions is found inside string list
     //
-    public List<String> getJoinPermissions() {
-        List<String> restricted = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
-            if(restricted.isEmpty()) {
-                setProperty("GroupOptions.Permissions.PermissionsOnJoin",restricted);           
+    private List<String> getcJoinPermissions() {
+        this.joinPerm = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
+            if(joinPerm.isEmpty()) {
+                setProperty("GroupOptions.Permissions.PermissionsOnJoin",joinPerm);           
             }
-       return restricted;
+       return joinPerm;
+    }
+    
+    public List<String> getJoinPermissions() {
+        return this.joinPerm;
     }
     
     //

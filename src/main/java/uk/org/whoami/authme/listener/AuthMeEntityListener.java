@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.citizens.CitizensCommunicator;
 import uk.org.whoami.authme.datasource.DataSource;
@@ -56,7 +57,7 @@ public class AuthMeEntityListener extends EntityListener {
             return;
         }
         */
-        if(CitizensCommunicator.isNPC(entity)) {
+        if(CitizensCommunicator.isNPC(entity) || Utils.getInstance().isUnrestricted((Player)entity)) {
             return;
         }
 
