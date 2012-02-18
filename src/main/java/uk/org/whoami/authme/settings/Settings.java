@@ -424,19 +424,21 @@ public final class Settings extends Configuration {
     public Boolean getRestrictedIp(String name, String ip) {
         List<String> restricted = getStringList("settings.restrictions.AllowedRestrictedUser", new ArrayList<String>());
             if(restricted.isEmpty()) {
-                setProperty("settings.restrictions.RestrictedUser",restricted);           
+                setProperty("settings.restrictions.AllowedRestrictedUser",restricted);           
             }     
             
               Iterator<String> iter = restricted.iterator();
                 while (iter.hasNext()) {
                    String[] args =  iter.next().split(";");
                   //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
-                   if(args[0].equals(name) && args[1].equals(ip)) {
+                   if(args[0].equals(name) ) {
+                           if(args[1].equals(ip)) {
                        //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
                            return true;
-                   } 
+                            } else return false;
+                        } 
                 }
-            return false;
+            return true;
     }
     
     //
