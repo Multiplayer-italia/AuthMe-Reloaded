@@ -43,6 +43,7 @@ import uk.org.whoami.authme.datasource.MySQLDataSource;
 import uk.org.whoami.authme.listener.AuthMeBlockListener;
 import uk.org.whoami.authme.listener.AuthMeEntityListener;
 import uk.org.whoami.authme.listener.AuthMePlayerListener;
+import uk.org.whoami.authme.listener.AuthMeSpoutListener;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
 import uk.org.whoami.authme.task.MessageTask;
@@ -53,6 +54,7 @@ import org.bukkit.Server;
 
 public class AuthMe extends JavaPlugin {
 
+    private static AuthMe instance = null;
     private DataSource database;
     private Settings settings;
     private Utils utils;
@@ -104,6 +106,8 @@ public class AuthMe extends JavaPlugin {
         pm.registerEvents(new AuthMePlayerListener(this, database),this);
         pm.registerEvents(new AuthMeBlockListener(database),this);
         pm.registerEvents(new AuthMeEntityListener(database),this);
+        if (pm.isPluginEnabled("Spout"))
+    		pm.registerEvents(new AuthMeSpoutListener(database), this);
         
         //Find Permissions
         RegisteredServiceProvider<Permission> permissionProvider =
@@ -192,6 +196,9 @@ public class AuthMe extends JavaPlugin {
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
         }
     }
-  
+    
+	public static AuthMe getInstance() {
+		return instance;
+	}
   
 }
