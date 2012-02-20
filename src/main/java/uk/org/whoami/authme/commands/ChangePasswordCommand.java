@@ -58,7 +58,15 @@ public class ChangePasswordCommand implements CommandExecutor {
             player.sendMessage(m._("not_logged_in"));
             return true;
         }
-
+        
+        //
+        // Check to prevent Changing Password if is active VBullettin system
+        //
+        if(!settings.getMySQLColumnSalt().isEmpty()) {
+            player.sendMessage(m._("You can Change Your Password on Vbullettin Forum panel!"));
+            return true;            
+        }
+        
         if (args.length != 2) {
             player.sendMessage(m._("Usage: /changepassword oldPassword newPassword"));
             return true;

@@ -41,6 +41,9 @@ public class MySQLDataSource implements DataSource {
     private String columnPassword;
     private String columnIp;
     private String columnLastLogin;
+    private String columnSalt;
+    private String columnGroup;
+    private int nonActivatedGroup;
     private MiniConnectionPoolManager conPool;
 
     public MySQLDataSource() throws ClassNotFoundException, SQLException {
@@ -56,6 +59,9 @@ public class MySQLDataSource implements DataSource {
         this.columnPassword = s.getMySQLColumnPassword();
         this.columnIp = s.getMySQLColumnIp();
         this.columnLastLogin = s.getMySQLColumnLastLogin();
+        this.columnSalt = s.getMySQLColumnSalt();
+        this.columnGroup = s.getMySQLColumnGroup();
+        this.nonActivatedGroup = s.getNonActivatedGroup();
 
         connect();
         setup();
@@ -125,8 +131,9 @@ public class MySQLDataSource implements DataSource {
         ResultSet rs = null;
         try {
             con = conPool.getValidConnection();
-            pst = con.prepareStatement("SELECT * FROM " + tableName + " WHERE "
-                    + columnName + "=?;");
+             pst = con.prepareStatement("SELECT * FROM " + tableName + " WHERE "
+                    + columnName + "=?;");               
+            
             pst.setString(1, user);
             rs = pst.executeQuery();
             return rs.next();
@@ -158,6 +165,9 @@ public class MySQLDataSource implements DataSource {
                 if (rs.getString(columnIp).isEmpty() ) {
                     return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                 } else {
+                        if(!columnSalt.isEmpty()){
+                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
+                        } else
                     return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                 }
             } else {

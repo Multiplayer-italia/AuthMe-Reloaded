@@ -46,6 +46,9 @@ public class Utils {
     }
   
     public String removeAll(Player player) {
+        if(!Utils.getInstance().useGroupSystem()){
+            return null;
+        }
         
         /*if (AuthMe.permission.playerAdd(this.player,"-*") ) {
             AuthMe.permission.playerAdd(this.player,"authme.login");
@@ -68,6 +71,9 @@ public class Utils {
     }
     
     public boolean addNormal(Player player, String group) {
+       if(!Utils.getInstance().useGroupSystem()){
+            return false;
+        }
        // System.out.println("in add normal");
        /* if (AuthMe.permission.playerRemove(this.player, "-*"))
             return true;
@@ -114,6 +120,10 @@ public class Utils {
         
         return singleton;
     } 
+    
+    private boolean useGroupSystem() {
+        return settings.isPermissionCheckEnabled();
+    }
      
     public enum groupType {
         UNREGISTERED, REGISTERED, NOTLOGGEDIN, LOGGEDIN

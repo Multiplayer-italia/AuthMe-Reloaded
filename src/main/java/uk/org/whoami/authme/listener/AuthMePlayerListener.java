@@ -208,6 +208,15 @@ public class AuthMePlayerListener extends PlayerListener {
             return;
         }
         
+        //
+        // If this check will fail mean that some permissions bypass kick, so player has to be
+        // Switched on nonloggedIn group and try another time this kick!!
+        //
+        if(player.isOnline() && settings.isForceSingleSessionEnabled() ) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
+            return;
+        }
+        
         if(data.isAuthAvailable(name) && !LimboCache.getInstance().hasLimboPlayer(name)) {
             if(!settings.isSessionsEnabled()) {
             //System.out.println("resetta il nick");  

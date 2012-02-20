@@ -64,6 +64,7 @@ public class Messages extends Configuration {
         map.put("max_reg","You have Exeded the max number of Registration for your Account"); 
         map.put("password_error","Password doesnt match");
         map.put("pass_len","Your password dind't reach the minimum length");
+        map.put("vb_nonActiv","Your Account isent Activated yet check your Emails!");        
     }
 
     private void loadFile() {

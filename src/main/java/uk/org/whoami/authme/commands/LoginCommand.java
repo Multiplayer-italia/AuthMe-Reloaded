@@ -80,10 +80,15 @@ public class LoginCommand implements CommandExecutor {
             return true;
         }
         
-        String hash = database.getAuth(name).getHash();
+        PlayerAuth hash = database.getAuth(name);
         try {
-            if (PasswordSecurity.comparePasswordWithHash(args[0], hash)) {
-                PlayerAuth auth = new PlayerAuth(name, hash, ip, new Date().getTime());
+            if (PasswordSecurity.comparePasswordWithHash(args[0], hash.getHash())) {
+                // Group id From Vbullettin Board for unactivated User
+                if(hash.getGroupId() == settings.getNonActivatedGroup()) {
+                        player.sendMessage(m._("vb_nonActiv"));
+                        return true;                  
+                }
+                PlayerAuth auth = new PlayerAuth(name, hash.getHash(), ip, new Date().getTime());
                 database.updateSession(auth);
                 PlayerCache.getInstance().addPlayer(auth);
                 LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);

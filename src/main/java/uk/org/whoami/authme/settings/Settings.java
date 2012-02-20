@@ -53,6 +53,7 @@ public final class Settings extends Configuration {
     }
 
     private void write() {
+        isPermissionCheckEnabled();
         isRegistrationEnabled();
         isForcedRegistrationEnabled();
         isTeleportToSpawnEnabled();
@@ -92,12 +93,26 @@ public final class Settings extends Configuration {
         getMySQLColumnPassword();
         getMySQLColumnIp();
         getMySQLColumnLastLogin();
+        getMySQLColumnSalt();
+        getMySQLColumnGroup();
+        getNonActivatedGroup();
         unRegisteredGroup();
         getcUnrestrictedName();
         getRegisteredGroup();
         save();
     }
-
+    
+    //
+    // This diable all group switching and permissions check!
+    //
+    public boolean isPermissionCheckEnabled() {
+        String key = "permission.EnablePermissionCheck";
+        if (getString(key) == null) {
+            setProperty(key, true);
+        }
+        return getBoolean(key, true);
+    }
+     
     public boolean isForcedRegistrationEnabled() {
         String key = "settings.registration.force";
         if (getString(key) == null) {
@@ -406,7 +421,37 @@ public final class Settings extends Configuration {
         }
         return getString(key);
     }
+
+    //
+    // Vbulletin Board Hook 3.X 4.X
+    //
+    public String getMySQLColumnSalt() {
+        String key = "VBullettinOptions.mySQLColumnSalt";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);
+    }
     
+    public String getMySQLColumnGroup() {
+        String key = "VBullettinOptions.mySQLColumnGroup";
+        if (getString(key) == null) {
+            setProperty(key, "");
+        }
+        return getString(key);
+    }
+    
+    public int getNonActivatedGroup() {
+        String key = "VBullettinOptions.nonActivedUserGroup";
+        if (getString(key) == null) {
+            setProperty(key, "-1");
+        }
+        return getInt(key, -1);
+    }
+    
+    //
+    // Check if Restriction against IP is TRUE
+    //
     public Boolean isAllowRestrictedIp() {
         String key = "settings.restrictions.AllowRestrictedUser";
         if (getString(key) == null) {
@@ -502,4 +547,6 @@ public final class Settings extends Configuration {
         }
         return singleton;
     }
+
+
 }

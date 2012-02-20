@@ -24,6 +24,9 @@ public class PlayerAuth {
     private String ip;
     private long lastLogin;
     private int x,y,z;
+    private String salt = "";
+    private String vBhash = null;
+    private int groupId;
 
     public PlayerAuth(String nickname, String hash, String ip, long lastLogin) {
         this.nickname = nickname;
@@ -47,9 +50,24 @@ public class PlayerAuth {
         this.lastLogin = lastLogin;
         this.x = x;
         this.y = y;
-        this.z = z;
-        
+        this.z = z;   
     }
+    
+    //
+    // This constructor is needed for Vbulletin board Auth!
+    //
+    public PlayerAuth(String nickname, String hash, String salt, int groupId, String ip, long lastLogin, int x, int y, int z) {
+        this.nickname = nickname;
+        this.hash = hash;
+        this.ip = ip;
+        this.lastLogin = lastLogin;
+        this.x = x;
+        this.y = y;
+        this.z = z;   
+        this.salt = salt;
+        this.groupId = groupId;
+    }
+    
     public String getIp() {
         return ip;
     }
@@ -59,7 +77,18 @@ public class PlayerAuth {
     }
 
     public String getHash() {
-        return hash;
+        if(!salt.isEmpty())
+            // Compose Vbullettin Hash System!
+            return this.vBhash = "$MD5vb$"+salt+"$"+hash;
+        else
+            return hash;
+    }
+    
+    //
+    // GroupId for unactivated User on Vbullettin Board
+    //
+    public int getGroupId() {
+        return groupId;
     }
     
     public int getQuitLocX() {

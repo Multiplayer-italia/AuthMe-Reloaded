@@ -104,7 +104,7 @@ public class PasswordSecurity {
             case SHA256:
                 String salt = createSalt(16);
                 return getSaltedHash(password, salt);
-            case MD5vb:
+            case MD5VB:
                 String salt2 = createSalt(16);
                 return getSaltedMd5(password, salt2);
             case WHIRLPOOL:
@@ -114,6 +114,8 @@ public class PasswordSecurity {
                 return getXAuth(password, xsalt);
             case PHPBB:
                 return getPhpBB(password);
+            case PLAINTEXT:
+                return getPlainText(password);
             default:
                 throw new NoSuchAlgorithmException("Unknown hash algorithm");
         }
@@ -124,7 +126,11 @@ public class PasswordSecurity {
            PhpBB checkHash = new PhpBB();
             return checkHash.phpbb_check_hash(password, hash);
         }
-            
+        // PlainText Password
+        if(hash.length() < 32 ) {
+            return hash.equals(password);
+        }
+        
         if (hash.length() == 32) {
             return hash.equals(getMD5(password));
         }
@@ -158,8 +164,12 @@ public class PasswordSecurity {
         return phpBBhash;
     }
 
+    private static String getPlainText(String password) {
+        return password;
+    }
+
     public enum HashAlgorithm {
 
-        MD5, SHA1, SHA256, WHIRLPOOL, XAUTH, MD5vb, PHPBB
+        MD5, SHA1, SHA256, WHIRLPOOL, XAUTH, MD5VB, PHPBB, PLAINTEXT
     }
 }
