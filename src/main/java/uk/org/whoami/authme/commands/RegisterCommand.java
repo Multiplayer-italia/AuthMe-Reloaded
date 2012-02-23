@@ -39,7 +39,7 @@ import uk.org.whoami.authme.settings.Settings;
 public class RegisterCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
     private DataSource database;
 
     public RegisterCommand(DataSource database) {
@@ -66,7 +66,7 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
 
-        if (!settings.isRegistrationEnabled()) {
+        if (!Settings.isRegistrationEnabled) {
             player.sendMessage(m._("reg_disabled"));
             return true;
         }
@@ -76,7 +76,7 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
         
-        if(args[0].length() < settings.getPasswordMinLen() ) {
+        if(args[0].length() < Settings.getPasswordMinLen ) {
             player.sendMessage(m._("pass_len"));
             return true;
         }
@@ -89,11 +89,11 @@ public class RegisterCommand implements CommandExecutor {
         // Check if player exeded the max number of registration
         //
         
-        if(settings.getmaxRegPerIp() > 0 ){
+        if(Settings.getmaxRegPerIp > 0 ){
             
         String ipAddress = player.getAddress().getAddress().getHostAddress();
         
-            if(database.getIps(ipAddress) >= settings.getmaxRegPerIp()) {
+            if(database.getIps(ipAddress) >= Settings.getmaxRegPerIp) {
                 //System.out.println("number of reg "+database.getIps(ipAddress));
                 player.sendMessage(m._("max_reg"));
                 return true;
@@ -104,7 +104,7 @@ public class RegisterCommand implements CommandExecutor {
         try {
             String hash;
             if (args[0].equals(args[1])) {
-                hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[0]);
+                hash = PasswordSecurity.getHash(Settings.getPasswordHash, args[0]);
             } else {
                 player.sendMessage(m._("password_error"));
                 return true;
@@ -122,14 +122,14 @@ public class RegisterCommand implements CommandExecutor {
                 player.getInventory().setContents(limbo.getInventory());
                 player.getInventory().setArmorContents(limbo.getArmour());
                 player.setGameMode(GameMode.getByValue(limbo.getGameMode()));      
-                if (settings.isTeleportToSpawnEnabled()) {
+                if (Settings.isTeleportToSpawnEnabled) {
                     player.teleport(limbo.getLoc());
                 }
 
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
                 LimboCache.getInstance().deleteLimboPlayer(name);
             }
-            if(!settings.getRegisteredGroup().isEmpty()){
+            if(!Settings.getRegisteredGroup.isEmpty()){
             Utils.getInstance().setGroup(player, Utils.groupType.REGISTERED);
             }
             player.sendMessage(m._("registered"));    

@@ -29,7 +29,7 @@ public class LimboCache {
 
     private static LimboCache singleton = null;
     private HashMap<String, LimboPlayer> cache;
-    private Settings settings = Settings.getInstance();
+   //private Settings settings = Settings.getInstance();
     private FileCache playerData = new FileCache();
     
     private LimboCache() {
@@ -66,8 +66,8 @@ public class LimboCache {
 
        
         
-        if(settings.isForceSurvivalModeEnabled()) {
-            if(settings.isResetInventoryIfCreative() && gameMode != 0 ) {
+        if(Settings.isForceSurvivalModeEnabled) {
+            if(Settings.isResetInventoryIfCreative && gameMode != 0 ) {
                player.sendMessage("Your inventory has been cleaned!");
                inv = new ItemStack[36];
                arm = new ItemStack[4];

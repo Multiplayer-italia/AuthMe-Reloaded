@@ -63,11 +63,12 @@ public class AuthMe extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        settings = Settings.getInstance();
+        settings = new Settings(this);
+        settings.loadConfigOptions();
         m = Messages.getInstance();
         server = getServer();
         
-        switch (settings.getDataSource()) {
+        switch (settings.getDataSource) {
             case FILE:
                 try {
                     database = new FileDataSource();
@@ -96,12 +97,12 @@ public class AuthMe extends JavaPlugin {
                 break;
         }
 
-        if (settings.isCachingEnabled()) {
+        if (settings.isCachingEnabled) {
             database = new CacheDataSource(database);
         }
         
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new AuthMePlayerListener(this, database),this);
+        pm.registerEvents(new AuthMePlayerListener(this,database),this);
         pm.registerEvents(new AuthMeBlockListener(database),this);
         pm.registerEvents(new AuthMeEntityListener(database),this);
         
@@ -111,8 +112,10 @@ public class AuthMe extends JavaPlugin {
         if (permissionProvider != null)
             permission = permissionProvider.getProvider();
         else {
+            if(settings.isPermissionCheckEnabled) {
             ConsoleLogger.showError("Vault and Permissions plugins is needed for enable AuthMe Reloaded!");
-            this.getServer().getPluginManager().disablePlugin(this);            
+            this.getServer().getPluginManager().disablePlugin(this);  
+            }
         }
         
         //System.out.println("[debug perm]"+permission);
@@ -128,11 +131,11 @@ public class AuthMe extends JavaPlugin {
         // Check for correct sintax in config file!
         //
         
-        if(settings.isForceExactSpawnEnabled() && !settings.isSaveQuitLocationEnabled()) {
+        if(settings.isForceExactSpawnEnabled && !settings.isSaveQuitLocationEnabled) {
             ConsoleLogger.showError("You need to enable SaveQuitLocation if you want to enable ForceExactSpawn");
             this.getServer().getPluginManager().disablePlugin(this);
         }
-        if(!settings.isForceSingleSessionEnabled()) {
+        if(!settings.isForceSingleSessionEnabled) {
             ConsoleLogger.info("ATTENTION by disabling ForceSingleSession Your server protection is set to low");
         }
         
@@ -158,7 +161,7 @@ public class AuthMe extends JavaPlugin {
             boolean authAvail = database.isAuthAvailable(name);
 
             if (authAvail) {
-                if (settings.isSessionsEnabled()) {
+                if (settings.isSessionsEnabled) {
                     PlayerAuth auth = database.getAuth(name);
                     if (auth.getNickname().equals(name) && auth.getIp().equals(ip)) {
                         PlayerCache.getInstance().addPlayer(auth);
@@ -166,9 +169,9 @@ public class AuthMe extends JavaPlugin {
                         break;
                     }
                 }
-            } else if (!settings.isForcedRegistrationEnabled()) {
+            } else if (!settings.isForcedRegistrationEnabled) {
                 break;
-            } else if (settings.isKickNonRegisteredEnabled()) {
+            } else if (settings.isKickNonRegisteredEnabled) {
                 player.kickPlayer(m._("reg_only"));
                 break;
             }
@@ -177,13 +180,13 @@ public class AuthMe extends JavaPlugin {
             player.getInventory().setArmorContents(new ItemStack[0]);
             player.getInventory().setContents(new ItemStack[36]);
 
-            if (settings.isTeleportToSpawnEnabled()) {
+            if (settings.isTeleportToSpawnEnabled) {
                 player.teleport(player.getWorld().getSpawnLocation());
             }
 
             String msg = authAvail ? m._("login_msg") : m._("reg_msg");
-            int time = settings.getRegistrationTimeout() * 20;
-            int msgInterval = settings.getWarnMessageInterval();
+            int time = settings.getRegistrationTimeout * 20;
+            int msgInterval = settings.getWarnMessageInterval;
             BukkitScheduler sched = this.getServer().getScheduler();
             if (time != 0) {
                 int id = sched.scheduleSyncDelayedTask(this, new TimeoutTask(this, name), time);
@@ -192,6 +195,5 @@ public class AuthMe extends JavaPlugin {
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
         }
     }
-  
-  
+   
 }

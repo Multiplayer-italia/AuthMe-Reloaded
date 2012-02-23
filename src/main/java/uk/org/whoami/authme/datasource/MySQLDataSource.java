@@ -47,21 +47,21 @@ public class MySQLDataSource implements DataSource {
     private MiniConnectionPoolManager conPool;
 
     public MySQLDataSource() throws ClassNotFoundException, SQLException {
-        Settings s = Settings.getInstance();
-        this.host = s.getMySQLHost();
-        this.port = s.getMySQLPort();
-        this.username = s.getMySQLUsername();
-        this.password = s.getMySQLPassword();
+        //Settings s = Settings.getInstance();
+        this.host = Settings.getMySQLHost;
+        this.port = Settings.getMySQLPort;
+        this.username = Settings.getMySQLUsername;
+        this.password = Settings.getMySQLPassword;
 
-        this.database = s.getMySQLDatabase();
-        this.tableName = s.getMySQLTablename();
-        this.columnName = s.getMySQLColumnName();
-        this.columnPassword = s.getMySQLColumnPassword();
-        this.columnIp = s.getMySQLColumnIp();
-        this.columnLastLogin = s.getMySQLColumnLastLogin();
-        this.columnSalt = s.getMySQLColumnSalt();
-        this.columnGroup = s.getMySQLColumnGroup();
-        this.nonActivatedGroup = s.getNonActivatedGroup();
+        this.database = Settings.getMySQLDatabase;
+        this.tableName = Settings.getMySQLTablename;
+        this.columnName = Settings.getMySQLColumnName;
+        this.columnPassword = Settings.getMySQLColumnPassword;
+        this.columnIp = Settings.getMySQLColumnIp;
+        this.columnLastLogin = Settings.getMySQLColumnLastLogin;
+        this.columnSalt = Settings.getMySQLColumnSalt;
+        this.columnGroup = Settings.getMySQLColumnGroup;
+        this.nonActivatedGroup = Settings.getNonActivatedGroup;
 
         connect();
         setup();

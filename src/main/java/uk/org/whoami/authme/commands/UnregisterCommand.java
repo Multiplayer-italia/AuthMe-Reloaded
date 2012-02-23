@@ -40,7 +40,7 @@ import uk.org.whoami.authme.task.TimeoutTask;
 public class UnregisterCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
     private JavaPlugin plugin;
     private DataSource database;
 
@@ -83,15 +83,15 @@ public class UnregisterCommand implements CommandExecutor {
                 player.getInventory().setArmorContents(new ItemStack[0]);
                 player.getInventory().setContents(new ItemStack[36]);
 
-                int delay = settings.getRegistrationTimeout() * 20;
-                int interval = settings.getWarnMessageInterval();
+                int delay = Settings.getRegistrationTimeout * 20;
+                int interval = Settings.getWarnMessageInterval;
                 BukkitScheduler sched = sender.getServer().getScheduler();
                 if (delay != 0) {
                     int id = sched.scheduleSyncDelayedTask(plugin, new TimeoutTask(plugin, name), delay);
                     LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
                 }
                 sched.scheduleSyncDelayedTask(plugin, new MessageTask(plugin, name, m._("reg_msg"), interval));
-                if(!settings.unRegisteredGroup().isEmpty()){
+                if(!Settings.unRegisteredGroup.isEmpty()){
                 Utils.getInstance().setGroup(player, Utils.groupType.UNREGISTERED);
                 }
                 player.sendMessage("unregistered");

@@ -19,8 +19,8 @@ package uk.org.whoami.authme.listener;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
@@ -30,10 +30,10 @@ import uk.org.whoami.authme.citizens.CitizensCommunicator;
 import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.settings.Settings;
 
-public class AuthMeEntityListener extends EntityListener {
+public class AuthMeEntityListener implements Listener{
 
     private DataSource data;
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
 
     public AuthMeEntityListener(DataSource data) {
         this.data = data;
@@ -69,7 +69,7 @@ public class AuthMeEntityListener extends EntityListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -96,7 +96,7 @@ public class AuthMeEntityListener extends EntityListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -123,7 +123,7 @@ public class AuthMeEntityListener extends EntityListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }

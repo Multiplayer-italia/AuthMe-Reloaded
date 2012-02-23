@@ -34,7 +34,7 @@ import uk.org.whoami.authme.settings.Settings;
 public class ChangePasswordCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
     private DataSource database;
 
     public ChangePasswordCommand(DataSource database) {
@@ -62,7 +62,7 @@ public class ChangePasswordCommand implements CommandExecutor {
         //
         // Check to prevent Changing Password if is active VBullettin system
         //
-        if(!settings.getMySQLColumnSalt().isEmpty()) {
+        if(!Settings.getMySQLColumnSalt.isEmpty()) {
             player.sendMessage(m._("You can Change Your Password on Vbullettin Forum panel!"));
             return true;            
         }
@@ -73,7 +73,7 @@ public class ChangePasswordCommand implements CommandExecutor {
         }
 
         try {
-            String hashnew = PasswordSecurity.getHash(settings.getPasswordHash(), args[1]);
+            String hashnew = PasswordSecurity.getHash(Settings.getPasswordHash, args[1]);
 
             if (PasswordSecurity.comparePasswordWithHash(args[0], PlayerCache.getInstance().getAuth(name).getHash())) {
                 PlayerAuth auth = PlayerCache.getInstance().getAuth(name);

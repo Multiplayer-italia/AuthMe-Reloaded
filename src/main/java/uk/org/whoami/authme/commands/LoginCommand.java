@@ -41,7 +41,7 @@ import uk.org.whoami.authme.settings.Settings;
 public class LoginCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
     private Utils utils = Utils.getInstance();
     private DataSource database;
     private FileCache playerCache = new FileCache();
@@ -84,7 +84,7 @@ public class LoginCommand implements CommandExecutor {
         try {
             if (PasswordSecurity.comparePasswordWithHash(args[0], hash.getHash())) {
                 // Group id From Vbullettin Board for unactivated User
-                if(hash.getGroupId() == settings.getNonActivatedGroup()) {
+                if(hash.getGroupId() == Settings.getNonActivatedGroup) {
                         player.sendMessage(m._("vb_nonActiv"));
                         return true;                  
                 }
@@ -106,14 +106,14 @@ public class LoginCommand implements CommandExecutor {
                    // TODO: completly rewrite this part, too much if, else ...
                    // check quit location, check correct spawn, 
                    //
-                    if (settings.isTeleportToSpawnEnabled() && !settings.isForceSpawnLocOnJoinEnabled()) {                  
-                             if(settings.isForceExactSpawnEnabled() ) {
+                    if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
+                             if(Settings.isForceExactSpawnEnabled ) {
                                  // This is initial work around for prevent ppl to quit on bukkit bug
                                  // take last quit location from database and subtract y from safe spawn             
                                  // if the error range is smaller then 1, player can come back in his quit location
                                  // otherwise he try to spawn in a unsafe location!
                                 
-                                 if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
+                                 if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
                                      if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)  ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
@@ -128,7 +128,7 @@ public class LoginCommand implements CommandExecutor {
                                  }
                              
                              } else {
-                                 if(settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0 ) {
+                                 if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0 ) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc);
                                      //System.out.println("quit location from db:"+quitLoc);
@@ -138,11 +138,11 @@ public class LoginCommand implements CommandExecutor {
                                  }
                              }  
                     } else {
-                        if(settings.isForceSpawnLocOnJoinEnabled()) {
+                        if(Settings.isForceSpawnLocOnJoinEnabled) {
                             player.teleport(player.getWorld().getSpawnLocation());  
                         } else {
-                        if ( settings.isSaveQuitLocationEnabled() && database.getAuth(name).getQuitLocY() != 0) {
-                              if( settings.isForceExactSpawnEnabled() ) {
+                        if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
+                              if( Settings.isForceExactSpawnEnabled ) {
                                  if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)) {  
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
                                      player.teleport(quitLoc); }
@@ -171,7 +171,7 @@ public class LoginCommand implements CommandExecutor {
                 
             } else {
                 ConsoleLogger.info(player.getDisplayName() + " used the wrong password");
-                if (settings.isKickOnWrongPasswordEnabled()) {
+                if (Settings.isKickOnWrongPasswordEnabled) {
                     player.kickPlayer(m._("wrong_pwd"));
                 } else {
                     player.sendMessage(m._("wrong_pwd"));

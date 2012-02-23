@@ -18,8 +18,8 @@ package uk.org.whoami.authme.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import uk.org.whoami.authme.Utils;
@@ -28,10 +28,10 @@ import uk.org.whoami.authme.citizens.CitizensCommunicator;
 import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.settings.Settings;
 
-public class AuthMeBlockListener extends BlockListener {
+public class AuthMeBlockListener implements Listener {
 
     private DataSource data;
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
 
     public AuthMeBlockListener(DataSource data) {
         this.data = data;
@@ -55,7 +55,7 @@ public class AuthMeBlockListener extends BlockListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -81,7 +81,7 @@ public class AuthMeBlockListener extends BlockListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }

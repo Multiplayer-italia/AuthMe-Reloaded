@@ -16,6 +16,7 @@
 
 package uk.org.whoami.authme.commands;
 
+import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
@@ -23,6 +24,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -34,7 +39,7 @@ import uk.org.whoami.authme.settings.Settings;
 public class AdminCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
-    private Settings settings = Settings.getInstance();
+    //private Settings settings = Settings.getInstance();
     private DataSource database;
 
     public AdminCommand(DataSource database) {
@@ -71,7 +76,17 @@ public class AdminCommand implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("reload")) {
             database.reload();
-            settings.reload();
+            
+            YamlConfiguration newConfig = Settings.loadConfiguration(new File("plugins/AuthMe","config.yml"));
+            //PluginManager pm = sender.getServer().getPluginManager();
+            //Plugin plugin = pm.getPlugin("AuthMe");
+            //System.err.println(plugin);
+            //Settings setting = new Settings(plugin);
+            //setting.reload();
+            Settings.reloadConfigOptions(newConfig);       
+            //settings.clearDefaults();
+            //setting.load();
+            //setting.reload();
             m.reload();
             sender.sendMessage(m._("reload"));
         } else if (args[0].equalsIgnoreCase("register")) {
@@ -82,7 +97,7 @@ public class AdminCommand implements CommandExecutor {
 
             try {
                 String name = args[1].toLowerCase();
-                String hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[2]);
+                String hash = PasswordSecurity.getHash(Settings.getPasswordHash, args[2]);
 
                 if (database.isAuthAvailable(name)) {
                     sender.sendMessage(m._("user_regged"));
@@ -108,7 +123,7 @@ public class AdminCommand implements CommandExecutor {
 
             try {
                 String name = args[1].toLowerCase();
-                String hash = PasswordSecurity.getHash(settings.getPasswordHash(), args[2]);
+                String hash = PasswordSecurity.getHash(Settings.getPasswordHash, args[2]);
 
                 PlayerAuth auth = null;
                 if (PlayerCache.getInstance().isAuthenticated(name)) {

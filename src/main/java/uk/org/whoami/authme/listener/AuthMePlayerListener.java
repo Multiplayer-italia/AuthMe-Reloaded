@@ -29,7 +29,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -41,6 +40,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.cache.backup.DataFileCache;
 import uk.org.whoami.authme.cache.backup.FileCache;
@@ -57,9 +57,9 @@ import uk.org.whoami.authme.task.MessageTask;
 import uk.org.whoami.authme.task.TimeoutTask;
 
 
-public class AuthMePlayerListener extends PlayerListener {
+public class AuthMePlayerListener implements Listener {
 
-    private Settings settings = Settings.getInstance();
+    
     private Utils utils = Utils.getInstance();
     private Messages m = Messages.getInstance();
     private JavaPlugin plugin;
@@ -68,7 +68,7 @@ public class AuthMePlayerListener extends PlayerListener {
 
     public AuthMePlayerListener(JavaPlugin plugin, DataSource data) {
         this.plugin = plugin;
-        this.data = data;
+        this.data = data; 
     }
 
     @EventHandler
@@ -89,7 +89,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -130,13 +130,13 @@ public class AuthMePlayerListener extends PlayerListener {
         if (data.isAuthAvailable(name)) {
             player.sendMessage(m._("login_msg"));
         } else {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
             player.sendMessage(m._("reg_msg"));
         }
         
-        if (!settings.isChatAllowed()) {
+        if (!Settings.isChatAllowed) {
             //System.out.println("debug chat: chat isnt allowed");
             event.setCancelled(true);
             return;
@@ -167,20 +167,20 @@ public class AuthMePlayerListener extends PlayerListener {
             return;
         }
 
-        if (!settings.isForcedRegistrationEnabled()) {
+        if (!Settings.isForcedRegistrationEnabled) {
             return;
         }
 
-        if (!settings.isMovementAllowed()) {
+        if (!Settings.isMovementAllowed) {
             event.setTo(event.getFrom());
             return;
         }
 
-        if (settings.getMovementRadius() == 0) {
+        if (Settings.getMovementRadius == 0) {
             return;
         }
 
-        int radius = settings.getMovementRadius();
+        int radius = Settings.getMovementRadius;
         Location spawn = player.getWorld().getSpawnLocation();
         Location to = event.getTo();
 
@@ -212,13 +212,13 @@ public class AuthMePlayerListener extends PlayerListener {
         // If this check will fail mean that some permissions bypass kick, so player has to be
         // Switched on nonloggedIn group and try another time this kick!!
         //
-        if(player.isOnline() && settings.isForceSingleSessionEnabled() ) {
+        if(player.isOnline() && Settings.isForceSingleSessionEnabled ) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
             return;
         }
         
         if(data.isAuthAvailable(name) && !LimboCache.getInstance().hasLimboPlayer(name)) {
-            if(!settings.isSessionsEnabled()) {
+            if(!Settings.isSessionsEnabled) {
             //System.out.println("resetta il nick");  
             LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
             } else if(PlayerCache.getInstance().isAuthenticated(name)) {
@@ -234,7 +234,7 @@ public class AuthMePlayerListener extends PlayerListener {
        
         // Big problem on this chek
         //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
-        if(player.isOnline() && settings.isForceSingleSessionEnabled() ) {
+        if(player.isOnline() && Settings.isForceSingleSessionEnabled ) {
              LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
              //System.out.println(" limbo ? "+limbo.getGroup());
              event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
@@ -307,9 +307,9 @@ public class AuthMePlayerListener extends PlayerListener {
         }  
          * 
          */
-        int min = settings.getMinNickLength();
-        int max = settings.getMaxNickLength();
-        String regex = settings.getNickRegex();
+        int min = Settings.getMinNickLength;
+        int max = Settings.getMaxNickLength;
+        String regex = Settings.getNickRegex;
 
         if (name.length() > max || name.length() < min) {
             
@@ -340,7 +340,7 @@ public class AuthMePlayerListener extends PlayerListener {
             }
         }
        */
-        if (settings.isKickNonRegisteredEnabled()) {
+        if (Settings.isKickNonRegisteredEnabled) {
             if (!data.isAuthAvailable(name)) {    
                 event.disallow(Result.KICK_OTHER, m._("reg_only"));
 /*      what should i do in this line? 
@@ -365,7 +365,7 @@ public class AuthMePlayerListener extends PlayerListener {
         String ip = player.getAddress().getAddress().getHostAddress();
        
        
-       if(settings.isAllowRestrictedIp() && !settings.getRestrictedIp(name, ip)) {
+       if(Settings.isAllowRestrictedIp && !Settings.getRestrictedIp(name, ip)) {
         LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
@@ -384,9 +384,9 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 */
         if (data.isAuthAvailable(name)) {     
-            if (settings.isSessionsEnabled()) {
+            if (Settings.isSessionsEnabled) {
                 PlayerAuth auth = data.getAuth(name);
-                long timeout = settings.getSessionTimeout() * 60000;
+                long timeout = Settings.getSessionTimeout * 60000;
                 long lastLogin = auth.getLastLogin();
                 long cur = new Date().getTime();
             //
@@ -415,11 +415,11 @@ public class AuthMePlayerListener extends PlayerListener {
           } 
           
         } else {  
-            if(!settings.unRegisteredGroup().isEmpty()){
+            if(!Settings.unRegisteredGroup.isEmpty()){
                
                utils.setGroup(player, Utils.groupType.UNREGISTERED);
             }
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -434,13 +434,13 @@ public class AuthMePlayerListener extends PlayerListener {
          //System.out.println("player is an operator");
          player.setOp(false);
         }
-        if (settings.isTeleportToSpawnEnabled() || settings.isForceSpawnLocOnJoinEnabled()) {
+        if (Settings.isTeleportToSpawnEnabled || Settings.isForceSpawnLocOnJoinEnabled) {
             player.teleport(player.getWorld().getSpawnLocation());  
         }
 
         String msg = data.isAuthAvailable(name) ? m._("login_msg") : m._("reg_msg");
-        int time = settings.getRegistrationTimeout() * 20;
-        int msgInterval = settings.getWarnMessageInterval();
+        int time = Settings.getRegistrationTimeout * 20;
+        int msgInterval = Settings.getWarnMessageInterval;
         BukkitScheduler sched = plugin.getServer().getScheduler();
         if (time != 0) {
             int id = sched.scheduleSyncDelayedTask(plugin, new TimeoutTask(plugin, name), time);
@@ -463,7 +463,7 @@ public class AuthMePlayerListener extends PlayerListener {
     // Fix for Quit location when player where kicked for timeout
     
     if (PlayerCache.getInstance().isAuthenticated(name) ) { 
-        if(settings.isForceExactSpawnEnabled() || settings.isSaveQuitLocationEnabled() ) {
+        if(Settings.isForceExactSpawnEnabled || Settings.isSaveQuitLocationEnabled ) {
             PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
             data.updateQuitLoc(auth);
         }
@@ -506,7 +506,7 @@ public class AuthMePlayerListener extends PlayerListener {
         
         // Check for Minecraft message kick request on same nickname
 	// Work only for off-line server
-		if (settings.isForceSingleSessionEnabled()) {
+		if (Settings.isForceSingleSessionEnabled) {
 			if (event.getReason().equals("You logged in from another location")) {                        	
                             event.setCancelled(true); 
                             return;
@@ -551,7 +551,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -577,7 +577,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -603,7 +603,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -627,7 +627,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }
@@ -651,7 +651,7 @@ public class AuthMePlayerListener extends PlayerListener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!settings.isForcedRegistrationEnabled()) {
+            if (!Settings.isForcedRegistrationEnabled) {
                 return;
             }
         }

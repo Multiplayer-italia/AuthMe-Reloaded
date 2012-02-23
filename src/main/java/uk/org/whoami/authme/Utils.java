@@ -14,11 +14,11 @@ import uk.org.whoami.authme.settings.Settings;
  * @author stefano
  */
 public class Utils {
-     private Settings settings = Settings.getInstance();
+     //private Settings settings = Settings.getInstance();
      private Player player;
      private String currentGroup;
      private static Utils singleton;
-     private String unLoggedGroup = settings.getUnloggedinGroup();
+     private String unLoggedGroup = Settings.getUnloggedinGroup;
   /*   
   public Utils(Player player) {
       this.player = player;
@@ -32,13 +32,13 @@ public class Utils {
             case UNREGISTERED: {
                 String currentGroup = AuthMe.permission.getPrimaryGroup(player);
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
-                AuthMe.permission.playerAddGroup(player, settings.unRegisteredGroup());
+                AuthMe.permission.playerAddGroup(player, Settings.unRegisteredGroup);
                 break;
             }
             case REGISTERED: {
                 String currentGroup = AuthMe.permission.getPrimaryGroup(player);
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
-                AuthMe.permission.playerAddGroup(player, settings.getRegisteredGroup());
+                AuthMe.permission.playerAddGroup(player, Settings.getRegisteredGroup);
                 break;
             }                
         }
@@ -87,9 +87,9 @@ public class Utils {
     }    
 
     private String hasPermOnJoin(Player player) {
-        if(settings.getJoinPermissions().isEmpty())
+        if(Settings.getJoinPermissions().isEmpty())
             return null;
-              Iterator<String> iter = settings.getJoinPermissions().iterator();
+              Iterator<String> iter = Settings.getJoinPermissions().iterator();
                 while (iter.hasNext()) {
                     String permission = iter.next();
                  // System.out.println("permissions? "+ permission);
@@ -103,16 +103,20 @@ public class Utils {
     }
     
     public boolean isUnrestricted(Player player) {
-        if(settings.getUnrestrictedName().isEmpty() || settings.getUnrestrictedName() == null)
+        return false;
+        /*
+        if(Settings.getUnrestrictedName().isEmpty() || Settings.getUnrestrictedName() == null)
             return false;
         
      //   System.out.println("name to escape "+player.getName());
-        if(settings.getUnrestrictedName().contains(player.getName())) {
+        if(Settings.getUnrestrictedName().contains(player.getName())) {
        //     System.out.println("name to escape correctly"+player.getName());
             return true;
         }
         
         return false;
+         *
+         */
     }
      public static Utils getInstance() {
         
@@ -122,7 +126,7 @@ public class Utils {
     } 
     
     private boolean useGroupSystem() {
-        return settings.isPermissionCheckEnabled();
+        return Settings.isPermissionCheckEnabled;
     }
      
     public enum groupType {
