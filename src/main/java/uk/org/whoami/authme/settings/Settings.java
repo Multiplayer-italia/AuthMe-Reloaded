@@ -42,8 +42,8 @@ public final class Settings extends YamlConfiguration {
     public static final String AUTH_FILE = Settings.PLUGIN_FOLDER + "/auths.db";
     public static final String MESSAGE_FILE = Settings.PLUGIN_FOLDER + "/messages.yml";
     public static final String SETTINGS_FILE = Settings.PLUGIN_FOLDER + "/config.yml";
-    private static List<String> joinPerm = null;
-    private static List<String> unrestricted = null;
+    public static List<String> getJoinPermissions = null;
+    public static List<String> getUnrestrictedName = null;
     private static List<String> getRestrictedIp;
     private static Settings singleton;
     public final Plugin plugin;
@@ -91,7 +91,7 @@ public final class Settings extends YamlConfiguration {
         }
         
         configFile = (YamlConfiguration) plugin.getConfig();
-        
+        saveDefaults();
         
     }
    
@@ -116,7 +116,7 @@ public final class Settings extends YamlConfiguration {
         getRestrictedIp = configFile.getStringList("settings.restrictions.AllowedRestrictedUser");
         isMovementAllowed = configFile.getBoolean("settings.restrictions.allowMovement",false);
         getMovementRadius = configFile.getInt("settings.restrictions.allowedMovementRadius",100);
-        getcJoinPermissions();
+        getJoinPermissions = configFile.getStringList("GroupOptions.Permissions.PermissionsOnJoin");
         isKickOnWrongPasswordEnabled = configFile.getBoolean("settings.restrictions.kickOnWrongPassword",false);
         isKickNonRegisteredEnabled = configFile.getBoolean("settings.restrictions.kickNonRegistered",false);
         isForceSingleSessionEnabled = configFile.getBoolean("settings.restrictions.ForceSingleSession",true);
@@ -144,7 +144,7 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnGroup = configFile.getString("VBullettinOptions.mySQLColumnGroup","");
         getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
-        //getcUnrestrictedName();
+        getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");  
         
         
@@ -171,7 +171,7 @@ public final class Settings extends YamlConfiguration {
         getRestrictedIp = configFile.getStringList("settings.restrictions.AllowedRestrictedUser");
         isMovementAllowed = configFile.getBoolean("settings.restrictions.allowMovement",false);
         getMovementRadius = configFile.getInt("settings.restrictions.allowedMovementRadius",100);
-        getcJoinPermissions();
+        getJoinPermissions = configFile.getStringList("GroupOptions.Permissions.PermissionsOnJoin");
         isKickOnWrongPasswordEnabled = configFile.getBoolean("settings.restrictions.kickOnWrongPassword",false);
         isKickNonRegisteredEnabled = configFile.getBoolean("settings.restrictions.kickNonRegistered",false);
         isForceSingleSessionEnabled = configFile.getBoolean("settings.restrictions.ForceSingleSession",true);
@@ -199,501 +199,12 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnGroup = configFile.getString("VBullettinOptions.mySQLColumnGroup","");
         getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
-        //getcUnrestrictedName();
+        getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup",""); 
         
-        System.out.println(getMySQLDatabase);
+        //System.out.println(getMySQLDatabase);
          
    }
-/*    private void write() {
-        isPermissionCheckEnabled();
-        isRegistrationEnabled();
-        isForcedRegistrationEnabled();
-        isTeleportToSpawnEnabled();
-        getWarnMessageInterval();
-        isSessionsEnabled();
-        getSessionTimeout();
-        getRegistrationTimeout();
-        isChatAllowed();
-        getMaxNickLength();
-        getMinNickLength();
-        getPasswordMinLen();
-        getNickRegex();
-        isAllowRestrictedIp();
-        getRestrictedIp("accountest" , "127.0.0.1");
-        isMovementAllowed();
-        getMovementRadius();
-        getcJoinPermissions();
-        isKickNonRegisteredEnabled();
-        isForceSingleSessionEnabled();
-        isForceSpawnLocOnJoinEnabled();
-        isForceExactSpawnEnabled();
-        isSaveQuitLocationEnabled();
-        isForceSurvivalModeEnabled();
-        isResetInventoryIfCreative();
-        getmaxRegPerIp();
-        getPasswordHash();
-        getUnloggedinGroup();
-        getDataSource();
-        isCachingEnabled();
-        getMySQLHost();
-        getMySQLPort();
-        getMySQLUsername();
-        getMySQLPassword();
-        getMySQLDatabase();
-        getMySQLTablename();
-        getMySQLColumnName();
-        getMySQLColumnPassword();
-        getMySQLColumnIp();
-        getMySQLColumnLastLogin();
-        getMySQLColumnSalt();
-        getMySQLColumnGroup();
-        getNonActivatedGroup();
-        unRegisteredGroup();
-        getcUnrestrictedName();
-        getRegisteredGroup();
-        save();
-    }
-   
-    //
-    // This diable all group switching and permissions check!
-    //
-    public boolean isPermissionCheckEnabled() {
-        String key = "permission.EnablePermissionCheck";
-        if (getString(key) == null) {
-            setProperty(key, true);
-        }
-        return getBoolean(key, true);
-    }
-     
-    public boolean isForcedRegistrationEnabled() {
-        String key = "settings.registration.force";
-        if (getString(key) == null) {
-            setProperty(key, true);
-        }
-        return getBoolean(key, true);
-    }
-
-    public boolean isRegistrationEnabled() {
-        String key = "settings.registration.enabled";
-        if (getString(key) == null) {
-            setProperty(key, true);
-        }
-        return getBoolean(key, true);
-    }
-
-    public int getWarnMessageInterval() {
-        String key = "settings.registration.messageInterval";
-        if (getString(key) == null) {
-            setProperty(key, 5);
-        }
-        return getInt(key, 5);
-    }
-
-    public boolean isSessionsEnabled() {
-        String key = "settings.sessions.enabled";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-    
-    public int getSessionTimeout() {
-        String key = "settings.sessions.timeout";
-        if (getString(key) == null) {
-            setProperty(key, 10);
-        }
-        return getInt(key, 10);
-    }
-
-    public boolean isKickOnWrongPasswordEnabled() {
-        String key = "settings.restrictions.kickOnWrongPassword";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-
-    public int getMinNickLength() {
-        String key = "settings.restrictions.minNicknameLength";
-        if (getString(key) == null) {
-            setProperty(key, 3);
-        }
-        return getInt(key, 3);
-    }
-
-    public int getmaxRegPerIp() {
-        String key = "settings.restrictions.maxRegPerIp";
-        if (getString(key) == null) {
-            setProperty(key, 1);
-        }
-        return getInt(key, 1);        
-    }
-    
-    public int getMaxNickLength() {
-        String key = "settings.restrictions.maxNicknameLength";
-        if (getString(key) == null) {
-            setProperty(key, 20);
-        }
-        return getInt(key, 20);
-    }
-
-    public String getNickRegex() {
-        String key = "settings.restrictions.allowedNicknameCharacters";
-        if (getString(key) == null) {
-            setProperty(key, "[a-zA-Z0-9_?]*");
-        }
-        return getString(key, "[a-zA-Z0-9_?]*");
-    }
-
-    public int getRegistrationTimeout() {
-        String key = "settings.restrictions.timeout";
-        if (getString(key) == null) {
-            setProperty(key, 30);
-        }
-        return getInt(key, 30);
-    }
-
-    public boolean isChatAllowed() {
-        String key = "settings.restrictions.allowChat";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-
-    public boolean isMovementAllowed() {
-        String key = "settings.restrictions.allowMovement";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-
-    public int getMovementRadius() {
-        String key = "settings.restrictions.allowedMovementRadius";
-        if (getString(key) == null) {
-            setProperty(key, 100);
-        }
-        return getInt(key, 100);
-    }
-
-    public boolean isKickNonRegisteredEnabled() {
-        String key = "settings.restrictions.kickNonRegistered";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-    
-    public boolean isForceSingleSessionEnabled() {
-        String key = "settings.restrictions.ForceSingleSession";
-        if (getString(key) == null) {
-            setProperty(key, true);
-        }
-        return getBoolean(key, true);
-    }
-    
-    public boolean isForceExactSpawnEnabled() {
-        String key = "settings.restrictions.ForceExactSpawn";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-               
-    public boolean isSaveQuitLocationEnabled() {
-        String key = "settings.restrictions.SaveQuitLocation";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-    
-    public boolean isForceSpawnLocOnJoinEnabled() {
-        String key = "settings.restrictions.ForceSpawnLocOnJoinEnabled";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);        
-    }
-    
-    public boolean isTeleportToSpawnEnabled() {
-        String key = "settings.restrictions.teleportUnAuthedToSpawn";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }
-    
-    public boolean isForceSurvivalModeEnabled() {
-        String key = "settings.GameMode.ForceSurvivalMode";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);        
-    }
-
-    public boolean isResetInventoryIfCreative() {
-        String key = "settings.GameMode.ResetInventotyIfCreative";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);        
-    }
-    
-    public HashAlgorithm getPasswordHash() {
-        String key = "settings.security.passwordHash";
-        if (getString(key) == null) {
-            setProperty(key, "SHA256");
-        }
-
-        try {
-            return PasswordSecurity.HashAlgorithm.valueOf(getString(key).toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            ConsoleLogger.showError("Unknown Hash Algorithm; defaulting to SHA256");
-            return PasswordSecurity.HashAlgorithm.SHA256;
-        }
-    }
-
-    public int getPasswordMinLen() {
-        String key = "settings.security.minPasswordLength";
-        if (getString(key) == null) {
-            setProperty(key, 4);
-        }
-        return getInt(key, 4);        
-    }
-    
-    public String getUnloggedinGroup() {
-        String key = "settings.security.unLoggedinGroup";
-        if (getString(key) == null) {
-            setProperty(key, "unLoggedinGroup");
-        }
-        return getString(key, "unLoggedinGroup*");
-            
-    }
-    
-    public boolean isCachingEnabled() {
-        String key = "DataSource.caching";
-        if (getString(key) == null) {
-            setProperty(key, true);
-        }
-        return getBoolean(key, true);
-    }
-
-    public DataSourceType getDataSource() {
-        String key = "DataSource.backend";
-        if (getString(key) == null) {
-            setProperty(key, "file");
-        }
-
-        try {
-            return DataSource.DataSourceType.valueOf(getString(key).toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            ConsoleLogger.showError("Unknown database backend; defaulting to file database");
-            return DataSource.DataSourceType.FILE;
-        }
-    }
-
-    public String getMySQLHost() {
-        String key = "DataSource.mySQLHost";
-        if (getString(key) == null) {
-            setProperty(key, "127.0.0.1");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLPort() {
-        String key = "DataSource.mySQLPort";
-        if (getString(key) == null) {
-            setProperty(key, "3306");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLUsername() {
-        String key = "DataSource.mySQLUsername";
-        if (getString(key) == null) {
-            setProperty(key, "authme");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLPassword() {
-        String key = "DataSource.mySQLPassword";
-        if (getString(key) == null) {
-            setProperty(key, "12345");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLDatabase() {
-        String key = "DataSource.mySQLDatabase";
-        if (getString(key) == null) {
-            setProperty(key, "authme");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLTablename() {
-        String key = "DataSource.mySQLTablename";
-        if (getString(key) == null) {
-            setProperty(key, "authme");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLColumnName() {
-        String key = "DataSource.mySQLColumnName";
-        if (getString(key) == null) {
-            setProperty(key, "username");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLColumnPassword() {
-        String key = "DataSource.mySQLColumnPassword";
-        if (getString(key) == null) {
-            setProperty(key, "password");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLColumnIp() {
-        String key = "DataSource.mySQLColumnIp";
-        if (getString(key) == null) {
-            setProperty(key, "ip");
-        }
-        return getString(key);
-    }
-
-    public String getMySQLColumnLastLogin() {
-        String key = "DataSource.mySQLColumnLastLogin";
-        if (getString(key) == null) {
-            setProperty(key, "lastlogin");
-        }
-        return getString(key);
-    }
-
-    //
-    // Vbulletin Board Hook 3.X 4.X
-    //
-    public String getMySQLColumnSalt() {
-        String key = "VBullettinOptions.mySQLColumnSalt";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);
-    }
-    
-    public String getMySQLColumnGroup() {
-        String key = "VBullettinOptions.mySQLColumnGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);
-    }
-    
-    public int getNonActivatedGroup() {
-        String key = "VBullettinOptions.nonActivedUserGroup";
-        if (getString(key) == null) {
-            setProperty(key, "-1");
-        }
-        return getInt(key, -1);
-    }
-    
-    //
-    // Check if Restriction against IP is TRUE
-    //
-    public Boolean isAllowRestrictedIp() {
-        String key = "settings.restrictions.AllowRestrictedUser";
-        if (getString(key) == null) {
-            setProperty(key, false);
-        }
-        return getBoolean(key, false);
-    }        
-         
-     
-    //
-    // Config option for setting and check restricted user by
-    // username;ip , return false if ip and name doesnt amtch with
-    // player that join the server, so player has a restricted access
-    //   
-    public Boolean getRestrictedIp(String name, String ip) {
-        List<String> restricted = getStringList("settings.restrictions.AllowedRestrictedUser", new ArrayList<String>());
-            if(restricted.isEmpty()) {
-                setProperty("settings.restrictions.AllowedRestrictedUser",restricted);           
-            }     
-            
-              Iterator<String> iter = restricted.iterator();
-                while (iter.hasNext()) {
-                   String[] args =  iter.next().split(";");
-                  //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
-                   if(args[0].equals(name) ) {
-                           if(args[1].equals(ip)) {
-                       //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
-                           return true;
-                            } else return false;
-                        } 
-                }
-            return true;
-    }
-    
-    //
-    // Config option for set playername that should bypass registration
-    // this is needed for mods like buildcraft but it is very doungerous!
-    // return true if input name is found inside string list
-    //
-    private List<String> getcUnrestrictedName() {
-        this.unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
-            if(unrestricted.isEmpty()) {
-                //unrestricted = Arrays.asList("mynameisunrestricted");
-                setProperty("settings.unrestrictions.UnrestrictedName",unrestricted);           
-            }             
-            return unrestricted;
-    }
-    
-    public List<String> getUnrestrictedName(){
-        return this.unrestricted;
-        
-    }
-    
-    //
-    // Config option for set player permissions on join, it will check
-    // if given permissions is founded in String arraty list.
-    // return true if input permissions is found inside string list
-    //
-    private List<String> getcJoinPermissions() {
-        this.joinPerm = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
-            if(joinPerm.isEmpty()) {
-                setProperty("GroupOptions.Permissions.PermissionsOnJoin",joinPerm);           
-            }
-       return joinPerm;
-    }
-    
-    public List<String> getJoinPermissions() {
-        return this.joinPerm;
-    }
-    
-    //
-    // Config option of different group settings about UNREGISTERED, REGISTERED
-    //
-    public String unRegisteredGroup() {
-        String key = "GroupOptions.UnregisteredPlayerGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);        
-    }
-   
-    public String getRegisteredGroup() {
-        String key = "GroupOptions.RegisteredPlayerGroup";
-        if (getString(key) == null) {
-            setProperty(key, "");
-        }
-        return getString(key);        
-    }
-    */
    
    /** 
     * 
@@ -753,40 +264,42 @@ public final class Settings extends YamlConfiguration {
     // this is needed for mods like buildcraft but it is very doungerous!
     // return true if input name is found inside string list
     //
+    /*
     public static List<String> getcUnrestrictedName() {
         return unrestricted;
-        /*
+        
         this.unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
             if(unrestricted.isEmpty()) {
                 //unrestricted = Arrays.asList("mynameisunrestricted");
                 setProperty("settings.unrestrictions.UnrestrictedName",unrestricted);           
             }             
-            return unrestricted;*/
+            return unrestricted;
     }
     
     public static List<String> getUnrestrictedName(){
         return unrestricted;
         
     }
-    
+    */
     //
     // Config option for set player permissions on join, it will check
     // if given permissions is founded in String arraty list.
     // return true if input permissions is found inside string list
     //
+    /*
     private static List<String> getcJoinPermissions() {
         return joinPerm;
        /* this.joinPerm = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
             if(joinPerm.isEmpty()) {
                 setProperty("GroupOptions.Permissions.PermissionsOnJoin",joinPerm);           
             }
-       return joinPerm;*/
+       return joinPerm;
     }
     
     public static List<String> getJoinPermissions() {
         return joinPerm;
     }
-    
+    */
     /**
      * Loads the configuration from disk
      *

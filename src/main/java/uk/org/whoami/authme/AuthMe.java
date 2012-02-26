@@ -66,6 +66,7 @@ public class AuthMe extends JavaPlugin {
         settings = new Settings(this);
         settings.loadConfigOptions();
         m = Messages.getInstance();
+        
         server = getServer();
         
         switch (settings.getDataSource) {

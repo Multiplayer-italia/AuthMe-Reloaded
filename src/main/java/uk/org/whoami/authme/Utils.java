@@ -54,6 +54,7 @@ public class Utils {
             AuthMe.permission.playerAdd(this.player,"authme.login");
             return true;
         }*/
+        
         String hasPerm = hasPermOnJoin(player);
         //System.out.println("permissions? "+ hasPerm);
         if(hasPerm != null ) {
@@ -87,9 +88,9 @@ public class Utils {
     }    
 
     private String hasPermOnJoin(Player player) {
-        if(Settings.getJoinPermissions().isEmpty())
+        if(Settings.getJoinPermissions.isEmpty())
             return null;
-              Iterator<String> iter = Settings.getJoinPermissions().iterator();
+              Iterator<String> iter = Settings.getJoinPermissions.iterator();
                 while (iter.hasNext()) {
                     String permission = iter.next();
                  // System.out.println("permissions? "+ permission);
@@ -103,20 +104,20 @@ public class Utils {
     }
     
     public boolean isUnrestricted(Player player) {
-        return false;
-        /*
-        if(Settings.getUnrestrictedName().isEmpty() || Settings.getUnrestrictedName() == null)
+        
+        
+        if(Settings.getUnrestrictedName.isEmpty() || Settings.getUnrestrictedName == null)
             return false;
         
      //   System.out.println("name to escape "+player.getName());
-        if(Settings.getUnrestrictedName().contains(player.getName())) {
+        if(Settings.getUnrestrictedName.contains(player.getName())) {
        //     System.out.println("name to escape correctly"+player.getName());
             return true;
         }
         
         return false;
-         *
-         */
+        
+         
     }
      public static Utils getInstance() {
         

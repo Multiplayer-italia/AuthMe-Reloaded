@@ -87,7 +87,8 @@ public class AdminCommand implements CommandExecutor {
             //settings.clearDefaults();
             //setting.load();
             //setting.reload();
-            m.reload();
+            //Messages.reloadFile(new File("plugins/AuthMe","messages.yml"));
+                    
             sender.sendMessage(m._("reload"));
         } else if (args[0].equalsIgnoreCase("register")) {
             if (args.length != 3) {
