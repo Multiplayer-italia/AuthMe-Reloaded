@@ -29,6 +29,7 @@ public class Messages extends CustomConfiguration {
         loadDefaults();
         loadFile();
         singleton = this;
+        
     }
     
     private void loadDefaults() {
@@ -62,12 +63,14 @@ public class Messages extends CustomConfiguration {
         this.set("max_reg","You have Exeded the max number of Registration for your Account"); 
         this.set("password_error","Password doesnt match");
         this.set("pass_len","Your password dind't reach the minimum length");
-        this.set("vb_nonActiv","Your Account isent Activated yet check your Emails!");        
+        this.set("vb_nonActiv","Your Account isent Activated yet check your Emails!");  
+        
     }
 
 	private void loadFile() {
         this.load();
         this.save();
+       
     }
 
     public String _(String msg) {
@@ -77,8 +80,12 @@ public class Messages extends CustomConfiguration {
         }
         return msg;
     }
-
+    
+    
     public static Messages getInstance() {
+        if (singleton == null) {
+            singleton = new Messages();
+        }        
         return singleton;
     }
 }

@@ -76,7 +76,6 @@ public class AdminCommand implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("reload")) {
             database.reload();
-            
             YamlConfiguration newConfig = Settings.loadConfiguration(new File("plugins/AuthMe","config.yml"));
             //PluginManager pm = sender.getServer().getPluginManager();
             //Plugin plugin = pm.getPlugin("AuthMe");
@@ -87,8 +86,7 @@ public class AdminCommand implements CommandExecutor {
             //settings.clearDefaults();
             //setting.load();
             //setting.reload();
-            //Messages.reloadFile(new File("plugins/AuthMe","messages.yml"));
-                    
+            m.reload();     
             sender.sendMessage(m._("reload"));
         } else if (args[0].equalsIgnoreCase("register")) {
             if (args.length != 3) {
@@ -143,7 +141,7 @@ public class AdminCommand implements CommandExecutor {
                 }
 
                 sender.sendMessage("pwd_changed");
-                ConsoleLogger.info(args[0] + "'s password changed");
+                ConsoleLogger.info(args[1] + "'s password changed");
             } catch (NoSuchAlgorithmException ex) {
                 ConsoleLogger.showError(ex.getMessage());
                 sender.sendMessage(m._("error"));

@@ -45,7 +45,8 @@ public final class Settings extends YamlConfiguration {
     public static List<String> getJoinPermissions = null;
     public static List<String> getUnrestrictedName = null;
     private static List<String> getRestrictedIp;
-    private static Settings singleton;
+   
+    private int numSettings = 59;
     public final Plugin plugin;
     private final File file;    
     
@@ -81,25 +82,26 @@ public final class Settings extends YamlConfiguration {
 
         //options().indent(4); 
         // Override to always indent 4 spaces
-        if(exists())
-            load();
+        if(exists()) {
+            load();         
+         }
         else {
             loadDefaults(file.getName());
-            checkDefaults();
-
             load();
         }
         
         configFile = (YamlConfiguration) plugin.getConfig();
+        //save();
         saveDefaults();
         
     }
    
    public void loadConfigOptions() {
        
-       plugin.getLogger().info("Loading Configuration File...");
-       
-       isForcedRegistrationEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
+        plugin.getLogger().info("Loading Configuration File...");
+        mergeConfig();
+        
+        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
         isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
@@ -145,16 +147,15 @@ public final class Settings extends YamlConfiguration {
         getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
-        getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");  
-        
-        
+        getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
+ 
    }
    
    public static void reloadConfigOptions(YamlConfiguration newConfig) {
        configFile = newConfig;
               
        //plugin.getLogger().info("RELoading Configuration File...");
-        isForcedRegistrationEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
+        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
         isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
@@ -203,9 +204,20 @@ public final class Settings extends YamlConfiguration {
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup",""); 
         
         //System.out.println(getMySQLDatabase);
+        
          
    }
    
+   public void mergeConfig() {
+      
+       if(configFile.getValues(true).size() == numSettings ) {
+           return;
+       }
+        plugin.getLogger().info("Merge new Options..");
+       //configFile.set("prova.prova","prova");
+       //plugin.saveConfig();
+       return;
+   }
    /** 
     * 
     * 
@@ -300,6 +312,7 @@ public final class Settings extends YamlConfiguration {
         return joinPerm;
     }
     */
+    
     /**
      * Loads the configuration from disk
      *
@@ -380,7 +393,7 @@ public final class Settings extends YamlConfiguration {
     }
 
     public void checkDefaults() {
-        if(getValues(true).size() < getDefaults().getValues(true).size()) {
+        if(configFile.getValues(true).size() > 3) {
             saveDefaults();
         }
     }

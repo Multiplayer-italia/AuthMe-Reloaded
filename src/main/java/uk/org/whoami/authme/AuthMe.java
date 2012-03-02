@@ -63,12 +63,26 @@ public class AuthMe extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        /*
+         *  Metric part from Hidendra Stats
+         */
+        try {
+        Metrics metrics = new Metrics();
+        metrics.beginMeasuringPlugin(this);
+            } catch (IOException e) {
+            // Failed to submit the stats :-(
+        }
+        
         settings = new Settings(this);
         settings.loadConfigOptions();
+        
         m = Messages.getInstance();
         
         server = getServer();
         
+        /*
+         * Backend MYSQL - FILE - SQLITE
+         */
         switch (settings.getDataSource) {
             case FILE:
                 try {

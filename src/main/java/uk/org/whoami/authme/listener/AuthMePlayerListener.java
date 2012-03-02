@@ -71,7 +71,7 @@ public class AuthMePlayerListener implements Listener {
         this.data = data; 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -369,7 +369,7 @@ public class AuthMePlayerListener implements Listener {
         LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
-        player.getInventory().setArmorContents(new ItemStack[0]);
+        player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().setContents(new ItemStack[36]);           
         player.kickPlayer( "You are not the Owner of this account, please try another name!");
         return;           
@@ -427,7 +427,7 @@ public class AuthMePlayerListener implements Listener {
         LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
-        player.getInventory().setArmorContents(new ItemStack[0]);
+        player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().setContents(new ItemStack[36]);
         player.setGameMode(GameMode.SURVIVAL);
         if(player.isOp()) {

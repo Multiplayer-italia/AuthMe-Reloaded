@@ -27,7 +27,6 @@ settings:
         ForceSingleSession: true
         ForceSpawnLocOnJoinEnabled: false
         SaveQuitLocation: false
-        ForceExactSpawn: false
         AllowRestrictedUser: false
         AllowedRestrictedUser: []
         kickNonRegistered: false

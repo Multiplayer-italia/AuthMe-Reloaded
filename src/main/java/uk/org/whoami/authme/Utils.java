@@ -60,6 +60,7 @@ public class Utils {
         if(hasPerm != null ) {
             AuthMe.permission.playerAddTransient(player, hasPerm);
         }
+        
         this.currentGroup = AuthMe.permission.getPrimaryGroup(player);
         //System.out.println("current grop" + currentGroup);
         if(AuthMe.permission.playerRemoveGroup(player, currentGroup) && AuthMe.permission.playerAddGroup(player,this.unLoggedGroup)) {
