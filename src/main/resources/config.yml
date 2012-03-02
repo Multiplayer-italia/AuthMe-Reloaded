@@ -55,4 +55,4 @@ VBullettinOptions:
     mySQLColumnGroup: ''
     nonActivedUserGroup: -1
 permission:
-    EnablePermissionCheck: true
+    EnablePermissionCheck: false

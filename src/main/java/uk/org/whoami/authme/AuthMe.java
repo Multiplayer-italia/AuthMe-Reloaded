@@ -122,14 +122,15 @@ public class AuthMe extends JavaPlugin {
         pm.registerEvents(new AuthMeEntityListener(database),this);
         
         //Find Permissions
+        if(settings.isPermissionCheckEnabled) {
         RegisteredServiceProvider<Permission> permissionProvider =
                 getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null)
             permission = permissionProvider.getProvider();
         else {
-            if(settings.isPermissionCheckEnabled) {
+            
             ConsoleLogger.showError("Vault and Permissions plugins is needed for enable AuthMe Reloaded!");
-            this.getServer().getPluginManager().disablePlugin(this);  
+            this.getServer().getPluginManager().disablePlugin(this);   
             }
         }
         

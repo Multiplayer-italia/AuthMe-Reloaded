@@ -101,7 +101,7 @@ public final class Settings extends YamlConfiguration {
         plugin.getLogger().info("Loading Configuration File...");
         mergeConfig();
         
-        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
+        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
         isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
@@ -155,7 +155,7 @@ public final class Settings extends YamlConfiguration {
        configFile = newConfig;
               
        //plugin.getLogger().info("RELoading Configuration File...");
-        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", true);
+        isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
         isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
