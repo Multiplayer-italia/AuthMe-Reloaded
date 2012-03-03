@@ -16,6 +16,7 @@
 
 package uk.org.whoami.authme.listener;
 
+import com.trc202.CombatTag.CombatTag;
 import java.util.Date;
 
 import org.bukkit.GameMode;
@@ -49,8 +50,9 @@ import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboPlayer;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
-import uk.org.whoami.authme.citizens.CitizensCommunicator;
+import uk.org.whoami.authme.plugin.manager.CitizensCommunicator;
 import uk.org.whoami.authme.datasource.DataSource;
+import uk.org.whoami.authme.plugin.manager.CombatTagComunicator;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
 import uk.org.whoami.authme.task.MessageTask;
@@ -80,7 +82,8 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
         
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player) ) {
             return;
         }
 
@@ -119,7 +122,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -154,7 +157,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -204,7 +207,7 @@ public class AuthMePlayerListener implements Listener {
         final Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
         
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
         
@@ -375,7 +378,7 @@ public class AuthMePlayerListener implements Listener {
         return;           
        }
        
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
  /* Why it has to return if a player is already authenticated? when should this happen?       
@@ -469,7 +472,7 @@ public class AuthMePlayerListener implements Listener {
         }
     } 
     
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -500,7 +503,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         
         
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
         
@@ -542,7 +545,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -568,7 +571,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -594,7 +597,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -618,7 +621,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -642,7 +645,7 @@ public class AuthMePlayerListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 

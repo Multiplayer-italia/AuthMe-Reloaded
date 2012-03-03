@@ -24,8 +24,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
-import uk.org.whoami.authme.citizens.CitizensCommunicator;
+import uk.org.whoami.authme.plugin.manager.CitizensCommunicator;
 import uk.org.whoami.authme.datasource.DataSource;
+import uk.org.whoami.authme.plugin.manager.CombatTagComunicator;
 import uk.org.whoami.authme.settings.Settings;
 
 public class AuthMeBlockListener implements Listener {
@@ -46,7 +47,7 @@ public class AuthMeBlockListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
-        if(CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if(CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
@@ -72,7 +73,7 @@ public class AuthMeBlockListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
        
-        if(CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player)) {
+        if(CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.org.whoami.authme.citizens;
+package uk.org.whoami.authme.plugin.manager;
 
 import net.citizensnpcs.api.CitizensManager;
 
