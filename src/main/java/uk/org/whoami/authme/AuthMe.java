@@ -43,6 +43,7 @@ import uk.org.whoami.authme.datasource.MySQLDataSource;
 import uk.org.whoami.authme.listener.AuthMeBlockListener;
 import uk.org.whoami.authme.listener.AuthMeEntityListener;
 import uk.org.whoami.authme.listener.AuthMePlayerListener;
+import uk.org.whoami.authme.listener.AuthMeSpoutListener;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
 import uk.org.whoami.authme.task.MessageTask;
@@ -57,12 +58,15 @@ public class AuthMe extends JavaPlugin {
     private Settings settings;
     private Utils utils;
     private Messages m;
+	public Management management;
     public static Server server;
     public static Permission permission;
+	private static AuthMe instance;
     
 
     @Override
     public void onEnable() {
+    	instance = this;
         /*
          *  Metric part from Hidendra Stats
          */
@@ -116,10 +120,14 @@ public class AuthMe extends JavaPlugin {
             database = new CacheDataSource(database);
         }
         
+        management =  new Management(database);
+        
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new AuthMePlayerListener(this,database),this);
         pm.registerEvents(new AuthMeBlockListener(database),this);
         pm.registerEvents(new AuthMeEntityListener(database),this);
+        if (pm.isPluginEnabled("Spout")) 
+        	pm.registerEvents(new AuthMeSpoutListener(),this);
         
         //Find Permissions
         RegisteredServiceProvider<Permission> permissionProvider =
@@ -137,7 +145,7 @@ public class AuthMe extends JavaPlugin {
         
         this.getCommand("authme").setExecutor(new AdminCommand(database));
         this.getCommand("register").setExecutor(new RegisterCommand(database));
-        this.getCommand("login").setExecutor(new LoginCommand(database));
+        this.getCommand("login").setExecutor(new LoginCommand());
         this.getCommand("changepassword").setExecutor(new ChangePasswordCommand(database));
         this.getCommand("logout").setExecutor(new LogoutCommand(this,database));
         this.getCommand("unregister").setExecutor(new UnregisterCommand(this, database));
@@ -210,5 +218,9 @@ public class AuthMe extends JavaPlugin {
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
         }
     }
+    
+	public static AuthMe getInstance() {
+		return instance;
+	}
    
 }
