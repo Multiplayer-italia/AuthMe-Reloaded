@@ -142,12 +142,14 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnPassword = configFile.getString("DataSource.mySQLColumnPassword","password");
         getMySQLColumnIp = configFile.getString("DataSource.mySQLColumnIp","ip");
         getMySQLColumnLastLogin = configFile.getString("DataSource.mySQLColumnLastLogin","lastlogin");
-        getMySQLColumnSalt = configFile.getString("VBullettinOptions.mySQLColumnSalt","");
+        getMySQLColumnSalt = configFile.getString("VBullettinOptions.mySQLColumnSalt");
         getMySQLColumnGroup = configFile.getString("VBullettinOptions.mySQLColumnGroup","");
         getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
+        
+        System.out.println("[AuthMe debug] column salt is set? " + getMySQLColumnSalt);
  
    }
    

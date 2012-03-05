@@ -9,7 +9,7 @@ package uk.org.whoami.authme.cache.backup;
  * @author stefano
  */
 import java.io.File;
-import java.io.FileWriter;;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 import org.bukkit.enchantments.Enchantment;

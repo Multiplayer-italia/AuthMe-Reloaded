@@ -17,8 +17,12 @@
 package uk.org.whoami.authme.commands;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,6 +31,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
@@ -76,13 +82,36 @@ public class AdminCommand implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("reload")) {
             database.reload();
-            YamlConfiguration newConfig = Settings.loadConfiguration(new File("plugins/AuthMe","config.yml"));
-            //PluginManager pm = sender.getServer().getPluginManager();
-            //Plugin plugin = pm.getPlugin("AuthMe");
-            //System.err.println(plugin);
-            //Settings setting = new Settings(plugin);
-            //setting.reload();
-            Settings.reloadConfigOptions(newConfig);       
+            
+            //Trying to load config from JAR-Ressources, if config.yml doesn't exist...
+            File newConfigFile = new File("plugins/AuthMe","config.yml");
+            if (!newConfigFile.exists()) {
+            	InputStream fis = getClass().getResourceAsStream("/config.yml");
+            	FileOutputStream fos = null;
+            	try {
+            		fos = new FileOutputStream(newConfigFile);
+            		byte[] buf = new byte[1024];
+            		int i = 0;
+        
+            		while ((i = fis.read(buf)) != -1) {
+            			fos.write(buf, 0, i);
+            		}
+            	} catch (Exception e) {
+            		Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Failed to load config from JAR");
+            	} finally {
+            		try {
+            			if (fis != null) {
+            				fis.close();
+            			}
+            			if (fos != null) {
+            				fos.close();
+            			}
+            		} catch (Exception e) {                         
+            		}
+            	}
+            }
+            YamlConfiguration newConfig = YamlConfiguration.loadConfiguration(newConfigFile);
+            Settings.reloadConfigOptions(newConfig);         
             //settings.clearDefaults();
             //setting.load();
             //setting.reload();

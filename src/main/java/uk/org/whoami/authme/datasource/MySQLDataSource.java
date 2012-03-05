@@ -113,7 +113,7 @@ public class MySQLDataSource implements DataSource {
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, "x");
             if (!rs.next()) {
-                st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN x smallint(6) NOT NULL AFTER "
+                st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN x smallint(6) NOT NULL DEFAULT '0' AFTER "
                         + columnLastLogin +" , ADD y smallint(6) NOT NULL DEFAULT '0' AFTER x , ADD z smallint(6) NOT NULL DEFAULT '0' AFTER y;");
             }            
         } finally {
@@ -163,13 +163,18 @@ public class MySQLDataSource implements DataSource {
             rs = pst.executeQuery();
             if (rs.next()) {
                 if (rs.getString(columnIp).isEmpty() ) {
+                    System.out.println("[Authme Debug] ColumnIp is empty");
                     return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                 } else {
                         if(!columnSalt.isEmpty()){
+                            System.out.println("[Authme Debug] column Salt is" + rs.getString(columnSalt));
                             return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
-                        } else
-                    return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
-                }
+                        } else {
+                    System.out.println("[Authme Debug] column Salt is empty");
+                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
+                       
+                        }
+                 }
             } else {
                 return null;
             }
