@@ -20,12 +20,9 @@ import java.io.File;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -102,8 +99,8 @@ public final class Settings extends YamlConfiguration {
         mergeConfig();
         
         isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
-        isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
-        isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
+        isForcedRegistrationEnabled  = configFile.getBoolean("settings.registration.force", true);
+        isRegistrationEnabled = configFile.getBoolean("settings.registration.enabled", true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
         getWarnMessageInterval = configFile.getInt("settings.registration.messageInterval",5);
         isSessionsEnabled = configFile.getBoolean("settings.sessions.enabled",false);
@@ -123,9 +120,8 @@ public final class Settings extends YamlConfiguration {
         isKickNonRegisteredEnabled = configFile.getBoolean("settings.restrictions.kickNonRegistered",false);
         isForceSingleSessionEnabled = configFile.getBoolean("settings.restrictions.ForceSingleSession",true);
         isForceSpawnLocOnJoinEnabled = configFile.getBoolean("settings.restrictions.ForceSpawnLocOnJoinEnabled",false);
-        isForceExactSpawnEnabled = configFile.getBoolean("settings.restrictions.ForceExactSpawn",false);
-        isSaveQuitLocationEnabled = configFile.getBoolean("settings.restrictions.SaveQuitLocation",false);
-        isForceSurvivalModeEnabled = configFile.getBoolean("settings.GameMode.ForceSurvivalMode",false);
+        isSaveQuitLocationEnabled = configFile.getBoolean("settings.restrictions.SaveQuitLocation", false);
+        isForceSurvivalModeEnabled = configFile.getBoolean("settings.GameMode.ForceSurvivalMode", false);
         isResetInventoryIfCreative = configFile.getBoolean("settings.GameMode.ResetInventotyIfCreative",false);
         getmaxRegPerIp = configFile.getInt("settings.restrictions.maxRegPerIp",1);
         getPasswordHash = getPasswordHash();
@@ -149,7 +145,7 @@ public final class Settings extends YamlConfiguration {
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
         
-        System.out.println("[AuthMe debug] column salt is set? " + getMySQLColumnSalt);
+        //System.out.println("[AuthMe debug] Reg " + isRegistrationEnabled.toString() + isForcedRegistrationEnabled.toString());
  
    }
    
@@ -158,8 +154,8 @@ public final class Settings extends YamlConfiguration {
               
        //plugin.getLogger().info("RELoading Configuration File...");
         isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
-        isRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
-        isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.enabled",true);
+        isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
+        isRegistrationEnabled = configFile.getBoolean("settings.registration.enabled", true);
         isTeleportToSpawnEnabled = configFile.getBoolean("settings.restrictions.teleportUnAuthedToSpawn",false);
         getWarnMessageInterval = configFile.getInt("settings.registration.messageInterval",5);
         isSessionsEnabled = configFile.getBoolean("settings.sessions.enabled",false);
@@ -178,8 +174,7 @@ public final class Settings extends YamlConfiguration {
         isKickOnWrongPasswordEnabled = configFile.getBoolean("settings.restrictions.kickOnWrongPassword",false);
         isKickNonRegisteredEnabled = configFile.getBoolean("settings.restrictions.kickNonRegistered",false);
         isForceSingleSessionEnabled = configFile.getBoolean("settings.restrictions.ForceSingleSession",true);
-        isForceSpawnLocOnJoinEnabled = configFile.getBoolean("settings.restrictions.ForceSpawnLocOnJoinEnabled",false);
-        isForceExactSpawnEnabled = configFile.getBoolean("settings.restrictions.ForceExactSpawn",false);
+        isForceSpawnLocOnJoinEnabled = configFile.getBoolean("settings.restrictions.ForceSpawnLocOnJoinEnabled",false);     
         isSaveQuitLocationEnabled = configFile.getBoolean("settings.restrictions.SaveQuitLocation",false);
         isForceSurvivalModeEnabled = configFile.getBoolean("settings.GameMode.ForceSurvivalMode",false);
         isResetInventoryIfCreative = configFile.getBoolean("settings.GameMode.ResetInventotyIfCreative",false);

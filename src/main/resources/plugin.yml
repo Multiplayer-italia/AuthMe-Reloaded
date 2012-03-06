@@ -2,7 +2,7 @@ name: AuthMe
 author: darkwarriros
 description: AuthMe prevents people, which aren't logged in, from doing stuff like placing blocks, moving, typing commands or seeing the inventory of the current player.
 main: uk.org.whoami.authme.AuthMe
-version: 2.6.3b2
+version: 2.6.3b3
 softdepend: [Vault]
 commands:
     register:
@@ -53,6 +53,9 @@ permissions:
     authme.logout:
         description: Logout
         default: true
+    authme.allow2accounts:
+        description: allow more accounts for same ip
+        default: false
     authme.unregister:
         description: unregister your account
         default: true

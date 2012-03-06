@@ -61,9 +61,9 @@ public class Utils {
             AuthMe.permission.playerAddTransient(player, hasPerm);
         }
         
-        this.currentGroup = AuthMe.permission.getPrimaryGroup(player);
+        this.currentGroup = AuthMe.permission.getPrimaryGroup(player.getWorld(),player.getName().toString());
         //System.out.println("current grop" + currentGroup);
-        if(AuthMe.permission.playerRemoveGroup(player, currentGroup) && AuthMe.permission.playerAddGroup(player,this.unLoggedGroup)) {
+        if(AuthMe.permission.playerRemoveGroup(player.getWorld(),player.getName().toString(), currentGroup) && AuthMe.permission.playerAddGroup(player.getWorld(),player.getName().toString(),this.unLoggedGroup)) {
             
             return currentGroup;
         }
@@ -80,7 +80,7 @@ public class Utils {
        /* if (AuthMe.permission.playerRemove(this.player, "-*"))
             return true;
        */      
-        if(AuthMe.permission.playerRemoveGroup(player,this.unLoggedGroup) && AuthMe.permission.playerAddGroup(player,group)) {
+        if(AuthMe.permission.playerRemoveGroup(player.getWorld(),player.getName().toString(),this.unLoggedGroup) && AuthMe.permission.playerAddGroup(player.getWorld(),player.getName().toString(),group)) {
         //System.out.println("vecchio "+this.unLoggedGroup+ "nuovo" + group);
             return true;
         

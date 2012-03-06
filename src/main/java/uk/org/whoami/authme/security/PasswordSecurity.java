@@ -122,7 +122,7 @@ public class PasswordSecurity {
     }
 
     public static boolean comparePasswordWithHash(String password, String hash) throws NoSuchAlgorithmException {
-        System.out.println("[Authme Debug] debug hashString"+hash);
+        //System.out.println("[Authme Debug] debug hashString"+hash);
         if(hash.contains("$H$")) {
            PhpBB checkHash = new PhpBB();
             return checkHash.phpbb_check_hash(password, hash);
@@ -147,15 +147,15 @@ public class PasswordSecurity {
         }
 
         if (hash.contains("$")) {
-            System.out.println("[Authme Debug] debug hashString"+hash);
+            //System.out.println("[Authme Debug] debug hashString"+hash);
             String[] line = hash.split("\\$");
             if (line.length > 3 && line[1].equals("SHA")) {
                 return hash.equals(getSaltedHash(password, line[2]));
             } else {
                 if(line[1].equals("MD5vb")) {
-                    System.out.println("[Authme Debug] password hashed from Authme"+getSaltedMd5(password, line[2]));
-                    System.out.println("[Authme Debug] salt from Authme"+line[2]);
-                    System.out.println("[Authme Debug] equals? Authme: "+hash);
+                    //System.out.println("[Authme Debug] password hashed from Authme"+getSaltedMd5(password, line[2]));
+                    //System.out.println("[Authme Debug] salt from Authme"+line[2]);
+                    //System.out.println("[Authme Debug] equals? Authme: "+hash);
                     //hash = "$MD5vb$" + salt + "$" + hash;
                     return hash.equals(getSaltedMd5(password, line[2]));
                 }

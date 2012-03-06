@@ -53,7 +53,8 @@ public class Management {
                     player.getInventory().setArmorContents(limbo.getArmour());
                     player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
                     player.setOp(limbo.getOperator());
-  /*                  if (limbo.getOperator()) {
+                    /*                  
+                     * if (limbo.getOperator()) {
                          System.out.println("player is an operator after login success");
                     }*/
                     utils.addNormal(player, limbo.getGroup());
@@ -63,50 +64,25 @@ public class Management {
                    // check quit location, check correct spawn, 
                    //
                     if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
-                             if(Settings.isForceExactSpawnEnabled) {
                                  // This is initial work around for prevent ppl to quit on bukkit bug
                                  // take last quit location from database and subtract y from safe spawn             
                                  // if the error range is smaller then 1, player can come back in his quit location
                                  // otherwise he try to spawn in a unsafe location!
                                 
                                  if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                                     if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)  ) {
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
+                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
                                      player.teleport(quitLoc);
                                      //System.out.println("quit location from db:"+quitLoc);
-                                     } else {
-                                    player.sendMessage(m._("unsafe_spawn"));
-                                    player.teleport(player.getWorld().getSpawnLocation());
-                                    }
                                  } else {
                                  player.teleport(limbo.getLoc());
                                  //System.out.println("quit location from bukkit:"+limbo.getLoc());
-                                 }
-                             
-                             } else {
-                                 if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0 ) {
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
-                                     player.teleport(quitLoc);
-                                     //System.out.println("quit location from db:"+quitLoc);
-                                 } else {
-                                  //System.out.println("quit location from bukkit:"+limbo.getLoc());
-                                 player.teleport(limbo.getLoc());
-                                 }
-                             }  
+                                 } 
                     } else {
                         if(Settings.isForceSpawnLocOnJoinEnabled) {
                             player.teleport(player.getWorld().getSpawnLocation());  
                         } else {
                         if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                              if( Settings.isForceExactSpawnEnabled ) {
-                                 if((((int)limbo.getLoc().getY()-database.getAuth(name).getQuitLocY()) <= 1)) {  
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
-                                     player.teleport(quitLoc); }
-                                 else {
-                                    player.sendMessage(m._("unsafe_spawn"));
-                                    player.teleport(player.getWorld().getSpawnLocation());} 
-                              }
-                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX(),(double)database.getAuth(name).getQuitLocY(),(double)database.getAuth(name).getQuitLocZ());
+                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
                           player.teleport(quitLoc);  
                           //System.out.println("quit location from db:"+quitLoc);
                         } else {

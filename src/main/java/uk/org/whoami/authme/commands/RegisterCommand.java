@@ -93,10 +93,12 @@ public class RegisterCommand implements CommandExecutor {
             
         String ipAddress = player.getAddress().getAddress().getHostAddress();
         
-            if(database.getIps(ipAddress) >= Settings.getmaxRegPerIp) {
+            if(database.getIps(ipAddress) >= Settings.getmaxRegPerIp ) {
+                if(!sender.hasPermission("authme.allow2accounts") && database.getIps(ipAddress) > Settings.getmaxRegPerIp) {
                 //System.out.println("number of reg "+database.getIps(ipAddress));
                 player.sendMessage(m._("max_reg"));
                 return true;
+                }
             }
                    
         }

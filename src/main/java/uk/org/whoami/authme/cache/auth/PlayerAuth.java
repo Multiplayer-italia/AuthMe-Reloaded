@@ -66,8 +66,8 @@ public class PlayerAuth {
         this.z = z;   
         this.salt = salt;
         this.groupId = groupId;
-        System.out.println("[Authme Debug] password hashed from db"+hash);
-        System.out.println("[Authme Debug] salt from db"+salt);        
+        //System.out.println("[Authme Debug] password hashed from db"+hash);
+        //System.out.println("[Authme Debug] salt from db"+salt);        
     }
     
     public String getIp() {

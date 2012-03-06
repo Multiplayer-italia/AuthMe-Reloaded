@@ -465,8 +465,8 @@ public class AuthMePlayerListener implements Listener {
     // Fix for Exact spawn usses that bukkit has
     // Fix for Quit location when player where kicked for timeout
     
-    if (PlayerCache.getInstance().isAuthenticated(name) ) { 
-        if(Settings.isForceExactSpawnEnabled || Settings.isSaveQuitLocationEnabled ) {
+    if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
+        if(Settings.isSaveQuitLocationEnabled) {
             PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
             data.updateQuitLoc(auth);
         }

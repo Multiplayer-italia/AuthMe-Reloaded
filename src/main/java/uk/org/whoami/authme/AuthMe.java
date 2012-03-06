@@ -127,7 +127,7 @@ public class AuthMe extends JavaPlugin {
         pm.registerEvents(new AuthMeBlockListener(database),this);
         pm.registerEvents(new AuthMeEntityListener(database),this);
         if (pm.isPluginEnabled("Spout")) 
-        	pm.registerEvents(new AuthMeSpoutListener(),this);
+        	pm.registerEvents(new AuthMeSpoutListener(database),this);
         
         //Find Permissions
         if(settings.isPermissionCheckEnabled) {
@@ -155,10 +155,6 @@ public class AuthMe extends JavaPlugin {
         // Check for correct sintax in config file!
         //
         
-        if(settings.isForceExactSpawnEnabled && !settings.isSaveQuitLocationEnabled) {
-            ConsoleLogger.showError("You need to enable SaveQuitLocation if you want to enable ForceExactSpawn");
-            this.getServer().getPluginManager().disablePlugin(this);
-        }
         if(!settings.isForceSingleSessionEnabled) {
             ConsoleLogger.info("ATTENTION by disabling ForceSingleSession Your server protection is set to low");
         }

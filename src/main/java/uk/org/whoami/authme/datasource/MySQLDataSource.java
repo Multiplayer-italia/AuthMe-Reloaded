@@ -163,14 +163,14 @@ public class MySQLDataSource implements DataSource {
             rs = pst.executeQuery();
             if (rs.next()) {
                 if (rs.getString(columnIp).isEmpty() ) {
-                    System.out.println("[Authme Debug] ColumnIp is empty");
+                    //System.out.println("[Authme Debug] ColumnIp is empty");
                     return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                 } else {
                         if(!columnSalt.isEmpty()){
-                            System.out.println("[Authme Debug] column Salt is" + rs.getString(columnSalt));
+                            //System.out.println("[Authme Debug] column Salt is" + rs.getString(columnSalt));
                             return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                         } else {
-                    System.out.println("[Authme Debug] column Salt is empty");
+                    //System.out.println("[Authme Debug] column Salt is empty");
                             return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                        
                         }
