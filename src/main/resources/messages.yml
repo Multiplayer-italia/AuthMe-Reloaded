@@ -29,3 +29,4 @@ registered: '&cSuccessfully registered!'
 pass_len: Your password dind't reach the minimum length
 reload: Configuration and database has been reloaded
 timeout: Login Timeout
+usage_changepassword: 'Usage: /changepassword oldPassword newPassword'

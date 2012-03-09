@@ -22,7 +22,7 @@ public interface DataSource {
 
     public enum DataSourceType {
 
-        MYSQL, FILE
+        MYSQL, FILE, SQLITE
     }
 
     boolean isAuthAvailable(String user);

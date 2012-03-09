@@ -68,7 +68,7 @@ public class ChangePasswordCommand implements CommandExecutor {
         }
         
         if (args.length != 2) {
-            player.sendMessage(m._("Usage: /changepassword oldPassword newPassword"));
+            player.sendMessage(m._("usage_changepassword"));
             return true;
         }
 

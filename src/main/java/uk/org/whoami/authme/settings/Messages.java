@@ -63,7 +63,8 @@ public class Messages extends CustomConfiguration {
         this.set("max_reg","You have Exeded the max number of Registration for your Account"); 
         this.set("password_error","Password doesnt match");
         this.set("pass_len","Your password dind't reach the minimum length");
-        this.set("vb_nonActiv","Your Account isent Activated yet check your Emails!");  
+        this.set("vb_nonActiv","Your Account isent Activated yet check your Emails!");
+        this.set("usage_changepassword", "Usage: /changepassword oldPassword newPassword");
         
     }
 

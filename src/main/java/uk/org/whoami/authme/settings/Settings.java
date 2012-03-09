@@ -54,7 +54,8 @@ public final class Settings extends YamlConfiguration {
             isTeleportToSpawnEnabled, isSessionsEnabled, isChatAllowed, isAllowRestrictedIp, 
             isMovementAllowed, isKickNonRegisteredEnabled, isForceSingleSessionEnabled,
             isForceSpawnLocOnJoinEnabled, isForceExactSpawnEnabled, isSaveQuitLocationEnabled,
-            isForceSurvivalModeEnabled, isResetInventoryIfCreative, isCachingEnabled, isKickOnWrongPasswordEnabled;
+            isForceSurvivalModeEnabled, isResetInventoryIfCreative, isCachingEnabled, isKickOnWrongPasswordEnabled,
+            getEnablePasswordVerifier, protectInventoryBeforeLogInEnabled;
             
             
     public static String getNickRegex, getUnloggedinGroup, getMySQLHost, getMySQLPort, 
@@ -144,8 +145,10 @@ public final class Settings extends YamlConfiguration {
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
-        
-        //System.out.println("[AuthMe debug] Reg " + isRegistrationEnabled.toString() + isForcedRegistrationEnabled.toString());
+        getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
+        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
+        plugin.saveConfig();
+        //System.out.println("[AuthMe debug] Config " + getEnablePasswordVerifier.toString());
  
    }
    
@@ -199,7 +202,8 @@ public final class Settings extends YamlConfiguration {
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup",""); 
-        
+        getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
+        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
         //System.out.println(getMySQLDatabase);
         
          
@@ -207,12 +211,21 @@ public final class Settings extends YamlConfiguration {
    
    public void mergeConfig() {
       
+      /*
        if(configFile.getValues(true).size() == numSettings ) {
            return;
        }
-        plugin.getLogger().info("Merge new Options..");
+        
        //configFile.set("prova.prova","prova");
        //plugin.saveConfig();
+        * 
+        */
+       if(configFile.getString("settings.restrictions.enablePasswordVerifier") == null || configFile.getString("settings.restrictions.ProtectIntentoryBeforeLogIn") == null) {
+           plugin.getLogger().info("Merge new Options..");
+           configFile.set("settings.restrictions.enablePasswordVerifier", true);
+           configFile.set("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
+       }
+       
        return;
    }
    /** 

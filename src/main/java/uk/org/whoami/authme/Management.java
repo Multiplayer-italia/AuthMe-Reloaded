@@ -33,12 +33,13 @@ public class Management {
         String name = player.getName().toLowerCase();
         String ip = player.getAddress().getAddress().getHostAddress();
         
-		if (PlayerCache.getInstance().isAuthenticated(name)) {
-            player.sendMessage(m._("logged_in"));
+        if (PlayerCache.getInstance().isAuthenticated(name)) {
+            return m._("logged_in");
+           
         }
 
         if (!database.isAuthAvailable(player.getName().toLowerCase())) {
-            player.sendMessage(m._("user_unknown"));
+            return m._("user_unknown");
         }
         
         String hash = database.getAuth(name).getHash();
@@ -49,8 +50,10 @@ public class Management {
                 PlayerCache.getInstance().addPlayer(auth);
                 LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
                 if (limbo != null) {
-                    player.getInventory().setContents(limbo.getInventory());
-                    player.getInventory().setArmorContents(limbo.getArmour());
+                    if(Settings.protectInventoryBeforeLogInEnabled) {
+                        player.getInventory().setContents(limbo.getInventory());
+                        player.getInventory().setArmorContents(limbo.getArmour());
+                    }
                     player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
                     player.setOp(limbo.getOperator());
                     /*                  

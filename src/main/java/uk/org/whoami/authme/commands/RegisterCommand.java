@@ -71,7 +71,7 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0 || args.length < 2 ) {
+        if (args.length == 0 || (Settings.getEnablePasswordVerifier && args.length < 2) ) {
             player.sendMessage(m._("usage_reg"));
             return true;
         }
@@ -105,13 +105,16 @@ public class RegisterCommand implements CommandExecutor {
 
         try {
             String hash;
-            if (args[0].equals(args[1])) {
+            if(Settings.getEnablePasswordVerifier) {
+                if (args[0].equals(args[1])) {
+                    hash = PasswordSecurity.getHash(Settings.getPasswordHash, args[0]);
+                 } else {
+                    player.sendMessage(m._("password_error"));
+                    return true;
+                  }
+            } else
                 hash = PasswordSecurity.getHash(Settings.getPasswordHash, args[0]);
-            } else {
-                player.sendMessage(m._("password_error"));
-                return true;
-            }
-         
+            
             PlayerAuth auth = new PlayerAuth(name, hash, ip, new Date().getTime());
             if (!database.saveAuth(auth)) {
                 player.sendMessage(m._("error"));

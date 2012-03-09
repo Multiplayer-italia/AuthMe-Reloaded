@@ -51,6 +51,7 @@ import uk.org.whoami.authme.task.TimeoutTask;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Server;
+import uk.org.whoami.authme.datasource.SqliteDataSource;
 
 public class AuthMe extends JavaPlugin {
 
@@ -109,6 +110,19 @@ public class AuthMe extends JavaPlugin {
                     this.getServer().getPluginManager().disablePlugin(this);
                     return;
                 } catch(TimeoutException ex) {
+                    ConsoleLogger.showError(ex.getMessage());
+                    this.getServer().getPluginManager().disablePlugin(this);
+                    return;
+                }
+                break;
+            case SQLITE:
+                try {
+                     database = new SqliteDataSource();
+                } catch (ClassNotFoundException ex) {
+                    ConsoleLogger.showError(ex.getMessage());
+                    this.getServer().getPluginManager().disablePlugin(this);
+                    return;
+                } catch (SQLException ex) {
                     ConsoleLogger.showError(ex.getMessage());
                     this.getServer().getPluginManager().disablePlugin(this);
                     return;

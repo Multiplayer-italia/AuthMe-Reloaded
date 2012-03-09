@@ -357,7 +357,7 @@ public class AuthMePlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (event.getPlayer() == null) {
             return;
@@ -372,8 +372,10 @@ public class AuthMePlayerListener implements Listener {
         LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        player.getInventory().setContents(new ItemStack[36]);           
+        if(Settings.protectInventoryBeforeLogInEnabled) {
+            player.getInventory().setArmorContents(new ItemStack[4]);
+            player.getInventory().setContents(new ItemStack[36]);
+        }
         player.kickPlayer( "You are not the Owner of this account, please try another name!");
         return;           
        }
@@ -430,8 +432,10 @@ public class AuthMePlayerListener implements Listener {
         LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        player.getInventory().setContents(new ItemStack[36]);
+        if(Settings.protectInventoryBeforeLogInEnabled) {
+            player.getInventory().setArmorContents(new ItemStack[4]);
+            player.getInventory().setContents(new ItemStack[36]);
+        }
         player.setGameMode(GameMode.SURVIVAL);
         if(player.isOp()) {
          //System.out.println("player is an operator");
@@ -452,7 +456,7 @@ public class AuthMePlayerListener implements Listener {
         sched.scheduleSyncDelayedTask(plugin, new MessageTask(plugin, name, msg, msgInterval));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         if (event.getPlayer() == null) {
             return;
@@ -480,8 +484,10 @@ public class AuthMePlayerListener implements Listener {
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
             //System.out.println("e' nel quit");
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
+            if(Settings.protectInventoryBeforeLogInEnabled) {
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());
+            }
             utils.addNormal(player, limbo.getGroup());
             player.setOp(limbo.getOperator());
             //System.out.println("debug quit group reset "+limbo.getGroup());
@@ -494,7 +500,7 @@ public class AuthMePlayerListener implements Listener {
         PlayerCache.getInstance().removePlayer(name);
     }
 
-     @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
         if (event.getPlayer() == null) {
             return;
@@ -520,8 +526,10 @@ public class AuthMePlayerListener implements Listener {
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
             //System.out.println("e' nel kick");
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
+            if(Settings.protectInventoryBeforeLogInEnabled) {
             player.getInventory().setArmorContents(limbo.getArmour());
             player.getInventory().setContents(limbo.getInventory());
+            }
             player.teleport(limbo.getLoc());
             utils.addNormal(player, limbo.getGroup());
             player.setOp(limbo.getOperator());
@@ -536,7 +544,7 @@ public class AuthMePlayerListener implements Listener {
         PlayerCache.getInstance().removePlayer(name);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -562,7 +570,7 @@ public class AuthMePlayerListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -588,7 +596,7 @@ public class AuthMePlayerListener implements Listener {
         event.setCancelled(true);
     }
 
-     @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -613,7 +621,7 @@ public class AuthMePlayerListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -634,10 +642,12 @@ public class AuthMePlayerListener implements Listener {
                 return;
             }
         }
+        //System.out.println("player try to drop item");
+        
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;

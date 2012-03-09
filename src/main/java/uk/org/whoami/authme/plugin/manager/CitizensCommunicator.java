@@ -16,7 +16,10 @@
 
 package uk.org.whoami.authme.plugin.manager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.citizensnpcs.api.CitizensManager;
+import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
@@ -27,9 +30,16 @@ public class CitizensCommunicator {
     public static boolean isNPC(Entity player) {
         PluginManager pm = player.getServer().getPluginManager();
         Plugin plugin = pm.getPlugin("Citizens");
-
+        
         if(plugin != null) {
-            return CitizensManager.isNPC(player);
+            try {
+                if( Class.forName("net.citizensnpcs.api.CitizensManager") != null)
+                    return CitizensManager.isNPC(player);
+                else return CitizensAPI.getNPCManager().isNPC(player);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CitizensCommunicator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
         return false;
     }
