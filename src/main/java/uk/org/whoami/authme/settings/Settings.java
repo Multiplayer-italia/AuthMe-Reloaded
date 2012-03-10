@@ -19,9 +19,12 @@ package uk.org.whoami.authme.settings;
 import java.io.File;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -66,8 +69,9 @@ public final class Settings extends YamlConfiguration {
             
     
     public static int getWarnMessageInterval, getSessionTimeout, getRegistrationTimeout, getMaxNickLength,
-            getMinNickLength, getPasswordMinLen, getMovementRadius, getmaxRegPerIp, getNonActivatedGroup;
-            
+            getMinNickLength, getPasswordMinLen, getMovementRadius, getmaxRegPerIp, getNonActivatedGroup,
+            passwordMaxLength;
+                    
     protected static YamlConfiguration configFile;
     
    public Settings(Plugin plugin) {
@@ -89,14 +93,15 @@ public final class Settings extends YamlConfiguration {
         }
         
         configFile = (YamlConfiguration) plugin.getConfig();
-        //save();
-        saveDefaults();
+        
+        //saveDefaults();
         
     }
    
    public void loadConfigOptions() {
        
         plugin.getLogger().info("Loading Configuration File...");
+        
         mergeConfig();
         
         isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
@@ -146,9 +151,14 @@ public final class Settings extends YamlConfiguration {
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
         getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
-        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
-        plugin.saveConfig();
-        //System.out.println("[AuthMe debug] Config " + getEnablePasswordVerifier.toString());
+        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectInventoryBeforeLogIn", true);
+        passwordMaxLength = configFile.getInt("settings.security.passwordMaxLength", 20);
+        
+        saveDefaults();
+            
+            //System.out.println("[AuthMe debug] Config " + getEnablePasswordVerifier.toString());
+            //System.out.println("[AuthMe debug] Config " + getEnablePasswordVerifier.toString());
+
  
    }
    
@@ -203,7 +213,8 @@ public final class Settings extends YamlConfiguration {
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup",""); 
         getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
-        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
+        protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectInventoryBeforeLogIn", true);
+        passwordMaxLength = configFile.getInt("settings.security.passwordMaxLength", 20);
         //System.out.println(getMySQLDatabase);
         
          
@@ -211,20 +222,19 @@ public final class Settings extends YamlConfiguration {
    
    public void mergeConfig() {
       
-      /*
-       if(configFile.getValues(true).size() == numSettings ) {
-           return;
-       }
-        
-       //configFile.set("prova.prova","prova");
-       //plugin.saveConfig();
-        * 
-        */
-       if(configFile.getString("settings.restrictions.enablePasswordVerifier") == null || configFile.getString("settings.restrictions.ProtectIntentoryBeforeLogIn") == null) {
-           plugin.getLogger().info("Merge new Options..");
-           configFile.set("settings.restrictions.enablePasswordVerifier", true);
-           configFile.set("settings.restrictions.ProtectIntentoryBeforeLogIn", true);
-       }
+       //options().copyDefaults(false);
+       //System.out.println("merging config?"+contains("settings.restrictions.ProtectInventoryBeforeLogIn")+checkDefaults());
+       if(!contains("settings.restrictions.ProtectInventoryBeforeLogIn")) {
+           set("settings.restrictions.enablePasswordVerifier", true);
+           set("settings.restrictions.ProtectInventoryBeforeLogIn", true);
+       } 
+       
+       if(!contains("settings.security.passwordMaxLength")) {
+           set("settings.security.passwordMaxLength", 20);
+       } else return;
+       
+       plugin.getLogger().info("Merge new Config Options..");
+       plugin.saveConfig();
        
        return;
    }
@@ -402,10 +412,16 @@ public final class Settings extends YamlConfiguration {
         setDefaults(new MemoryConfiguration());
     }
 
-    public void checkDefaults() {
-        if(configFile.getValues(true).size() > 3) {
-            saveDefaults();
+    /**
+* Check loaded defaults against current configuration
+*
+* @return false When all defaults aren't present in config
+*/
+    public boolean checkDefaults() {
+        if (getDefaults() == null) {
+            return true;
         }
+        return getKeys(true).containsAll(getDefaults().getKeys(true));
     }
  /*   
     public static Settings getInstance() {

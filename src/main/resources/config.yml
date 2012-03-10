@@ -38,7 +38,7 @@ settings:
         allowedNicknameCharacters: '[a-zA-Z0-9_?]*'
         allowedMovementRadius: 100
         enablePasswordVerifier: true
-        ProtectIntentoryBeforeLogIn: true
+        ProtectInventoryBeforeLogIn: true
     GameMode:
         ForceSurvivalMode: false
         ResetInventotyIfCreative: false

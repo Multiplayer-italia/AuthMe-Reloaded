@@ -30,6 +30,7 @@ import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
 import uk.org.whoami.authme.datasource.DataSource;
+import uk.org.whoami.authme.gui.screens.LoginScreen;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
 import uk.org.whoami.authme.task.MessageTask;
@@ -95,6 +96,7 @@ public class LogoutCommand implements CommandExecutor {
 
         player.sendMessage(m._("logout"));
         ConsoleLogger.info(player.getDisplayName() + " logged out");
+
         return true;
     }
 }

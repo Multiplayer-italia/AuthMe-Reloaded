@@ -55,7 +55,7 @@ public class AdminCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmnd, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("Usage: /authme reload|register playername password|changepassword playername password|unregister playername|purge");
+            sender.sendMessage("Usage: /authme reload|register playername password|changepassword playername password|unregister playername|purge|version");
             return true;
         }
 
@@ -63,7 +63,12 @@ public class AdminCommand implements CommandExecutor {
             sender.sendMessage(m._("no_perm"));
             return true;
         }
-
+        
+        if (args[0].equalsIgnoreCase("version")) {
+            sender.sendMessage("AuthMe Version: "+AuthMe.getInstance().getDescription().getVersion());
+            return true;
+        }
+        
         if (args[0].equalsIgnoreCase("purge")) {
             if (args.length != 2) {
                 sender.sendMessage("Usage: /authme purge <DAYS>");
