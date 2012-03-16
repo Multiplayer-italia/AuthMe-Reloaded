@@ -55,10 +55,10 @@ public class Utils {
             return true;
         }*/
         
-        String hasPerm = hasPermOnJoin(player);
+        
         //System.out.println("permissions? "+ hasPerm);
-        if(hasPerm != null ) {
-            AuthMe.permission.playerAddTransient(player, hasPerm);
+        if( !Settings.getJoinPermissions.isEmpty() ) {
+            hasPermOnJoin(player);
         }
         
         this.currentGroup = AuthMe.permission.getPrimaryGroup(player.getWorld(),player.getName().toString());
@@ -98,7 +98,7 @@ public class Utils {
                      
                    if(AuthMe.permission.playerHas(player, permission)){
                      //  System.out.println("player has permissions " +permission);
-                       return permission;
+                       AuthMe.permission.playerAddTransient(player, permission);
                    }
                 }
            return null;
@@ -128,7 +128,11 @@ public class Utils {
     } 
     
     private boolean useGroupSystem() {
-        return Settings.isPermissionCheckEnabled;
+        
+        if(Settings.isPermissionCheckEnabled && !Settings.getUnloggedinGroup.isEmpty()) {
+            return true;
+        } return false;
+            
     }
      
     public enum groupType {

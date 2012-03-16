@@ -58,13 +58,14 @@ public final class Settings extends YamlConfiguration {
             isMovementAllowed, isKickNonRegisteredEnabled, isForceSingleSessionEnabled,
             isForceSpawnLocOnJoinEnabled, isForceExactSpawnEnabled, isSaveQuitLocationEnabled,
             isForceSurvivalModeEnabled, isResetInventoryIfCreative, isCachingEnabled, isKickOnWrongPasswordEnabled,
-            getEnablePasswordVerifier, protectInventoryBeforeLogInEnabled;
+            getEnablePasswordVerifier, protectInventoryBeforeLogInEnabled, isBackupActivated, isBackupOnStart,
+            isBackupOnStop;
             
             
     public static String getNickRegex, getUnloggedinGroup, getMySQLHost, getMySQLPort, 
             getMySQLUsername, getMySQLPassword, getMySQLDatabase, getMySQLTablename, 
             getMySQLColumnName, getMySQLColumnPassword, getMySQLColumnIp, getMySQLColumnLastLogin,
-            getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup,
+            getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup, backupWindowsPath,
             getcUnrestrictedName, getRegisteredGroup;
             
     
@@ -144,15 +145,19 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnPassword = configFile.getString("DataSource.mySQLColumnPassword","password");
         getMySQLColumnIp = configFile.getString("DataSource.mySQLColumnIp","ip");
         getMySQLColumnLastLogin = configFile.getString("DataSource.mySQLColumnLastLogin","lastlogin");
-        getMySQLColumnSalt = configFile.getString("VBullettinOptions.mySQLColumnSalt");
-        getMySQLColumnGroup = configFile.getString("VBullettinOptions.mySQLColumnGroup","");
-        getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
+        getMySQLColumnSalt = configFile.getString("ExternalBoardOptions.mySQLColumnSalt");
+        getMySQLColumnGroup = configFile.getString("ExternalBoardOptions.mySQLColumnGroup","");
+        getNonActivatedGroup = configFile.getInt("ExternalBoardOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup","");
         getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
         protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectInventoryBeforeLogIn", true);
         passwordMaxLength = configFile.getInt("settings.security.passwordMaxLength", 20);
+        isBackupActivated = configFile.getBoolean("BackupSystem.ActivateBackup",false);
+        isBackupOnStart = configFile.getBoolean("BackupSystem.OnServerStart",false);
+        isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);
+        backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
         
         saveDefaults();
             
@@ -206,15 +211,19 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnPassword = configFile.getString("DataSource.mySQLColumnPassword","password");
         getMySQLColumnIp = configFile.getString("DataSource.mySQLColumnIp","ip");
         getMySQLColumnLastLogin = configFile.getString("DataSource.mySQLColumnLastLogin","lastlogin");
-        getMySQLColumnSalt = configFile.getString("VBullettinOptions.mySQLColumnSalt","");
-        getMySQLColumnGroup = configFile.getString("VBullettinOptions.mySQLColumnGroup","");
-        getNonActivatedGroup = configFile.getInt("VBullettinOptions.nonActivedUserGroup", -1);
+        getMySQLColumnSalt = configFile.getString("ExternalBoardOptions.mySQLColumnSalt","");
+        getMySQLColumnGroup = configFile.getString("ExternalBoardOptions.mySQLColumnGroup","");
+        getNonActivatedGroup = configFile.getInt("ExternalBoardOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
         getRegisteredGroup = configFile.getString("GroupOptions.RegisteredPlayerGroup",""); 
         getEnablePasswordVerifier = configFile.getBoolean("settings.restrictions.enablePasswordVerifier" , true);
         protectInventoryBeforeLogInEnabled = configFile.getBoolean("settings.restrictions.ProtectInventoryBeforeLogIn", true);
         passwordMaxLength = configFile.getInt("settings.security.passwordMaxLength", 20);
+        isBackupActivated = configFile.getBoolean("BackupSystem.ActivateBackup",false);
+        isBackupOnStart = configFile.getBoolean("BackupSystem.OnServerStart",false);
+        isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);     
+        backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
         //System.out.println(getMySQLDatabase);
         
          
@@ -231,6 +240,17 @@ public final class Settings extends YamlConfiguration {
        
        if(!contains("settings.security.passwordMaxLength")) {
            set("settings.security.passwordMaxLength", 20);
+       }
+       
+       if(!contains("BackupSystem.ActivateBackup")) {
+           set("BackupSystem.ActivateBackup",false);
+           set("BackupSystem.OnServerStart",false);
+           set("BackupSystem.OnServeStop",false);
+       }
+       
+       
+       if(!contains("BackupSystem.MysqlWindowsPath")) {
+           set("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
        } else return;
        
        plugin.getLogger().info("Merge new Config Options..");

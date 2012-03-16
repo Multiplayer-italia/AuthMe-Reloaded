@@ -77,13 +77,22 @@ public class AuthMe extends JavaPlugin {
             } catch (IOException e) {
             // Failed to submit the stats :-(
         }
-        
+         
         settings = new Settings(this);
         settings.loadConfigOptions();
         
         m = Messages.getInstance();
         
         server = getServer();
+        
+        /*
+         *  Back style on start if avaible
+         */
+        if(Settings.isBackupActivated && Settings.isBackupOnStart) {
+        Boolean Backup = new PerformBackup().PerformBackup();
+        if(Backup) ConsoleLogger.info("Backup Complete");
+            else ConsoleLogger.showError("Error while making Backup");
+        }
         
         /*
          * Backend MYSQL - FILE - SQLITE
@@ -173,7 +182,7 @@ public class AuthMe extends JavaPlugin {
             ConsoleLogger.info("ATTENTION by disabling ForceSingleSession Your server protection is set to low");
         }
         
-        onReload(this.getServer().getOnlinePlayers());
+        //onReload(this.getServer().getOnlinePlayers());
         ConsoleLogger.info("Authme " + this.getDescription().getVersion() + " enabled");
     }
 
@@ -183,12 +192,22 @@ public class AuthMe extends JavaPlugin {
             database.close();
         }
         //utils = Utils.getInstance();
-       
+        
+        /*
+         *  Back style on start if avaible
+         */
+        if(Settings.isBackupActivated && Settings.isBackupOnStop) {
+        Boolean Backup = new PerformBackup().PerformBackup();
+        if(Backup) ConsoleLogger.info("Backup Complete");
+            else ConsoleLogger.showError("Error while making Backup");
+        }       
         ConsoleLogger.info("Authme " + this.getDescription().getVersion() + " disabled");
     }
 
     private void onReload(Player[] players) {
-        for (Player player : players) {
+      ConsoleLogger.showError("AuthMe dont support /reload command yet, please use /authme relaod");
+        return;
+         /*for (Player player : players) {
             String name = player.getName().toLowerCase();
             String ip = player.getAddress().getAddress().getHostAddress();
 
@@ -227,7 +246,8 @@ public class AuthMe extends JavaPlugin {
                 LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
             }
             sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
-        }
+        } 
+          * */
     }
     
 	public static AuthMe getInstance() {

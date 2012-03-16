@@ -52,9 +52,14 @@ settings:
         force: true
     unrestrictions:
         UnrestrictedName: []
-VBullettinOptions:
+ExternalBoardOptions:
     mySQLColumnSalt: ''
     mySQLColumnGroup: ''
     nonActivedUserGroup: -1
 permission:
     EnablePermissionCheck: false
+BackupSystem:
+    ActivateBackup: false
+    OnServerStart: false
+    OnServerStop: true
+    MysqlWindowsPath: 'C:\\Program Files\\MySQL\\MySQL Server 5.1\\'

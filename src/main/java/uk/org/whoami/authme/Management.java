@@ -100,6 +100,17 @@ public class Management {
                         playerCache.removeCache(name);
                     }   
                 }
+                
+               /*
+                *  Little Work Around under Registration Group Switching for admins that
+                *  add Registration thru a web Scripts.
+                */
+                if ( Settings.isPermissionCheckEnabled && AuthMe.permission.playerInGroup(player, Settings.unRegisteredGroup) && !Settings.unRegisteredGroup.isEmpty() ) {
+                    AuthMe.permission.playerRemoveGroup(player.getWorld(), player.getName(), Settings.unRegisteredGroup);
+                    AuthMe.permission.playerAddGroup(player.getWorld(), player.getName(), Settings.getRegisteredGroup);
+                }
+                    
+                    
                 player.sendMessage(m._("login"));
                 ConsoleLogger.info(player.getDisplayName() + " logged in!");
                

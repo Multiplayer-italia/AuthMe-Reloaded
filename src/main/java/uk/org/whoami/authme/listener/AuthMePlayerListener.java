@@ -421,7 +421,7 @@ public class AuthMePlayerListener implements Listener {
           
         } else {  
             if(!Settings.unRegisteredGroup.isEmpty()){
-               
+
                utils.setGroup(player, Utils.groupType.UNREGISTERED);
             }
             if (!Settings.isForcedRegistrationEnabled) {
