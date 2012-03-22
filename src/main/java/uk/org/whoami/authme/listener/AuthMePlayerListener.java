@@ -521,8 +521,14 @@ public class AuthMePlayerListener implements Listener {
                             return;
                         }
                 }
-             
-        String name = player.getName().toLowerCase();
+         String name = player.getName().toLowerCase();
+        if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
+            if(Settings.isSaveQuitLocationEnabled) {
+                PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
+                data.updateQuitLoc(auth);
+                }
+        }              
+       
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
             //System.out.println("e' nel kick");
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);

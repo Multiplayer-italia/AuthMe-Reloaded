@@ -89,8 +89,8 @@ public class Utils {
     }    
 
     private String hasPermOnJoin(Player player) {
-        if(Settings.getJoinPermissions.isEmpty())
-            return null;
+       /* if(Settings.getJoinPermissions.isEmpty())
+            return null; */
               Iterator<String> iter = Settings.getJoinPermissions.iterator();
                 while (iter.hasNext()) {
                     String permission = iter.next();

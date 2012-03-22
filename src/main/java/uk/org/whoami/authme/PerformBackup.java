@@ -25,7 +25,7 @@ public class PerformBackup {
    private String dbUserName = Settings.getMySQLUsername;
    private String dbPassword = Settings.getMySQLPassword;
    private String tblname = Settings.getMySQLTablename;
-   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
    String dateString = format.format( new Date()   );
    private String path = AuthMe.getInstance().getDataFolder()+"/backups/backup"+dateString;
    
@@ -50,6 +50,7 @@ public class PerformBackup {
            dirBackup.mkdir();
        if(checkWindows(Settings.backupWindowsPath)) {
         String executeCmd = Settings.backupWindowsPath+"\\bin\\mysqldump.exe -u " + dbUserName + " -p" + dbPassword + " " + dbName + " --tables " + tblname + " -r " + path+".sql";
+        //ConsoleLogger.info(executeCmd);
         Process runtimeProcess;
         try {
             //System.out.println("path "+path+" cmd "+executeCmd);
@@ -113,11 +114,12 @@ public class PerformBackup {
       String isWin = System.getProperty("os.name").toLowerCase();
        
       if(isWin.indexOf("win") >= 0) {
-          if(new File(windowsPath+"bin/mysqldump.exe").exists()) {
+          //ConsoleLogger.info(windowsPath+"\\bin\\mysqldump.exe");
+          if(new File(windowsPath+"\\bin\\mysqldump.exe").exists()) {
               return true;
           } else {
               ConsoleLogger.showError("Mysql Windows Path is incorrect please check it");
-              return false;
+              return true;
           }
        } else return false;
        
