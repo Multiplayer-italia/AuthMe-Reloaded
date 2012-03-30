@@ -185,13 +185,17 @@ public class AuthMePlayerListener implements Listener {
 
         int radius = Settings.getMovementRadius;
         Location spawn = player.getWorld().getSpawnLocation();
-        Location to = event.getTo();
-
+        //Location to = event.getTo();
+        
+        if ((spawn.distance(player.getLocation()) > radius) ) {
+            event.setTo(spawn);
+        }
+        /* old method
         if (to.getX() > spawn.getX() + radius || to.getX() < spawn.getX() - radius ||
             to.getY() > spawn.getY() + radius || to.getY() < spawn.getY() - radius ||
             to.getZ() > spawn.getZ() + radius || to.getZ() < spawn.getZ() - radius) {
             event.setTo(event.getFrom());
-        }
+        } */
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)

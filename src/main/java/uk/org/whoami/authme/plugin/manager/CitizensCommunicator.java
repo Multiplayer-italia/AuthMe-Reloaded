@@ -30,8 +30,18 @@ public class CitizensCommunicator {
     public static boolean isNPC(Entity player) {
         PluginManager pm = player.getServer().getPluginManager();
         Plugin plugin = pm.getPlugin("Citizens");
-        
+         
         if(plugin != null) {
+            /*
+             *  Checl the Citizens Version 1.1.6 or 2.0
+             */
+            String Ver = plugin.getDescription().getVersion();
+            String[] args = Ver.split("\\.");
+            
+            if(args[0].equals("1")) 
+                return CitizensManager.isNPC(player);
+            else return CitizensAPI.getNPCManager().isNPC(player);
+            /* old method
             try {
                 if( Class.forName("net.citizensnpcs.api.CitizensManager") != null)
                     return CitizensManager.isNPC(player);
@@ -39,7 +49,7 @@ public class CitizensCommunicator {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(CitizensCommunicator.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+             */
         }
         return false;
     }

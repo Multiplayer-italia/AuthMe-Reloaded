@@ -1,0 +1,30 @@
+unknown_user: Usuario inexistente
+not_logged_in: '&cNao conectado!'
+reg_voluntarily: 'Para registrar um nickname, digite: "/register senha senha"'
+usage_log: '&cPara entrar digite: "/login senha"'
+wrong_pwd: '&cErro. Senha Incorreta.'
+unregistered: '&cDesregistrado com sucesso!'
+reg_disabled: '&cNovos registros estao desativados.'
+valid_session: '&cSessao de login'
+login: '&cLogado com sucesso!'
+vb_nonActiv: 'Sua conta nao esta ativada, verifique os seus e-mails!'
+user_regged: '&cEste nome ja foi registrado antes.'
+usage_reg: '&cPara registrar digite: "/register senha senha"'
+max_reg: 'Numero maximo de registros excedido.'
+no_perm: '&cSem permissao!'
+error: 'Ocorreu um erro de sistema, por favor reporte ao ADM.'
+login_msg: '&cPara entrar digite: "/login password"'
+reg_msg: '&cPara registrar um nick digite: "/register senha senha"'
+usage_unreg: '&cPara desregistrar digite: /unregister senha'
+pwd_changed: '&cSenha modificada!'
+user_unknown: '&cNome de usuario nao existe. Verifique.'
+password_error: Erro! Senha incorreta!
+unvalid_session: Sessao invalida! Desconecte e reconecte-se novamente.
+reg_only: Registro permitido somente para nomes na Whitelist!
+logged_in: '&cJa esta logado!'
+logout: '&cSaida realizada com sucesso.'
+same_nick: Este nick ja esta online...
+registered: '&cRegistrado com sucesso!'
+pass_len: Senha muito curta.
+reload: AuthMe Recarregado.
+timeout: 'Demorou....'

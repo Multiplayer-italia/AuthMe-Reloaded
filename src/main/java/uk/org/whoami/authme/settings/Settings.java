@@ -40,7 +40,7 @@ public final class Settings extends YamlConfiguration {
     public static final String PLUGIN_FOLDER = "./plugins/AuthMe";
     public static final String CACHE_FOLDER = Settings.PLUGIN_FOLDER + "/cache";
     public static final String AUTH_FILE = Settings.PLUGIN_FOLDER + "/auths.db";
-    public static final String MESSAGE_FILE = Settings.PLUGIN_FOLDER + "/messages.yml";
+    public static final String MESSAGE_FILE = Settings.PLUGIN_FOLDER + "/messages";
     public static final String SETTINGS_FILE = Settings.PLUGIN_FOLDER + "/config.yml";
     public static List<String> getJoinPermissions = null;
     public static List<String> getUnrestrictedName = null;
@@ -66,7 +66,7 @@ public final class Settings extends YamlConfiguration {
             getMySQLUsername, getMySQLPassword, getMySQLDatabase, getMySQLTablename, 
             getMySQLColumnName, getMySQLColumnPassword, getMySQLColumnIp, getMySQLColumnLastLogin,
             getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup, backupWindowsPath,
-            getcUnrestrictedName, getRegisteredGroup;
+            getcUnrestrictedName, getRegisteredGroup, messagesLanguage;
             
     
     public static int getWarnMessageInterval, getSessionTimeout, getRegistrationTimeout, getMaxNickLength,
@@ -105,6 +105,7 @@ public final class Settings extends YamlConfiguration {
         
         mergeConfig();
         
+        messagesLanguage = checkLang(configFile.getString("settings.messagesLanguage","en"));
         isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
         isForcedRegistrationEnabled  = configFile.getBoolean("settings.registration.force", true);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.enabled", true);
@@ -171,6 +172,7 @@ public final class Settings extends YamlConfiguration {
        configFile = newConfig;
               
        //plugin.getLogger().info("RELoading Configuration File...");
+        messagesLanguage = checkLang(configFile.getString("settings.messagesLanguage","en"));
         isPermissionCheckEnabled = configFile.getBoolean("permission.EnablePermissionCheck", false);
         isForcedRegistrationEnabled = configFile.getBoolean("settings.registration.force", true);
         isRegistrationEnabled = configFile.getBoolean("settings.registration.enabled", true);
@@ -251,7 +253,11 @@ public final class Settings extends YamlConfiguration {
        
        if(!contains("BackupSystem.MysqlWindowsPath")) {
            set("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
-       } else return;
+       }
+       
+       if(!contains("settings.messagesLanguage")) {
+           set("settings.messagesLanguage","en");
+       }else return;
        
        plugin.getLogger().info("Merge new Config Options..");
        plugin.saveConfig();
@@ -451,5 +457,19 @@ public final class Settings extends YamlConfiguration {
         return singleton;
     }
 */
-
+    public static String checkLang(String lang) {
+        for(messagesLang language: messagesLang.values()) {
+            //System.out.println(language.toString());
+            if(lang.toLowerCase().contains(language.toString())) {
+                ConsoleLogger.info("Set Language: "+lang);
+                return lang;
+            }    
+        }
+        ConsoleLogger.info("Set Default Language: En ");
+        return "en";
+    }
+    
+    public enum messagesLang {
+        en, de, br, cz
+    } 
 }

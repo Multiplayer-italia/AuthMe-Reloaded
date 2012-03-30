@@ -1,6 +1,6 @@
 unknown_user: '&cBDer Spieler ist nicht registriert.'
 not_logged_in: '&cNicht angemeldet!'
-reg_voluntarily: &cBRegistrieren Sie sich mit dem Befehl "/registrieren pass pass".
+reg_voluntarily: '&cBRegistrieren Sie sich mit dem Befehl "/registrieren pass pass".'
 usage_log: '&cVerwendung: "/login pass".'
 wrong_pwd: '&cFalsches Passwort.'
 unregistered: '&cEine erfolgreiche unregister!'
@@ -14,19 +14,19 @@ error: &cBEin Fehler ist aufgetreten bitte an admin ...
 login_msg: '&cBitte loggen Sie sich "/login pass".'
 reg_msg: '&cBitte registrieren Sie sich "/register pass pass".'
 usage_unreg: '&cVerwendung: "/unregister pass".'
-pwd_changed: '&cPasswort geändert!'
+pwd_changed: '&cPasswort gendert!'
 user_unknown: '&cBenutzername nicht registriert.'
-reg_only: &cBDer Server ist nur für registrierte! Besuchen http://bit.ly/zyEzzS.
+reg_only: '&cBDer Server ist nur fur registrierte! Besuchen .'
 logged_in: '&cSie wurden abgemeldet!'
 logout: '&cAbmelden erfolgreich war.'
-same_nick: &cBJemand spielte mit dem gleichen Nick.
+same_nick: '&cBJemand spielte mit dem gleichen Nick.'
 registered: '&cAnmeldung war erfolgreich!'
-reload: &cBAktualisieren AuthMe gelungen.
-timeout: &cBZeit um sich einzuloggen ist abgelaufen!
-unsafe_spawn: &cBIhre Position war gefährlich, wenn sie getrennt werden, zu teleportieren, um zu laichen!
-unvalid_session: &cBBad beim Lesen von Daten warten, bis Ablauf.
-max_reg: &cBSie haben bereits die Grenze für die Anzahl der Konten von Ihrer IP überschritten.
-password_error: &cBPasswörter stimmen nicht überein!
-pass_len: &cBIhr Kennwort erfüllt nicht die minimale Länge (4).
-vb_nonActiv: &cBIhr Konto ist nicht aktivaovany, überprüfen Sie Ihre E-Mail.
+reload: '&cBAktualisieren AuthMe gelungen.'
+timeout: '&cBZeit um sich einzuloggen ist abgelaufen!'
+unsafe_spawn: &cBIhre Position war gefhrlich, wenn sie getrennt werden, zu teleportieren, um zu laichen!
+unvalid_session: '&cBBad beim Lesen von Daten warten bis Ablauf.'
+max_reg: '&cSie haben bereits die Grenze fur die Anzahl der Konten von Ihrer IP berschritten.'
+password_error: '&cBPassworter stimmen nicht uberein!'
+pass_len: '&cBIhr Kennwort erfllt nicht die minimale Longe (4).'
+vb_nonActiv: '&cBIhr Konto ist nicht aktivaovany, uberprofen Sie Ihre E-Mail.'
 usage_changepassword: '&cBVerwendung: "/changepassword alt-pass neu-pass".'

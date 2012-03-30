@@ -23,9 +23,11 @@ public class Messages extends CustomConfiguration {
 
     private static Messages singleton = null;
     private HashMap<String, String> map;
+    
 
     public Messages() {
-        super(new File(Settings.MESSAGE_FILE));
+        
+        super(new File(Settings.MESSAGE_FILE+"_"+Settings.messagesLanguage+".yml"));
         loadDefaults();
         loadFile();
         singleton = this;
@@ -89,4 +91,5 @@ public class Messages extends CustomConfiguration {
         }        
         return singleton;
     }
+       
 }

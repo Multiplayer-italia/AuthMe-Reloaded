@@ -41,10 +41,12 @@ import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.security.PasswordSecurity;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
+import uk.org.whoami.authme.settings.SpoutCfg;
 
 public class AdminCommand implements CommandExecutor {
 
     private Messages m = Messages.getInstance();
+    private SpoutCfg s = SpoutCfg.getInstance();
     //private Settings settings = Settings.getInstance();
     private DataSource database;
 
@@ -120,7 +122,8 @@ public class AdminCommand implements CommandExecutor {
             //settings.clearDefaults();
             //setting.load();
             //setting.reload();
-            m.reload();     
+            m.reload();
+            s.reload();
             sender.sendMessage(m._("reload"));
         } else if (args[0].equalsIgnoreCase("register")) {
             if (args.length != 3) {
