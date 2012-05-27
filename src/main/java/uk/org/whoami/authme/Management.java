@@ -113,7 +113,7 @@ public class Management {
                     
                 player.sendMessage(m._("login"));
                 ConsoleLogger.info(player.getDisplayName() + " logged in!");
-               
+                player.saveData();
                 
             } else {
                 ConsoleLogger.info(player.getDisplayName() + " used the wrong password");

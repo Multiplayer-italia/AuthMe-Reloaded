@@ -19,8 +19,10 @@ package uk.org.whoami.authme.listener;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
@@ -78,7 +80,7 @@ public class AuthMeEntityListener implements Listener{
         event.setCancelled(true);
     }
 
-     @EventHandler
+    @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.isCancelled()) {
             return;
@@ -131,6 +133,33 @@ public class AuthMeEntityListener implements Listener{
 
         event.setCancelled(true);
 
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void EntityRegainHealthEvent(EntityRegainHealthEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) entity;
+        String name = player.getName().toLowerCase();
+
+        if (PlayerCache.getInstance().isAuthenticated(name)) {
+            return;
+        }
+
+        if (!data.isAuthAvailable(name)) {
+            if (!Settings.isForcedRegistrationEnabled) {
+                return;
+            }
+        }
+
+        event.setCancelled(true);       
     }
  
 }

@@ -10,16 +10,7 @@ package uk.org.whoami.authme.cache.backup;
  */
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Scanner;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import java.util.Scanner;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import java.util.Scanner;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import java.util.Scanner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -102,6 +93,7 @@ public class FileCache {
 					itemid = armorstack[i].getTypeId();
 					amount = armorstack[i].getAmount();
 					durability = armorstack[i].getDurability();
+                                        
                                                 for(Enchantment e : armorstack[i].getEnchantments().keySet())
                                                  {
                                                     //System.out.println("enchant "+e.getName()+" bog "+armorstack[i].getEnchantmentLevel(e));
@@ -168,6 +160,7 @@ public class FileCache {
                         // can enchant item? size ofstring in file - 4  all / 2 = number of enchant
 				if (in[0].equals("i")) {
                                     Enchantment e = null;  
+                                    
 					stacki[i] = new ItemStack(Integer.parseInt(in[1]),
 							Integer.parseInt(in[2]), Short.parseShort((in[3])));
 					// qui c'e' un problema serio!

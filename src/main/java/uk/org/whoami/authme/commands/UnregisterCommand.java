@@ -29,6 +29,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
 import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.security.PasswordSecurity;
@@ -43,7 +44,8 @@ public class UnregisterCommand implements CommandExecutor {
     //private Settings settings = Settings.getInstance();
     private JavaPlugin plugin;
     private DataSource database;
-
+    private FileCache playerCache = new FileCache();
+    
     public UnregisterCommand(JavaPlugin plugin, DataSource database) {
         this.plugin = plugin;
         this.database = database;
@@ -78,24 +80,41 @@ public class UnregisterCommand implements CommandExecutor {
                     player.sendMessage("error");
                     return true;
                 }
-                PlayerCache.getInstance().removePlayer(player.getName().toLowerCase());
-                LimboCache.getInstance().addLimboPlayer(player);
-                player.getInventory().setArmorContents(new ItemStack[0]);
-                player.getInventory().setContents(new ItemStack[36]);
+                if(Settings.isForcedRegistrationEnabled) {
+                    player.getInventory().setArmorContents(new ItemStack[4]);
+                    player.getInventory().setContents(new ItemStack[36]); 
+                    player.saveData();
+                    PlayerCache.getInstance().removePlayer(player.getName().toLowerCase());
+                    LimboCache.getInstance().addLimboPlayer(player);
 
-                int delay = Settings.getRegistrationTimeout * 20;
-                int interval = Settings.getWarnMessageInterval;
-                BukkitScheduler sched = sender.getServer().getScheduler();
-                if (delay != 0) {
-                    int id = sched.scheduleSyncDelayedTask(plugin, new TimeoutTask(plugin, name), delay);
-                    LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
+
+                    int delay = Settings.getRegistrationTimeout * 20;
+                    int interval = Settings.getWarnMessageInterval;
+                    BukkitScheduler sched = sender.getServer().getScheduler();
+                    if (delay != 0) {
+                        int id = sched.scheduleSyncDelayedTask(plugin, new TimeoutTask(plugin, name), delay);
+                        LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
+                    }
+                    sched.scheduleSyncDelayedTask(plugin, new MessageTask(plugin, name, m._("reg_msg"), interval));
+                        if(!Settings.unRegisteredGroup.isEmpty()){
+                            Utils.getInstance().setGroup(player, Utils.groupType.UNREGISTERED);
+                        }
+                        player.sendMessage("unregistered");
+                        ConsoleLogger.info(player.getDisplayName() + " unregistered himself");
+                    return true;
                 }
-                sched.scheduleSyncDelayedTask(plugin, new MessageTask(plugin, name, m._("reg_msg"), interval));
                 if(!Settings.unRegisteredGroup.isEmpty()){
-                Utils.getInstance().setGroup(player, Utils.groupType.UNREGISTERED);
-                }
-                player.sendMessage("unregistered");
-                ConsoleLogger.info(player.getDisplayName() + " unregistered himself");
+                     Utils.getInstance().setGroup(player, Utils.groupType.UNREGISTERED);
+                  }
+                 PlayerCache.getInstance().removePlayer(player.getName().toLowerCase());
+                // check if Player cache File Exist and delete it, preventing duplication of items
+                 if(playerCache.doesCacheExist(name)) {
+                        playerCache.removeCache(name);
+                 }   
+                
+                 player.sendMessage("unregistered");
+                 ConsoleLogger.info(player.getDisplayName() + " unregistered himself");                
+                return true;
             } else {
                 player.sendMessage(m._("wrong_pwd"));
             }

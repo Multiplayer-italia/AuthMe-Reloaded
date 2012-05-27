@@ -42,6 +42,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.cache.backup.DataFileCache;
 import uk.org.whoami.authme.cache.backup.FileCache;
@@ -111,8 +114,13 @@ public class AuthMePlayerListener implements Listener {
         event.setMessage("/notloggedin");
         event.setCancelled(true);
     }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+        
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
@@ -249,71 +257,11 @@ public class AuthMePlayerListener implements Listener {
                         utils.addNormal(player, limbo.getGroup());
                         LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
                     }            
-        //Start a new thread
- /*       Thread group = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println("nick gia in uso");
-                    final LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
-                    //sleep of thread
-
-                    //Thread.currentThread().sleep(2);      
-                    //assign the group
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
-                    
-                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
-                    utils.addNormal(player, limbo.getGroup());
-                    LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
-                    } 
-                }
-                catch (Exception e) {
-                }
-            }
-        };
-        group.start();
-  */
-            //event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
-            /*if(utils.addNormal(player, limbo.getGroup()))
-                
-            System.out.println("groupp"+limbo.getGroup()+"nome"+player);
-            else
-            LimboCache.getInstance().deleteLimboPlayer(name);*/
             return;
                
         }
         
-        // is needed this check?
-        /*
-      if (PlayerCache.getInstance().isAuthenticated(name)) {   
-            //System.out.println("gia tutenticato");
-           
-        //Start a new thread
-        Thread group = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    final LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
-                    //sleep of thread
-                    Thread.currentThread().sleep(2);      
-                    //assign the group
-                    
-                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
-                     utils.addNormal(player, limbo.getGroup());
-                    LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
-                    }
-                }
-                catch (Exception e) {
-                }
-            }
-        };
-        group.start();
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
-            //utils.addNormal(player, limbo.getGroup());
-            return;
-        }  
-         * 
-         */
+
         int min = Settings.getMinNickLength;
         int max = Settings.getMaxNickLength;
         String regex = Settings.getNickRegex;
@@ -350,12 +298,6 @@ public class AuthMePlayerListener implements Listener {
         if (Settings.isKickNonRegisteredEnabled) {
             if (!data.isAuthAvailable(name)) {    
                 event.disallow(Result.KICK_OTHER, m._("reg_only"));
-/*      what should i do in this line? 
-                 * LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name); 
-                utils.addNormal(player, limbo.getGroup());
-                LimboCache.getInstance().deleteLimboPlayer(name);
-                 * 
-                 */
                 return;
             }
         }
@@ -425,7 +367,6 @@ public class AuthMePlayerListener implements Listener {
           
         } else {  
             if(!Settings.unRegisteredGroup.isEmpty()){
-
                utils.setGroup(player, Utils.groupType.UNREGISTERED);
             }
             if (!Settings.isForcedRegistrationEnabled) {
@@ -502,6 +443,7 @@ public class AuthMePlayerListener implements Listener {
             }
         }
         PlayerCache.getInstance().removePlayer(name);
+        player.saveData();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -552,6 +494,7 @@ public class AuthMePlayerListener implements Listener {
                 
         }
         PlayerCache.getInstance().removePlayer(name);
+        player.saveData();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -680,5 +623,33 @@ public class AuthMePlayerListener implements Listener {
         }
         event.setCancelled(true);
     }
-    
+
+    /* TODO: hook in Multiverse Custom Event for better checking this situation!
+     * Avoid the situation where player join the server and he is in the portal, 
+     * simple workAround is TeleportUnAtuhToSpawn: true;
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
+        if (event.isCancelled() || event.getPlayer() == null) {
+            return;
+        }
+        
+        Player player = event.getPlayer();
+        String name = player.getName().toLowerCase();
+
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
+            return;
+        }
+        
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+            return;
+        }        
+        
+        if(event.getCause().equals(TeleportCause.PLUGIN) || event.getCause().equals(TeleportCause.NETHER_PORTAL)) {
+            return;
+        }
+        
+        event.setCancelled(true);
+    }
+     * 
+     */
 }

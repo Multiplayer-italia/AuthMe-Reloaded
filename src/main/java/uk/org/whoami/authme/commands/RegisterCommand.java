@@ -94,15 +94,14 @@ public class RegisterCommand implements CommandExecutor {
             
         String ipAddress = player.getAddress().getAddress().getHostAddress();
         
-            if(database.getIps(ipAddress) >= Settings.getmaxRegPerIp ) {
-                if(!sender.hasPermission("authme.allow2accounts") && database.getIps(ipAddress) > Settings.getmaxRegPerIp) {
+         if(!sender.hasPermission("authme.allow2accounts") && database.getIps(ipAddress) > Settings.getmaxRegPerIp) {
                 //System.out.println("number of reg "+database.getIps(ipAddress));
                 player.sendMessage(m._("max_reg"));
                 return true;
                 }
             }
                    
-        }
+        
 
         try {
             String hash;
@@ -131,14 +130,17 @@ public class RegisterCommand implements CommandExecutor {
                 if (Settings.isTeleportToSpawnEnabled) {
                     player.teleport(limbo.getLoc());
                 }
-
+                
                 sender.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
                 LimboCache.getInstance().deleteLimboPlayer(name);
             }
+  
+ 
             if(!Settings.getRegisteredGroup.isEmpty()){
             Utils.getInstance().setGroup(player, Utils.groupType.REGISTERED);
             }
-            player.sendMessage(m._("registered"));    
+            player.sendMessage(m._("registered"));
+            player.saveData();
             ConsoleLogger.info(player.getDisplayName() + " registered "+player.getAddress().getAddress().getHostAddress());
 
         } catch (NoSuchAlgorithmException ex) {

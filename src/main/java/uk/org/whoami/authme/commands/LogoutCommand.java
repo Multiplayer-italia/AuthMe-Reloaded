@@ -28,6 +28,8 @@ import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
+import uk.org.whoami.authme.cache.backup.DataFileCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.cache.limbo.LimboCache;
 import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.gui.screens.LoginScreen;
@@ -43,7 +45,8 @@ public class LogoutCommand implements CommandExecutor {
     private JavaPlugin plugin;
     private DataSource database;
     private Utils utils = Utils.getInstance();
-
+    private FileCache playerBackup = new FileCache();
+    
     public LogoutCommand(JavaPlugin plugin, DataSource database) {
         this.plugin = plugin;
         this.database = database;
@@ -80,6 +83,9 @@ public class LogoutCommand implements CommandExecutor {
         if(Settings.protectInventoryBeforeLogInEnabled) {
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.getInventory().setContents(new ItemStack[36]);
+            // create cache file for handling lost of inventories on unlogged in status
+            DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
+            playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());            
         }
         if (Settings.isTeleportToSpawnEnabled) {
             player.teleport(player.getWorld().getSpawnLocation());

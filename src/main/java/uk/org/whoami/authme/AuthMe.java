@@ -202,6 +202,8 @@ public class AuthMe extends JavaPlugin {
             else ConsoleLogger.showError("Error while making Backup");
         }       
         ConsoleLogger.info("Authme " + this.getDescription().getVersion() + " disabled");
+        
+        
     }
 
     private void onReload(Player[] players) {
