@@ -337,6 +337,7 @@ public class AuthMePlayerListener implements Listener {
         }
 */
         if (data.isAuthAvailable(name)) {    
+        LimboCache.getInstance().addLimboPlayer(player);
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());            
             if (Settings.isSessionsEnabled) {
