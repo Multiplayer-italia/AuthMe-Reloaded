@@ -30,13 +30,13 @@ public class Utils {
             return;
         switch(group) {
             case UNREGISTERED: {
-                String currentGroup = AuthMe.permission.getPrimaryGroup(player);
+                currentGroup = AuthMe.permission.getPrimaryGroup(player);
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
                 AuthMe.permission.playerAddGroup(player, Settings.unRegisteredGroup);
                 break;
             }
             case REGISTERED: {
-                String currentGroup = AuthMe.permission.getPrimaryGroup(player);
+                currentGroup = AuthMe.permission.getPrimaryGroup(player);
                 AuthMe.permission.playerRemoveGroup(player, currentGroup);
                 AuthMe.permission.playerAddGroup(player, Settings.getRegisteredGroup);
                 break;
