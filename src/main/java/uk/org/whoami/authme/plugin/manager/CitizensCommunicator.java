@@ -40,7 +40,7 @@ public class CitizensCommunicator {
             
             if(args[0].equals("1")) 
                 return CitizensManager.isNPC(player);
-            else return CitizensAPI.getNPCManager().isNPC(player);
+            else return CitizensAPI.getNPCRegistry().isNPC(player);
             /* old method
             try {
                 if( Class.forName("net.citizensnpcs.api.CitizensManager") != null)

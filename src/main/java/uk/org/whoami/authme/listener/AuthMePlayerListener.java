@@ -314,14 +314,16 @@ public class AuthMePlayerListener implements Listener {
         String ip = player.getAddress().getAddress().getHostAddress();
        
        
-       if(Settings.isAllowRestrictedIp && !Settings.getRestrictedIp(name, ip)) {
+      if(Settings.isAllowRestrictedIp && !Settings.getRestrictedIp(name, ip)) {
         LimboCache.getInstance().addLimboPlayer(player);
+        /* 
+         * TODO: rewrite this part more usefull
         DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
         playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
         if(Settings.protectInventoryBeforeLogInEnabled) {
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.getInventory().setContents(new ItemStack[36]);
-        }
+        } */
         player.kickPlayer( "You are not the Owner of this account, please try another name!");
         return;           
        }
@@ -334,7 +336,9 @@ public class AuthMePlayerListener implements Listener {
             return;
         }
 */
-        if (data.isAuthAvailable(name)) {     
+        if (data.isAuthAvailable(name)) {    
+        DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
+        playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());            
             if (Settings.isSessionsEnabled) {
                 PlayerAuth auth = data.getAuth(name);
                 long timeout = Settings.getSessionTimeout * 60000;
@@ -360,8 +364,8 @@ public class AuthMePlayerListener implements Listener {
                  // and session isent ended he is kick out for invalid session, even if he is the rigth
                  // player
                 PlayerCache.getInstance().removePlayer(name);
-                  LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
-                 LimboCache.getInstance().addLimboPlayer(player);
+                LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
+                LimboCache.getInstance().addLimboPlayer(player);
             }
           } 
           
@@ -375,8 +379,7 @@ public class AuthMePlayerListener implements Listener {
         }
 
         LimboCache.getInstance().addLimboPlayer(player);
-        DataFileCache playerData = new DataFileCache(player.getInventory().getContents(),player.getInventory().getArmorContents());      
-        playerBackup.createCache(name, playerData, LimboCache.getInstance().getLimboPlayer(name).getGroup(),LimboCache.getInstance().getLimboPlayer(name).getOperator());
+
         if(Settings.protectInventoryBeforeLogInEnabled) {
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.getInventory().setContents(new ItemStack[36]);

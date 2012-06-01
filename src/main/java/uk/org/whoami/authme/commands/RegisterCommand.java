@@ -41,9 +41,11 @@ public class RegisterCommand implements CommandExecutor {
     private Messages m = Messages.getInstance();
     //private Settings settings = Settings.getInstance();
     private DataSource database;
+    public boolean isFirstTimeJoin;
 
     public RegisterCommand(DataSource database) {
         this.database = database;
+        this.isFirstTimeJoin = false;
     }
 
     @Override
@@ -75,8 +77,8 @@ public class RegisterCommand implements CommandExecutor {
             player.sendMessage(m._("usage_reg"));
             return true;
         }
-        //System.out.println("pass legth "+args[0].length());
-        //System.out.println("pass length permit"+Settings.passwordMaxLength);
+        System.out.println("pass legth "+args[0].length());
+        System.out.println("pass length permit"+Settings.passwordMaxLength);
         if(args[0].length() < Settings.getPasswordMinLen || args[0].length() > Settings.passwordMaxLength) {
             player.sendMessage(m._("pass_len"));
             return true;
@@ -94,7 +96,7 @@ public class RegisterCommand implements CommandExecutor {
             
         String ipAddress = player.getAddress().getAddress().getHostAddress();
         
-         if(!sender.hasPermission("authme.allow2accounts") && database.getIps(ipAddress) > Settings.getmaxRegPerIp) {
+         if(!sender.hasPermission("authme.allow2accounts") && database.getIps(ipAddress) >= Settings.getmaxRegPerIp) {
                 //System.out.println("number of reg "+database.getIps(ipAddress));
                 player.sendMessage(m._("max_reg"));
                 return true;
@@ -124,8 +126,8 @@ public class RegisterCommand implements CommandExecutor {
 
             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
             if (limbo != null) {
-                player.getInventory().setContents(limbo.getInventory());
-                player.getInventory().setArmorContents(limbo.getArmour());
+               // player.getInventory().setContents(limbo.getInventory());
+               // player.getInventory().setArmorContents(limbo.getArmour());
                 player.setGameMode(GameMode.getByValue(limbo.getGameMode()));      
                 if (Settings.isTeleportToSpawnEnabled) {
                     player.teleport(limbo.getLoc());
@@ -137,9 +139,10 @@ public class RegisterCommand implements CommandExecutor {
   
  
             if(!Settings.getRegisteredGroup.isEmpty()){
-            Utils.getInstance().setGroup(player, Utils.groupType.REGISTERED);
+                Utils.getInstance().setGroup(player, Utils.groupType.REGISTERED);
             }
             player.sendMessage(m._("registered"));
+            this.isFirstTimeJoin = true;
             player.saveData();
             ConsoleLogger.info(player.getDisplayName() + " registered "+player.getAddress().getAddress().getHostAddress());
 

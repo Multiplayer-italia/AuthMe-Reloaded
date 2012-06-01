@@ -307,8 +307,8 @@ public final class Settings extends YamlConfiguration {
                 while (iter.hasNext()) {
                    String[] args =  iter.next().split(";");
                   //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
-                   if(args[0].equals(name) ) {
-                           if(args[1].equals(ip)) {
+                   if(args[0].equalsIgnoreCase(name) ) {
+                           if(args[1].equalsIgnoreCase(ip)) {
                        //System.out.println("name restricted "+args[0]+"name 2:"+name+"ip"+args[1]+"ip2"+ip);
                            return true;
                             } else return false;

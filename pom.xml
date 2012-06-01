@@ -61,12 +61,12 @@
             <groupId>citizensnpcs.net</groupId>
             <artifactId>Citizens</artifactId>
             <version>1.1.6</version>
-        </dependency>
+        </dependency>  
         <dependency>
-            <groupId>ci.citizensnpcs.net</groupId>
-            <artifactId>CitizensAPI</artifactId>
-            <version>2.0</version>
-        </dependency>        
+            <groupId>citizensnpcs.net</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>dev-SNAPSHOT</version>
+        </dependency>           
         <dependency>
             <groupId>vault.net</groupId>
             <artifactId>vault</artifactId>
@@ -88,5 +88,5 @@
             <version>3.7.2</version>
         </dependency>
     </dependencies>
-    <version>2.6.6</version>
+    <version>2.6.6b2</version>
 </project>
