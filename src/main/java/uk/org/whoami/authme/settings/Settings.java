@@ -59,14 +59,14 @@ public final class Settings extends YamlConfiguration {
             isForceSpawnLocOnJoinEnabled, isForceExactSpawnEnabled, isSaveQuitLocationEnabled,
             isForceSurvivalModeEnabled, isResetInventoryIfCreative, isCachingEnabled, isKickOnWrongPasswordEnabled,
             getEnablePasswordVerifier, protectInventoryBeforeLogInEnabled, isBackupActivated, isBackupOnStart,
-            isBackupOnStop;
+            isBackupOnStop, enablePasspartu;
             
             
     public static String getNickRegex, getUnloggedinGroup, getMySQLHost, getMySQLPort, 
             getMySQLUsername, getMySQLPassword, getMySQLDatabase, getMySQLTablename, 
             getMySQLColumnName, getMySQLColumnPassword, getMySQLColumnIp, getMySQLColumnLastLogin,
             getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup, backupWindowsPath,
-            getcUnrestrictedName, getRegisteredGroup, messagesLanguage;
+            getcUnrestrictedName, getRegisteredGroup, messagesLanguage, passpartuPassword, consolePassword;
             
     
     public static int getWarnMessageInterval, getSessionTimeout, getRegistrationTimeout, getMaxNickLength,
@@ -159,7 +159,10 @@ public final class Settings extends YamlConfiguration {
         isBackupOnStart = configFile.getBoolean("BackupSystem.OnServerStart",false);
         isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);
         backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
-        
+        enablePasspartu = configFile.getBoolean("Passpartu.enablePasspartu",false);
+        passpartuPassword =  configFile.getString("Passpartu.passpartuPassword","");
+        consolePassword =  configFile.getString("Passpartu.consolePassword","");
+
         saveDefaults();
             
             //System.out.println("[AuthMe debug] Config " + getEnablePasswordVerifier.toString());
@@ -226,6 +229,9 @@ public final class Settings extends YamlConfiguration {
         isBackupOnStart = configFile.getBoolean("BackupSystem.OnServerStart",false);
         isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);     
         backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
+        enablePasspartu = configFile.getBoolean("Passpartu.enablePasspartu",false);
+        passpartuPassword =  configFile.getString("Passpartu.passpartuPassword","");
+        consolePassword =  configFile.getString("Passpartu.consolePassword","");        
         //System.out.println(getMySQLDatabase);
         
          
@@ -257,7 +263,13 @@ public final class Settings extends YamlConfiguration {
        
        if(!contains("settings.messagesLanguage")) {
            set("settings.messagesLanguage","en");
-       }else return;
+       }
+       
+       if(!contains("passpartu.enablePasspartu")) {
+           set("Passpartu.enablePasspartu",false);
+           set("Passpartu.passpartuPassword","");
+           set("Passpartu.consolePassword","");
+       } else return;
        
        plugin.getLogger().info("Merge new Config Options..");
        plugin.saveConfig();

@@ -26,7 +26,7 @@ import uk.org.whoami.authme.settings.Messages;
 
 public class LoginCommand implements CommandExecutor {
 
-	private AuthMe plugin = AuthMe.getInstance();
+    private AuthMe plugin = AuthMe.getInstance();
     private Messages m = Messages.getInstance();
     
     public LoginCommand() {

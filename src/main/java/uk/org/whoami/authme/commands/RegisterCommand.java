@@ -77,8 +77,8 @@ public class RegisterCommand implements CommandExecutor {
             player.sendMessage(m._("usage_reg"));
             return true;
         }
-        System.out.println("pass legth "+args[0].length());
-        System.out.println("pass length permit"+Settings.passwordMaxLength);
+        //System.out.println("pass legth "+args[0].length());
+        //System.out.println("pass length permit"+Settings.passwordMaxLength);
         if(args[0].length() < Settings.getPasswordMinLen || args[0].length() > Settings.passwordMaxLength) {
             player.sendMessage(m._("pass_len"));
             return true;

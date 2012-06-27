@@ -173,6 +173,7 @@ public class AuthMe extends JavaPlugin {
         this.getCommand("changepassword").setExecutor(new ChangePasswordCommand(database));
         this.getCommand("logout").setExecutor(new LogoutCommand(this,database));
         this.getCommand("unregister").setExecutor(new UnregisterCommand(this, database));
+
         
         //
         // Check for correct sintax in config file!

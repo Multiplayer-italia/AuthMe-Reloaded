@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,13 +29,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.ConsoleLogger;
+import uk.org.whoami.authme.Management;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.datasource.DataSource;
@@ -49,7 +53,9 @@ public class AdminCommand implements CommandExecutor {
     private SpoutCfg s = SpoutCfg.getInstance();
     //private Settings settings = Settings.getInstance();
     private DataSource database;
-
+    private String token;
+    private boolean isPasspartu = false;
+    
     public AdminCommand(DataSource database) {
         this.database = database;
     }
@@ -60,8 +66,50 @@ public class AdminCommand implements CommandExecutor {
             sender.sendMessage("Usage: /authme reload|register playername password|changepassword playername password|unregister playername|purge|version");
             return true;
         }
+        
+       if((sender instanceof ConsoleCommandSender) && args[0].equalsIgnoreCase("passpartuToken")) {
+           // obtain new random token 
+           Random rnd = new Random ();
+            char[] arr = new char[5];
 
-        if (!sender.hasPermission("authme.admin." + args[0].toLowerCase())) {
+            for (int i=0; i<5; i++) {
+                    int n = rnd.nextInt (36);
+                    arr[i] = (char) (n < 10 ? '0'+n : 'a'+n-10);
+            }
+            token = new String(arr);
+            System.out.println("[AuthMe] Security passpartu token: "+ token);
+            System.out.println("[AuthMe] You have 10s for insert this token with /authme passpartu [token]");
+            isPasspartu = true;
+            //Start timeout interval
+             Thread timeout = new Thread() {
+             @Override
+             public void run() {
+                try {
+                    Thread.currentThread().sleep(100);
+                    //reset passpartu because time is ended.
+                    isPasspartu = false;
+                    }  catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            timeout.start(); 
+            return true;
+       }
+       
+       if ((sender instanceof Player) && args[0].equalsIgnoreCase("passpartu") && args.length == 3) {
+           if(isPasspartu && args[2].equals(this.token)) {
+                 //bypass login!
+                Management bypass = new Management(database,true);
+                String result = bypass.performLogin((Player)sender, "dontneed");
+                if (result != "") sender.sendMessage(result); 
+                return true;
+           }
+           sender.sendMessage("Time is expired or Token is Wrong!");
+           return true;
+       }
+       
+       if (!sender.hasPermission("authme.admin." + args[0].toLowerCase())) {
             sender.sendMessage(m._("no_perm"));
             return true;
         }
