@@ -54,16 +54,19 @@ public class TimeoutTask implements Runnable {
             if (player.getName().toLowerCase().equals(name)) {
                 if (LimboCache.getInstance().hasLimboPlayer(name)) {
                     LimboPlayer inv = LimboCache.getInstance().getLimboPlayer(name);
+                    player.getServer().getScheduler().cancelTask(inv.getTimeoutTaskId());
+                    /*
                     player.getInventory().setArmorContents(inv.getArmour());
                     player.getInventory().setContents(inv.getInventory());
                     utils.addNormal(player, inv.getGroup());
                     player.setOp(inv.getOperator());
                     //System.out.println("debug timout group reset "+inv.getGroup());
-                    LimboCache.getInstance().deleteLimboPlayer(name);
-                   if(playerCache.doesCacheExist(name)) {
+                    LimboCache.getInstance().deleteLimboPlayer(name); */
+                    if(playerCache.doesCacheExist(name)) {
                         playerCache.removeCache(name);
                     }   
-                }
+                } 
+
                 player.kickPlayer(m._("timeout"));
                 break;
             }

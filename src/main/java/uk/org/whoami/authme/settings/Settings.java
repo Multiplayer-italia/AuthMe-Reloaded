@@ -317,47 +317,6 @@ public final class Settings extends YamlConfiguration {
             return true;
     }
 
-    //
-    // Config option for set playername that should bypass registration
-    // this is needed for mods like buildcraft but it is very doungerous!
-    // return true if input name is found inside string list
-    //
-    /*
-    public static List<String> getcUnrestrictedName() {
-        return unrestricted;
-        
-        this.unrestricted = getStringList("settings.unrestrictions.UnrestrictedName", new ArrayList<String>());
-            if(unrestricted.isEmpty()) {
-                //unrestricted = Arrays.asList("mynameisunrestricted");
-                setProperty("settings.unrestrictions.UnrestrictedName",unrestricted);           
-            }             
-            return unrestricted;
-    }
-    
-    public static List<String> getUnrestrictedName(){
-        return unrestricted;
-        
-    }
-    */
-    //
-    // Config option for set player permissions on join, it will check
-    // if given permissions is founded in String arraty list.
-    // return true if input permissions is found inside string list
-    //
-    /*
-    private static List<String> getcJoinPermissions() {
-        return joinPerm;
-       /* this.joinPerm = getStringList("GroupOptions.Permissions.PermissionsOnJoin", new ArrayList<String>());
-            if(joinPerm.isEmpty()) {
-                setProperty("GroupOptions.Permissions.PermissionsOnJoin",joinPerm);           
-            }
-       return joinPerm;
-    }
-    
-    public static List<String> getJoinPermissions() {
-        return joinPerm;
-    }
-    */
     
     /**
      * Loads the configuration from disk

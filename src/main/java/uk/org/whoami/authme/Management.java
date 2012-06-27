@@ -3,8 +3,10 @@ package uk.org.whoami.authme;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
@@ -66,6 +68,7 @@ public class Management {
                    // TODO: completly rewrite this part, too much if, else ...
                    // check quit location, check correct spawn, 
                    //
+                    World world = player.getWorld();
                     if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
                                  // This is initial work around for prevent ppl to quit on bukkit bug
                                  // take last quit location from database and subtract y from safe spawn             
@@ -74,9 +77,18 @@ public class Management {
                                 
                                  if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
                                      Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
+                                     //pre-load chunk before teleport player to quit location
+                                     
+                                     if(!world.getChunkAt(quitLoc).isLoaded()) {
+                                         //System.out.println("Debug chunk insent loaded");
+                                         world.getChunkAt(quitLoc).load();
+                                     }
                                      player.teleport(quitLoc);
                                      //System.out.println("quit location from db:"+quitLoc);
                                  } else {
+                                    //pre-load chunk before teleport player to quit location
+                                    if(!world.getChunkAt(limbo.getLoc()).isLoaded())
+                                            world.getChunkAt(limbo.getLoc()).load();                                      
                                  player.teleport(limbo.getLoc());
                                  //System.out.println("quit location from bukkit:"+limbo.getLoc());
                                  } 
@@ -86,9 +98,19 @@ public class Management {
                         } else {
                         if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
                           Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
+                          //pre-load chunk before teleport player to quit location
+                              if(!world.getChunkAt(quitLoc).isLoaded()) {
+                                  //System.out.println("Debug chunk insent loaded");
+                                  world.getChunkAt(quitLoc).load(); 
+                              }
                           player.teleport(quitLoc);  
                           //System.out.println("quit location from db:"+quitLoc);
                         } else {
+                          //pre-load chunk before teleport player to quit location
+                              if(!world.getChunkAt(limbo.getLoc()).isLoaded()) {
+                                  //System.out.println("Debug chunk insent loaded");
+                                  world.getChunkAt(limbo.getLoc()).load();      
+                              }
                                 player.teleport(limbo.getLoc());
                                 //System.out.println("quit location from bukkit:"+limbo.getLoc()); 
                                 }  

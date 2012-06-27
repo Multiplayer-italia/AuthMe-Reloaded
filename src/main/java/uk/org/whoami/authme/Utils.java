@@ -27,7 +27,10 @@ public class Utils {
   */
   public void setGroup(Player player, groupType group) {
     if (!player.isOnline())
-            return;
+        return;
+    if(!Settings.isPermissionCheckEnabled)
+        return;
+    
         switch(group) {
             case UNREGISTERED: {
                 currentGroup = AuthMe.permission.getPrimaryGroup(player);
