@@ -66,7 +66,7 @@ public final class Settings extends YamlConfiguration {
             getMySQLUsername, getMySQLPassword, getMySQLDatabase, getMySQLTablename, 
             getMySQLColumnName, getMySQLColumnPassword, getMySQLColumnIp, getMySQLColumnLastLogin,
             getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup, backupWindowsPath,
-            getcUnrestrictedName, getRegisteredGroup, messagesLanguage, passpartuPassword, consolePassword;
+            getcUnrestrictedName, getRegisteredGroup, messagesLanguage;
             
     
     public static int getWarnMessageInterval, getSessionTimeout, getRegistrationTimeout, getMaxNickLength,
@@ -160,8 +160,7 @@ public final class Settings extends YamlConfiguration {
         isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);
         backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
         enablePasspartu = configFile.getBoolean("Passpartu.enablePasspartu",false);
-        passpartuPassword =  configFile.getString("Passpartu.passpartuPassword","");
-        consolePassword =  configFile.getString("Passpartu.consolePassword","");
+
 
         saveDefaults();
             
@@ -230,8 +229,7 @@ public final class Settings extends YamlConfiguration {
         isBackupOnStop = configFile.getBoolean("BackupSystem.OnServeStop",false);     
         backupWindowsPath = configFile.getString("BackupSystem.MysqlWindowsPath", "C:\\Program Files\\MySQL\\MySQL Server 5.1\\");
         enablePasspartu = configFile.getBoolean("Passpartu.enablePasspartu",false);
-        passpartuPassword =  configFile.getString("Passpartu.passpartuPassword","");
-        consolePassword =  configFile.getString("Passpartu.consolePassword","");        
+       
         //System.out.println(getMySQLDatabase);
         
          
@@ -267,8 +265,6 @@ public final class Settings extends YamlConfiguration {
        
        if(!contains("passpartu.enablePasspartu")) {
            set("Passpartu.enablePasspartu",false);
-           set("Passpartu.passpartuPassword","");
-           set("Passpartu.consolePassword","");
        } else return;
        
        plugin.getLogger().info("Merge new Config Options..");

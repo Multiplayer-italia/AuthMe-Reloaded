@@ -107,7 +107,7 @@ public class AuthMePlayerListener implements Listener {
         }
 
         String cmd = msg.split(" ")[0];
-        if (cmd.equalsIgnoreCase("/login") || cmd.equalsIgnoreCase("/register")) {
+        if (cmd.equalsIgnoreCase("/login") || cmd.equalsIgnoreCase("/register") || cmd.equalsIgnoreCase("/passpartu")) {
             return;
         }
 

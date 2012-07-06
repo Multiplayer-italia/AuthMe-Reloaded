@@ -51,6 +51,7 @@ import uk.org.whoami.authme.task.TimeoutTask;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Server;
+import uk.org.whoami.authme.commands.PasspartuCommand;
 import uk.org.whoami.authme.datasource.SqliteDataSource;
 
 public class AuthMe extends JavaPlugin {
@@ -173,6 +174,7 @@ public class AuthMe extends JavaPlugin {
         this.getCommand("changepassword").setExecutor(new ChangePasswordCommand(database));
         this.getCommand("logout").setExecutor(new LogoutCommand(this,database));
         this.getCommand("unregister").setExecutor(new UnregisterCommand(this, database));
+        this.getCommand("passpartu").setExecutor(new PasspartuCommand(database));
 
         
         //

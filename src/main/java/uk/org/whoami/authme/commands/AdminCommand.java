@@ -39,6 +39,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.Management;
+import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
 import uk.org.whoami.authme.datasource.DataSource;
@@ -55,6 +56,7 @@ public class AdminCommand implements CommandExecutor {
     private DataSource database;
     private String token;
     private boolean isPasspartu = false;
+    private Utils utility = new Utils();
     
     public AdminCommand(DataSource database) {
         this.database = database;
@@ -68,46 +70,14 @@ public class AdminCommand implements CommandExecutor {
         }
         
        if((sender instanceof ConsoleCommandSender) && args[0].equalsIgnoreCase("passpartuToken")) {
-           // obtain new random token 
-           Random rnd = new Random ();
-            char[] arr = new char[5];
-
-            for (int i=0; i<5; i++) {
-                    int n = rnd.nextInt (36);
-                    arr[i] = (char) (n < 10 ? '0'+n : 'a'+n-10);
+            if(Utils.getInstance().obtainToken()) {
+                System.out.println("[AuthMe] You have 30s for insert this token with /passpartu [token]");
+            } else {
+                System.out.println("[AuthMe] Security error on passpartu token, redo it. ");
             }
-            token = new String(arr);
-            System.out.println("[AuthMe] Security passpartu token: "+ token);
-            System.out.println("[AuthMe] You have 10s for insert this token with /authme passpartu [token]");
-            isPasspartu = true;
-            //Start timeout interval
-             Thread timeout = new Thread() {
-             @Override
-             public void run() {
-                try {
-                    Thread.currentThread().sleep(100);
-                    //reset passpartu because time is ended.
-                    isPasspartu = false;
-                    }  catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            timeout.start(); 
             return true;
        }
        
-       if ((sender instanceof Player) && args[0].equalsIgnoreCase("passpartu") && args.length == 3) {
-           if(isPasspartu && args[2].equals(this.token)) {
-                 //bypass login!
-                Management bypass = new Management(database,true);
-                String result = bypass.performLogin((Player)sender, "dontneed");
-                if (result != "") sender.sendMessage(result); 
-                return true;
-           }
-           sender.sendMessage("Time is expired or Token is Wrong!");
-           return true;
-       }
        
        if (!sender.hasPermission("authme.admin." + args[0].toLowerCase())) {
             sender.sendMessage(m._("no_perm"));

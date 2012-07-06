@@ -34,9 +34,10 @@ public class Management {
     public Management(DataSource database, boolean passpartu) {
         this.database = database;
         this.passpartu = passpartu;
-    }    
-	public String performLogin(Player player, String password)
-	{
+    }   
+    
+    public String performLogin(Player player, String password) {
+            
         String name = player.getName().toLowerCase();
         String ip = player.getAddress().getAddress().getHostAddress();
         
@@ -49,7 +50,14 @@ public class Management {
             return m._("user_unknown");
         }
         
-        String hash = database.getAuth(name).getHash();
+        PlayerAuth pAuth = database.getAuth(name);
+            // if Mysql is unavaible
+            if(pAuth == null)
+                return m._("user_unknown");
+            
+        String hash = pAuth.getHash();
+        
+
         try {
             if(!passpartu) {
             if (PasswordSecurity.comparePasswordWithHash(password, hash)) {
@@ -70,12 +78,14 @@ public class Management {
                          System.out.println("player is an operator after login success");
                     }*/
                     utils.addNormal(player, limbo.getGroup());
-                   //System.out.println("il gruppo in logincommand "+limbo.getGroup());
-                   //
-                   // TODO: completly rewrite this part, too much if, else ...
-                   // check quit location, check correct spawn, 
-                   //
+                    //System.out.println("il gruppo in logincommand "+limbo.getGroup());
+                    //
+                    // TODO: completly rewrite this part, too much if, else ...
+                    // check quit location, check correct spawn, 
+                    //
                     World world = player.getWorld();
+
+                        
                     if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
                                  // This is initial work around for prevent ppl to quit on bukkit bug
                                  // take last quit location from database and subtract y from safe spawn             
@@ -83,7 +93,7 @@ public class Management {
                                  // otherwise he try to spawn in a unsafe location!
                                 
                                  if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
+                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+1.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
                                      //pre-load chunk before teleport player to quit location
                                      
                                      if(!world.getChunkAt(quitLoc).isLoaded()) {
@@ -104,7 +114,7 @@ public class Management {
                             player.teleport(player.getWorld().getSpawnLocation());  
                         } else {
                         if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
+                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+1.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
                           //pre-load chunk before teleport player to quit location
                               if(!world.getChunkAt(quitLoc).isLoaded()) {
                                   //System.out.println("Debug chunk insent loaded");
