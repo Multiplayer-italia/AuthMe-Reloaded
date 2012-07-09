@@ -1,16 +1,19 @@
 name: AuthMe
 author: darkwarriros
+website: http://www.multiplayer-italia.com/
 description: AuthMe prevents people, which aren't logged in, from doing stuff like placing blocks, moving, typing commands or seeing the inventory of the current player.
 main: uk.org.whoami.authme.AuthMe
-version: 2.6.6b5
+version: 2.6.6
 softdepend: [Vault]
 commands:
     register:
         description: Register an account
         usage: /register password confirmpassword
+        aliases: r
     login:
         description: Login into a account
         usage: /login password
+        aliases: l
     changepassword:
         description: Change password of a account
         usage: /changepassword oldPassword newPassword
@@ -37,6 +40,8 @@ permissions:
             authme.logout: true
             authme.unregister: true
             authme.passpartu: true
+            authme.l: true
+            authme.r: true                     
     authme.admin.*:
          description: Gives access to all authme admin commands
          children:

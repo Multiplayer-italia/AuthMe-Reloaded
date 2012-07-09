@@ -70,8 +70,13 @@ public class AdminCommand implements CommandExecutor {
         }
         
        if((sender instanceof ConsoleCommandSender) && args[0].equalsIgnoreCase("passpartuToken")) {
-            if(Utils.getInstance().obtainToken()) {
-                System.out.println("[AuthMe] You have 30s for insert this token with /passpartu [token]");
+           if(args.length > 1) {  
+               System.out.println("[AuthMe] command usage: authme passpartuToken");
+               return true;
+           }
+               
+           if(Utils.getInstance().obtainToken()) {
+                System.out.println("[AuthMe] You have 30s for insert this token ingame with /passpartu [token]");
             } else {
                 System.out.println("[AuthMe] Security error on passpartu token, redo it. ");
             }
