@@ -9,7 +9,7 @@ commands:
     register:
         description: Register an account
         usage: /register password confirmpassword
-        aliases: reg
+        aliases: regg
     login:
         description: Login into a account
         usage: /login password
