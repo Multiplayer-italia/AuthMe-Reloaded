@@ -95,7 +95,7 @@ public class AuthMePlayerListener implements Listener {
         }
 
         if (!data.isAuthAvailable(name)) {
-            if (!Settings.isForcedRegistrationEnabled) {
+            if (!Settings.isForcedRegistrationEnabled || !player.hasPermission("authme.force.register") {
                 return;
             }
         }
