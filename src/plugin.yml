@@ -43,6 +43,9 @@ permissions:
     authme.register:
         description: Register an account
         default: true
+    authme.force.register:
+        description: Force a player to register.
+        default: true
     authme.login:
         description: Login into a account
         default: true
