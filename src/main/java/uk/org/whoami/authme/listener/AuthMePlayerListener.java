@@ -42,6 +42,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -117,7 +118,7 @@ public class AuthMePlayerListener implements Listener {
     
     
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
         }
