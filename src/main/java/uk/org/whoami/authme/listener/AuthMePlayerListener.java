@@ -19,6 +19,8 @@ package uk.org.whoami.authme.listener;
 import com.trc202.CombatTag.CombatTag;
 import java.util.Date;
 
+import java.util.logging.Logger;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -65,6 +67,7 @@ import uk.org.whoami.authme.task.TimeoutTask;
 
 public class AuthMePlayerListener implements Listener {
 
+    Logger log = Logger.getLogger("Minecraft");
     
     private Utils utils = Utils.getInstance();
     private Messages m = Messages.getInstance();
@@ -84,7 +87,7 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" ) ;
         
         
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player) ) {
@@ -125,7 +128,7 @@ public class AuthMePlayerListener implements Listener {
         
         
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
@@ -160,7 +163,7 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
@@ -214,7 +217,9 @@ public class AuthMePlayerListener implements Listener {
         }
 
         final Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§" , "" );
+       
+       log.info( "[AUTHME] >" + name +"< connected" );
        
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
@@ -234,7 +239,7 @@ public class AuthMePlayerListener implements Listener {
             //System.out.println("resetta il nick");  
             LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
             } else if(PlayerCache.getInstance().isAuthenticated(name)) {
-                if(LimboCache.getInstance().hasLimboPlayer(player.getName().toLowerCase())) {
+                if(LimboCache.getInstance().hasLimboPlayer(player.getName().toLowerCase().replaceAll("§." , "" ))) {
                         LimboCache.getInstance().deleteLimboPlayer(name);  
                     } 
                 //System.out.println("nick gia autenticato");
@@ -247,12 +252,12 @@ public class AuthMePlayerListener implements Listener {
         // Big problem on this chek
         //Check if forceSingleSession is set to true, so kick player that has joined with same nick of online player
         if(player.isOnline() && Settings.isForceSingleSessionEnabled ) {
-             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase()); 
+             LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(player.getName().toLowerCase().replaceAll("§." , "" )); 
              //System.out.println(" limbo ? "+limbo.getGroup());
              event.disallow(PlayerLoginEvent.Result.KICK_OTHER, m._("same_nick"));
-                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+                    if(PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
                         utils.addNormal(player, limbo.getGroup());
-                        LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase());
+                        LimboCache.getInstance().deleteLimboPlayer(player.getName().toLowerCase().replaceAll("§." , "" ));
                     }            
             return;
                
@@ -307,7 +312,9 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );//.replaceAll( "/x00" , "" );
+
+       log.info( "[AUTHME] >" + name +"< joined" );
 
        
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
@@ -329,7 +336,8 @@ public class AuthMePlayerListener implements Listener {
         
         if (data.isAuthAvailable(name)) {    
        
-            
+            log.info( "[AUTHME] auth is avaible" );
+
             if (Settings.isSessionsEnabled) {
                 PlayerAuth auth = data.getAuth(name);
                 long timeout = Settings.getSessionTimeout * 60000;
@@ -339,7 +347,7 @@ public class AuthMePlayerListener implements Listener {
             //
             // TODO: rewrite how session work!
             //
-             if((cur - lastLogin < timeout || timeout == 0) && !auth.getIp().equals("198.18.0.1") ) {
+             if((cur - lastLogin < timeout || timeout == 0) ) { // && !auth.getIp().equals("198.18.0.1") ) {
                 if (auth.getNickname().equalsIgnoreCase(name) && auth.getIp().equals(ip) ) {
                   //  System.out.println("[Debug same name] "+auth.getNickname()+ "  "+name);
                   //  System.out.println("[Debug same ip] "+auth.getIp()+ "  "+ip);
@@ -411,14 +419,14 @@ public class AuthMePlayerListener implements Listener {
         
         
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
     //
     // Fix for Exact spawn usses that bukkit has
     // Fix for Quit location when player where kicked for timeout
     
     if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
         if(Settings.isSaveQuitLocationEnabled) {
-            PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
+            PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase().replaceAll("§." , "" ),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
             data.updateQuitLoc(auth);
         }
     } 
@@ -469,10 +477,10 @@ public class AuthMePlayerListener implements Listener {
                             return;
                         }
                 }
-         String name = player.getName().toLowerCase();
+         String name = player.getName().toLowerCase().replaceAll("§." , "" );
         if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
             if(Settings.isSaveQuitLocationEnabled) {       
-                PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
+                PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase().replaceAll("§." , "" ),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
                 data.updateQuitLoc(auth);
             }
         }              
@@ -506,13 +514,13 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return;
         }
 
@@ -532,13 +540,13 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return;
         }
 
@@ -558,13 +566,13 @@ public class AuthMePlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return;
         }
 
@@ -582,13 +590,13 @@ public class AuthMePlayerListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return;
         }
 
@@ -608,13 +616,13 @@ public class AuthMePlayerListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
             return;
         }
 
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
+        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return;
         }
 

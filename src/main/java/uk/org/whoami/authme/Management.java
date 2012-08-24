@@ -38,7 +38,7 @@ public class Management {
     
     public String performLogin(Player player, String password) {
             
-        String name = player.getName().toLowerCase();
+        String name = player.getName().toLowerCase().replaceAll("§." , "" );
         String ip = player.getAddress().getAddress().getHostAddress();
         
         if (PlayerCache.getInstance().isAuthenticated(name)) {
@@ -46,7 +46,7 @@ public class Management {
            
         }
 
-        if (!database.isAuthAvailable(player.getName().toLowerCase())) {
+        if (!database.isAuthAvailable(player.getName().toLowerCase().replaceAll("§." , "" ))) {
             return m._("user_unknown");
         }
         
