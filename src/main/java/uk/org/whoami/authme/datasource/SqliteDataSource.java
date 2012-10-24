@@ -92,8 +92,9 @@ public class SqliteDataSource implements DataSource {
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, "x");
             if (!rs.next()) {
-                st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN x smallint(6) NOT NULL DEFAULT '0' AFTER "
-                        + columnLastLogin +" , ADD y smallint(6) NOT NULL DEFAULT '0' AFTER x , ADD z smallint(6) NOT NULL DEFAULT '0' AFTER y;");
+                st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN x smallint(6) NOT NULL DEFAULT '0'; " 
+                               + "ALTER TABLE " + tableName + " ADD COLUMN y smallint(6) NOT NULL DEFAULT '0'; "
+                               + "ALTER TABLE " + tableName + " ADD COLUMN z smallint(6) NOT NULL DEFAULT '0';");
             }            
         } finally {
             close(rs);
