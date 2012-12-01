@@ -16,14 +16,12 @@
 
 package uk.org.whoami.authme.listener;
 
-import com.trc202.CombatTag.CombatTag;
 import java.util.Date;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -43,10 +41,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.cache.backup.DataFileCache;
 import uk.org.whoami.authme.cache.backup.FileCache;
 import uk.org.whoami.authme.Utils;
@@ -134,6 +128,14 @@ public class AuthMePlayerListener implements Listener {
         if (PlayerCache.getInstance().isAuthenticated(name)) {
             return;
         }
+        
+        String cmd = event.getMessage().split(" ")[0];
+
+        if (!Settings.isChatAllowed && !(cmd.equalsIgnoreCase("/login") || cmd.equalsIgnoreCase("/register") || cmd.equalsIgnoreCase("/passpartu") || cmd.equalsIgnoreCase("/l") || cmd.equalsIgnoreCase("/reg"))) {
+            //System.out.println("debug chat: chat isnt allowed");
+            event.setCancelled(true);
+            return;
+        }
 
         if (data.isAuthAvailable(name)) {
             player.sendMessage(m._("login_msg"));
@@ -144,11 +146,6 @@ public class AuthMePlayerListener implements Listener {
             player.sendMessage(m._("reg_msg"));
         }
         
-        if (!Settings.isChatAllowed) {
-            //System.out.println("debug chat: chat isnt allowed");
-            event.setCancelled(true);
-            return;
-        }
         //System.out.println("debug chat: chat is allow?");
         
     }
