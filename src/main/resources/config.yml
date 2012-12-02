@@ -11,6 +11,9 @@ DataSource:
     mySQLColumnPassword: password
     mySQLPassword: '12345'
     caching: true
+    mySQLlastlocX: x
+    mySQLlastlocY : y
+    mySQLlastlocZ : z
 GroupOptions:
     UnregisteredPlayerGroup: ''
     RegisteredPlayerGroup: ''
@@ -52,6 +55,7 @@ settings:
         force: true
     unrestrictions:
         UnrestrictedName: []
+    messagesLanguage: en
 ExternalBoardOptions:
     mySQLColumnSalt: ''
     mySQLColumnGroup: ''

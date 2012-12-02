@@ -66,7 +66,7 @@ public final class Settings extends YamlConfiguration {
             getMySQLUsername, getMySQLPassword, getMySQLDatabase, getMySQLTablename, 
             getMySQLColumnName, getMySQLColumnPassword, getMySQLColumnIp, getMySQLColumnLastLogin,
             getMySQLColumnSalt, getMySQLColumnGroup, unRegisteredGroup, backupWindowsPath,
-            getcUnrestrictedName, getRegisteredGroup, messagesLanguage;
+            getcUnrestrictedName, getRegisteredGroup, messagesLanguage, getMySQLlastlocX, getMySQLlastlocY, getMySQLlastlocZ;
             
     
     public static int getWarnMessageInterval, getSessionTimeout, getRegistrationTimeout, getMaxNickLength,
@@ -148,6 +148,9 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnLastLogin = configFile.getString("DataSource.mySQLColumnLastLogin","lastlogin");
         getMySQLColumnSalt = configFile.getString("ExternalBoardOptions.mySQLColumnSalt");
         getMySQLColumnGroup = configFile.getString("ExternalBoardOptions.mySQLColumnGroup","");
+        getMySQLlastlocX = configFile.getString("DataSource.mySQLlastlocX","x");
+        getMySQLlastlocY = configFile.getString("DataSource.mySQLlastlocY","y");
+        getMySQLlastlocZ = configFile.getString("DataSource.mySQLlastlocZ","z");
         getNonActivatedGroup = configFile.getInt("ExternalBoardOptions.nonActivedUserGroup", -1);
         unRegisteredGroup = configFile.getString("GroupOptions.UnregisteredPlayerGroup","");
         getUnrestrictedName = configFile.getStringList("settings.unrestrictions.UnrestrictedName");
@@ -215,6 +218,9 @@ public final class Settings extends YamlConfiguration {
         getMySQLColumnPassword = configFile.getString("DataSource.mySQLColumnPassword","password");
         getMySQLColumnIp = configFile.getString("DataSource.mySQLColumnIp","ip");
         getMySQLColumnLastLogin = configFile.getString("DataSource.mySQLColumnLastLogin","lastlogin");
+        getMySQLlastlocX = configFile.getString("DataSource.mySQLlastlocX","x");
+        getMySQLlastlocY = configFile.getString("DataSource.mySQLlastlocY","y");
+        getMySQLlastlocZ = configFile.getString("DataSource.mySQLlastlocZ","z");
         getMySQLColumnSalt = configFile.getString("ExternalBoardOptions.mySQLColumnSalt","");
         getMySQLColumnGroup = configFile.getString("ExternalBoardOptions.mySQLColumnGroup","");
         getNonActivatedGroup = configFile.getInt("ExternalBoardOptions.nonActivedUserGroup", -1);
@@ -437,6 +443,6 @@ public final class Settings extends YamlConfiguration {
     }
     
     public enum messagesLang {
-        en, de, br, cz
+        en, de, br, cz, pl, fr
     } 
 }

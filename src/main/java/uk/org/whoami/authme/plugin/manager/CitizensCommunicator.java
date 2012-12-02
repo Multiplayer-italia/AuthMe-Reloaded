@@ -16,8 +16,6 @@
 
 package uk.org.whoami.authme.plugin.manager;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.citizensnpcs.api.CitizensManager;
 import net.citizensnpcs.api.CitizensAPI;
 

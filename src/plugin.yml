@@ -1,15 +1,19 @@
 name: AuthMe
-author: whoami
+author: darkwarriros
+website: http://www.multiplayer-italia.com/
 description: AuthMe prevents people, which aren't logged in, from doing stuff like placing blocks, moving, typing commands or seeing the inventory of the current player.
 main: uk.org.whoami.authme.AuthMe
-version: 2.5.1
+version: 2.6.8b1
+softdepend: [Vault]
 commands:
     register:
         description: Register an account
-        usage: /register password
+        usage: /register password confirmpassword
+        aliases: reg
     login:
         description: Login into a account
         usage: /login password
+        aliases: l
     changepassword:
         description: Change password of a account
         usage: /changepassword oldPassword newPassword
@@ -18,10 +22,13 @@ commands:
         usage: /logout
     unregister:
         description: unregister your account
-        usage: /unregister password
+        usage: /unregister password    
+    passpartu:
+        description: compare passpartu token
+        usage: /passpartu token          
     authme:
         description: AuthMe op commands
-        usage: '/authme reload|register playername password|changepassword playername password|unregister playername'
+        usage: '/authme reload|register playername password|changepassword playername password|unregister playername|version'
 permissions:
     authme.player.*:
         description: Gives access to all authme player commands
@@ -31,7 +38,10 @@ permissions:
             authme.login: true
             authme.changepassword: true
             authme.logout: true
-            authme.unregister: true   
+            authme.unregister: true
+            authme.passpartu: true
+            authme.l: true
+            authme.r: true                     
     authme.admin.*:
          description: Gives access to all authme admin commands
          children:
@@ -52,6 +62,12 @@ permissions:
     authme.logout:
         description: Logout
         default: true
+    authme.passpartu:
+        description: passpartu
+        default: true        
+    authme.allow2accounts:
+        description: allow more accounts for same ip
+        default: false
     authme.unregister:
         description: unregister your account
         default: true

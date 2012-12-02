@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -65,6 +66,7 @@ public class AuthMePlayerListener implements Listener {
     private JavaPlugin plugin;
     private DataSource data;
     private FileCache playerBackup = new FileCache();
+    private LimboPlayer limbo;
 
     public AuthMePlayerListener(JavaPlugin plugin, DataSource data) {
         this.plugin = plugin;
@@ -651,4 +653,5 @@ public class AuthMePlayerListener implements Listener {
     }
      * 
      */
+
 }

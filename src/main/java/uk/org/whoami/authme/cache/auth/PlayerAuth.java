@@ -79,11 +79,14 @@ public class PlayerAuth {
     }
 
     public String getHash() {
-        if(!salt.isEmpty())
+        if(!salt.isEmpty()) {
+        	vBhash = "$MD5vb$"+salt+"$"+hash;
             // Compose Vbullettin Hash System!
-            return this.vBhash = "$MD5vb$"+salt+"$"+hash;
-        else
-            return hash;
+            return vBhash;
+        }
+        else {
+        	return hash;
+        } 
     }
     
     //
