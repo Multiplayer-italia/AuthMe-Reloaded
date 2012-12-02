@@ -25,6 +25,11 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import uk.org.whoami.authme.cache.auth.PlayerAuth;
+import uk.org.whoami.authme.cache.auth.PlayerCache;
+import uk.org.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.cache.limbo.LimboCache;
+import uk.org.whoami.authme.cache.limbo.LimboPlayer;
 import uk.org.whoami.authme.commands.AdminCommand;
 import uk.org.whoami.authme.commands.ChangePasswordCommand;
 import uk.org.whoami.authme.commands.LoginCommand;
@@ -40,10 +45,14 @@ import uk.org.whoami.authme.listener.AuthMeBlockListener;
 import uk.org.whoami.authme.listener.AuthMeEntityListener;
 import uk.org.whoami.authme.listener.AuthMePlayerListener;
 import uk.org.whoami.authme.listener.AuthMeSpoutListener;
+import uk.org.whoami.authme.plugin.manager.CitizensCommunicator;
+import uk.org.whoami.authme.plugin.manager.CombatTagComunicator;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
 
 import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import uk.org.whoami.authme.commands.PasspartuCommand;
 import uk.org.whoami.authme.datasource.SqliteDataSource;
@@ -59,7 +68,9 @@ public class AuthMe extends JavaPlugin {
     public static Plugin authme;
     public static Permission permission;
 	private static AuthMe instance;
-
+    private Utils utils = Utils.getInstance();
+    private JavaPlugin plugin;
+    private FileCache playerBackup = new FileCache();
     @Override
     public void onEnable() {
     	instance = this;
@@ -186,6 +197,11 @@ public class AuthMe extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (Bukkit.getOnlinePlayers() != null)
+        for(Player player : Bukkit.getOnlinePlayers()) {
+        	this.savePlayer(player);
+        }
+        
         if (database != null) {
             database.close();
         }
@@ -213,5 +229,39 @@ public class AuthMe extends JavaPlugin {
 	public static AuthMe getInstance() {
 		return instance;
 	}
+	
+	public void savePlayer(Player player) {
+	      if ((CitizensCommunicator.isNPC(player)) || (Utils.getInstance().isUnrestricted(player)) || (CombatTagComunicator.isNPC(player))) {
+	          return;
+	        }
+
+	        String name = player.getName().toLowerCase();
+	        if ((PlayerCache.getInstance().isAuthenticated(name)) && (!player.isDead()) && 
+	          (Settings.isSaveQuitLocationEnabled.booleanValue())) {
+	          PlayerAuth auth = new PlayerAuth(player.getName().toLowerCase(), (int)player.getLocation().getX(), (int)player.getLocation().getY(), (int)player.getLocation().getZ());
+	          this.database.updateQuitLoc(auth);
+	        }
+
+	        if (LimboCache.getInstance().hasLimboPlayer(name))
+	        {
+	          LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
+	          if (Settings.protectInventoryBeforeLogInEnabled.booleanValue()) {
+	            player.getInventory().setArmorContents(limbo.getArmour());
+	            player.getInventory().setContents(limbo.getInventory());
+	          }
+	          player.teleport(limbo.getLoc());
+	          this.utils.addNormal(player, limbo.getGroup());
+	          player.setOp(limbo.getOperator());
+
+	          this.plugin.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
+	          LimboCache.getInstance().deleteLimboPlayer(name);
+	          if (this.playerBackup.doesCacheExist(name)) {
+	            this.playerBackup.removeCache(name);
+	          }
+	        }
+
+	        PlayerCache.getInstance().removePlayer(name);
+	        player.saveData();
+	      }
    
 }
