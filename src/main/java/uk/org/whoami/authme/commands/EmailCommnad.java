@@ -29,7 +29,8 @@ import uk.org.whoami.authme.settings.Messages;
  */
 public class EmailCommnad implements CommandExecutor {
 
-    private AuthMe plugin;
+    @SuppressWarnings("unused")
+	private AuthMe plugin;
     private Messages m = Messages.getInstance();
     
     public EmailCommnad(Plugin plugin) {

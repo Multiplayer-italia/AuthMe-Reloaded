@@ -159,27 +159,24 @@ public class FileCache {
 				}
                         // can enchant item? size ofstring in file - 4  all / 2 = number of enchant
 				if (in[0].equals("i")) {
-                                    Enchantment e = null;  
-                                    
-					stacki[i] = new ItemStack(Integer.parseInt(in[1]),
+                                    stacki[i] = new ItemStack(Integer.parseInt(in[1]),
 							Integer.parseInt(in[2]), Short.parseShort((in[3])));
 					// qui c'e' un problema serio!
                                         if(in.length > 4 && !in[4].isEmpty()) {
                                              for(int k=4;k<in.length-1;k++) {
                                                 //System.out.println("enchant "+in[k]);
-                                                stacki[i].addUnsafeEnchantment(e.getByName(in[k]) ,Integer.parseInt(in[k+1]));
+                                                stacki[i].addUnsafeEnchantment(Enchantment.getByName(in[k]) ,Integer.parseInt(in[k+1]));
                                                 k++;
                                              }
                                         }
                                         i++;
 				} else {
-                                    Enchantment e = null;  
-					stacka[a] = new ItemStack(Integer.parseInt(in[1]),
+                                    stacka[a] = new ItemStack(Integer.parseInt(in[1]),
 							Integer.parseInt(in[2]), Short.parseShort((in[3])));
                                         if(in.length > 4 && !in[4].isEmpty()) {
                                            for(int k=4;k<in.length-1;k++) {
                                                 //System.out.println("enchant "+in[k]);
-                                                stacka[a].addUnsafeEnchantment(e.getByName(in[k]) ,Integer.parseInt(in[k+1]));
+                                                stacka[a].addUnsafeEnchantment(Enchantment.getByName(in[k]) ,Integer.parseInt(in[k+1]));
                                                 k++;
                                            }
                                         }

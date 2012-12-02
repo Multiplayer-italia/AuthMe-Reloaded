@@ -22,7 +22,6 @@ import uk.org.whoami.authme.settings.SpoutCfg;
 
 public class LoginScreen extends GenericPopup implements Clickable{
 
-	private SpoutPlayer splayer;
 	private AuthMe plugin = AuthMe.getInstance();
 	private SpoutCfg spoutCfg = SpoutCfg.getInstance();
 	
@@ -38,6 +37,8 @@ public class LoginScreen extends GenericPopup implements Clickable{
 	String exitMsg = spoutCfg.getString("LoginScreen.exit message"); //"Good Bye";
 	String title = spoutCfg.getString("LoginScreen.title"); //"LOGIN"
 	List<String> textlines = spoutCfg.getStringList("LoginScreen.text");
+	@SuppressWarnings("unused")
+	private SpoutPlayer splayer;
 	
 	public LoginScreen(SpoutPlayer player) {
 		this.splayer = player;
@@ -116,6 +117,7 @@ public class LoginScreen extends GenericPopup implements Clickable{
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public void handleClick(ButtonClickEvent event) {
 		Button b = event.getButton();
 		if (b.equals(loginBtn))

@@ -6,11 +6,13 @@ package uk.org.whoami.authme;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
-import org.bukkit.entity.Entity;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import uk.org.whoami.authme.settings.Settings;
 
@@ -20,7 +22,6 @@ import uk.org.whoami.authme.settings.Settings;
  */
 public class Utils {
      //private Settings settings = Settings.getInstance();
-     private Player player;
      private String currentGroup;
      private static Utils singleton;
      private String unLoggedGroup = Settings.getUnloggedinGroup;
@@ -143,7 +144,43 @@ public class Utils {
             
     }
     
-    /*
+    public void packCoords(World world, int x, final int y, int z, final Player pl)
+    /*     */   {
+    /* 156 */     final Location loc = new Location(world, x + 0.5D, y + 0.6D, z + 0.5D);
+    /*     */ 
+    /* 158 */     if (!world.getChunkAt(loc).isLoaded())
+    /*     */     {
+    /* 160 */       world.getChunkAt(loc).load();
+    /*     */     }
+    /*     */ 
+    /* 163 */     pl.teleport(loc);
+    /*     */ 
+    			final int id = Bukkit.getScheduler().scheduleAsyncRepeatingTask(AuthMe.authme, new Runnable()
+    			{
+					public void run() {
+    		            int current = (int)pl.getLocation().getY();
+    	    		     
+   		             	if (current != y) {
+   		             		ConsoleLogger.showError("Problems on SpawnLocation: " + pl.getLocation());
+   		             		pl.teleport(loc);
+   		             	}
+					}
+
+    			}, 1L, 20L);
+    
+      Bukkit.getScheduler().scheduleAsyncDelayedTask(AuthMe.authme, new Runnable()
+      {
+
+		@Override
+		public void run() {
+			Bukkit.getScheduler().cancelTask(id);
+			
+		}
+    	  
+      }, 60L);
+      }
+
+	/*
      * Random Token for passpartu
      * 
      */

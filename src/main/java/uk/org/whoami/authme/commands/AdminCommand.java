@@ -21,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,14 +30,10 @@ import org.bukkit.command.CommandSender;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.ConsoleLogger;
-import uk.org.whoami.authme.Management;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -54,9 +49,6 @@ public class AdminCommand implements CommandExecutor {
     private SpoutCfg s = SpoutCfg.getInstance();
     //private Settings settings = Settings.getInstance();
     private DataSource database;
-    private String token;
-    private boolean isPasspartu = false;
-    private Utils utility = new Utils();
     
     public AdminCommand(DataSource database) {
         this.database = database;

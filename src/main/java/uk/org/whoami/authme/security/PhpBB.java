@@ -56,7 +56,8 @@ public class PhpBB {
     return _hash_gensalt_private(input, itoa64, 6);
   }
 
-  private String _hash_gensalt_private(
+  @SuppressWarnings("unused")
+private String _hash_gensalt_private(
     String input, String itoa64, int iteration_count_log2) {
     if (iteration_count_log2 < 4 || iteration_count_log2 > 31) {
       iteration_count_log2 = 8;

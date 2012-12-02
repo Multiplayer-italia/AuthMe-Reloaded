@@ -20,15 +20,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
-import uk.org.whoami.authme.cache.auth.PlayerAuth;
-import uk.org.whoami.authme.cache.auth.PlayerCache;
-import uk.org.whoami.authme.cache.limbo.LimboCache;
 import uk.org.whoami.authme.commands.AdminCommand;
 import uk.org.whoami.authme.commands.ChangePasswordCommand;
 import uk.org.whoami.authme.commands.LoginCommand;
@@ -46,8 +42,6 @@ import uk.org.whoami.authme.listener.AuthMePlayerListener;
 import uk.org.whoami.authme.listener.AuthMeSpoutListener;
 import uk.org.whoami.authme.settings.Messages;
 import uk.org.whoami.authme.settings.Settings;
-import uk.org.whoami.authme.task.MessageTask;
-import uk.org.whoami.authme.task.TimeoutTask;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Server;
@@ -58,17 +52,18 @@ public class AuthMe extends JavaPlugin {
 
     private DataSource database;
     private Settings settings;
-    private Utils utils;
-    private Messages m;
+    @SuppressWarnings("unused")
+	private Messages m;
 	public Management management;
     public static Server server;
+    public static Plugin authme;
     public static Permission permission;
 	private static AuthMe instance;
-    
 
     @Override
     public void onEnable() {
     	instance = this;
+    	authme = instance;
         /*
          *  Metric part from Hidendra Stats
          */
@@ -98,7 +93,7 @@ public class AuthMe extends JavaPlugin {
         /*
          * Backend MYSQL - FILE - SQLITE
          */
-        switch (settings.getDataSource) {
+        switch (Settings.getDataSource) {
             case FILE:
                 try {
                     database = new FileDataSource();
@@ -140,7 +135,7 @@ public class AuthMe extends JavaPlugin {
                 break;
         }
 
-        if (settings.isCachingEnabled) {
+        if (Settings.isCachingEnabled) {
             database = new CacheDataSource(database);
         }
         
@@ -154,7 +149,7 @@ public class AuthMe extends JavaPlugin {
         	pm.registerEvents(new AuthMeSpoutListener(database),this);
         
         //Find Permissions
-        if(settings.isPermissionCheckEnabled) {
+        if(Settings.isPermissionCheckEnabled) {
         RegisteredServiceProvider<Permission> permissionProvider =
                 getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
         if (permissionProvider != null)
@@ -181,7 +176,7 @@ public class AuthMe extends JavaPlugin {
         // Check for correct sintax in config file!
         //
         
-        if(!settings.isForceSingleSessionEnabled) {
+        if(!Settings.isForceSingleSessionEnabled) {
             ConsoleLogger.info("ATTENTION by disabling ForceSingleSession Your server protection is set to low");
         }
         
@@ -209,50 +204,10 @@ public class AuthMe extends JavaPlugin {
         
     }
 
-    private void onReload(Player[] players) {
+    @SuppressWarnings("unused")
+	private void onReload(Player[] players) {
       ConsoleLogger.showError("AuthMe dont support /reload command yet, please use /authme relaod");
         return;
-         /*for (Player player : players) {
-            String name = player.getName().toLowerCase();
-            String ip = player.getAddress().getAddress().getHostAddress();
-
-            boolean authAvail = database.isAuthAvailable(name);
-
-            if (authAvail) {
-                if (settings.isSessionsEnabled) {
-                    PlayerAuth auth = database.getAuth(name);
-                    if (auth.getNickname().equals(name) && auth.getIp().equals(ip)) {
-                        PlayerCache.getInstance().addPlayer(auth);
-                        player.sendMessage(m._("valid_session"));
-                        break;
-                    }
-                }
-            } else if (!settings.isForcedRegistrationEnabled) {
-                break;
-            } else if (settings.isKickNonRegisteredEnabled) {
-                player.kickPlayer(m._("reg_only"));
-                break;
-            }
-
-            LimboCache.getInstance().addLimboPlayer(player);
-            player.getInventory().setArmorContents(new ItemStack[0]);
-            player.getInventory().setContents(new ItemStack[36]);
-
-            if (settings.isTeleportToSpawnEnabled) {
-                player.teleport(player.getWorld().getSpawnLocation());
-            }
-
-            String msg = authAvail ? m._("login_msg") : m._("reg_msg");
-            int time = settings.getRegistrationTimeout * 20;
-            int msgInterval = settings.getWarnMessageInterval;
-            BukkitScheduler sched = this.getServer().getScheduler();
-            if (time != 0) {
-                int id = sched.scheduleSyncDelayedTask(this, new TimeoutTask(this, name), time);
-                LimboCache.getInstance().getLimboPlayer(name).setTimeoutTaskId(id);
-            }
-            sched.scheduleSyncDelayedTask(this, new MessageTask(this, name, msg, msgInterval));
-        } 
-          * */
     }
     
 	public static AuthMe getInstance() {

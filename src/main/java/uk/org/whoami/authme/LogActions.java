@@ -39,6 +39,7 @@ public class LogActions {
    }
           
         
+   @SuppressWarnings("unused")
    private void initFiles() {
 	  if (logData && !this.dataLog.exists()) {
 		  try {

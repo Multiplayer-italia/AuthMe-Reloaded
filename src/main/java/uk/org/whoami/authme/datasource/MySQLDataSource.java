@@ -46,7 +46,6 @@ public class MySQLDataSource implements DataSource {
     private String lastlocX;
     private String lastlocY;
     private String lastlocZ;
-    private int nonActivatedGroup;
     private MiniConnectionPoolManager conPool;
 
     public MySQLDataSource() throws ClassNotFoundException, SQLException {
@@ -67,8 +66,6 @@ public class MySQLDataSource implements DataSource {
         this.lastlocZ = Settings.getMySQLlastlocZ;
         this.columnSalt = Settings.getMySQLColumnSalt;
         this.columnGroup = Settings.getMySQLColumnGroup;
-        this.nonActivatedGroup = Settings.getNonActivatedGroup;
-
         connect();
         setup();
     }

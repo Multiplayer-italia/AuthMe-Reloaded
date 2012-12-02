@@ -15,7 +15,9 @@ import uk.org.whoami.authme.settings.Settings;
 
 public class RegisterScreen extends GenericPopup implements Clickable{
 
+	@SuppressWarnings("unused")
 	private SpoutPlayer splayer;
+	@SuppressWarnings("unused")
 	private boolean forcedRegistrationEnabled;
 	private String title;
 	

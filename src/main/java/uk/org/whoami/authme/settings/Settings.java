@@ -18,13 +18,9 @@ package uk.org.whoami.authme.settings;
 
 import java.io.File;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -46,7 +42,6 @@ public final class Settings extends YamlConfiguration {
     public static List<String> getUnrestrictedName = null;
     private static List<String> getRestrictedIp;
    
-    private int numSettings = 59;
     public final Plugin plugin;
     private final File file;    
     

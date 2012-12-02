@@ -15,9 +15,10 @@ import uk.org.whoami.authme.settings.Settings;
  *
  * @author stefano
  */
+@SuppressWarnings("unused")
 public class SqliteDataSource implements DataSource {
 
-    private String host;
+	private String host;
     private String port;
     private String username;
     private String password;

@@ -67,78 +67,53 @@ public class Management {
                 PlayerCache.getInstance().addPlayer(auth);
                 LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
                 if (limbo != null) {
-                    if(Settings.protectInventoryBeforeLogInEnabled) {
+                    if (Settings.protectInventoryBeforeLogInEnabled.booleanValue()) {
                         player.getInventory().setContents(limbo.getInventory());
                         player.getInventory().setArmorContents(limbo.getArmour());
-                    }
-                    player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
-                    player.setOp(limbo.getOperator());
-                    /*                  
-                     * if (limbo.getOperator()) {
-                         System.out.println("player is an operator after login success");
-                    }*/
-                    utils.addNormal(player, limbo.getGroup());
-                    //System.out.println("il gruppo in logincommand "+limbo.getGroup());
-                    //
-                    // TODO: completly rewrite this part, too much if, else ...
-                    // check quit location, check correct spawn, 
-                    //
-                    World world = player.getWorld();
-
-                        
-                    if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
-                                 // This is initial work around for prevent ppl to quit on bukkit bug
-                                 // take last quit location from database and subtract y from safe spawn             
-                                 // if the error range is smaller then 1, player can come back in his quit location
-                                 // otherwise he try to spawn in a unsafe location!
-                                
-                                 if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+1.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
-                                     //pre-load chunk before teleport player to quit location
-                                     
-                                     if(!world.getChunkAt(quitLoc).isLoaded()) {
-                                         //System.out.println("Debug chunk insent loaded");
-                                         world.getChunkAt(quitLoc).load();
-                                     }
-                                     player.teleport(quitLoc);
-                                     //System.out.println("quit location from db:"+quitLoc);
-                                 } else {
-                                    //pre-load chunk before teleport player to quit location
-                                    if(!world.getChunkAt(limbo.getLoc()).isLoaded())
-                                            world.getChunkAt(limbo.getLoc()).load();                                      
-                                 player.teleport(limbo.getLoc());
-                                 //System.out.println("quit location from bukkit:"+limbo.getLoc());
-                                 } 
-                    } else {
-                        if(Settings.isForceSpawnLocOnJoinEnabled) {
-                            player.teleport(player.getWorld().getSpawnLocation());  
-                        } else {
-                        if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+1.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
-                          //pre-load chunk before teleport player to quit location
-                              if(!world.getChunkAt(quitLoc).isLoaded()) {
-                                  //System.out.println("Debug chunk insent loaded");
-                                  world.getChunkAt(quitLoc).load(); 
+                                }
+                      player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
+                      player.setOp(limbo.getOperator());
+                    
+                      this.utils.addNormal(player, limbo.getGroup());
+                    
+                      World world = player.getWorld();
+                    
+                      if ((Settings.isTeleportToSpawnEnabled.booleanValue()) && (!Settings.isForceSpawnLocOnJoinEnabled.booleanValue()))
+                                {
+                        if ((Settings.isSaveQuitLocationEnabled.booleanValue()) && (this.database.getAuth(name).getQuitLocY() != 0))
+                                  {
+                          this.utils.packCoords(player.getWorld(), this.database.getAuth(name).getQuitLocX(), this.database.getAuth(name).getQuitLocY(), this.database.getAuth(name).getQuitLocZ(), player);
+                                  }
+                                  else {
+                          if (!world.getChunkAt(limbo.getLoc()).isLoaded()) {
+                            world.getChunkAt(limbo.getLoc()).load();
+                                    }
+                         player.teleport(limbo.getLoc());
+                                  }
+                    
+                                }
+                      else if (Settings.isForceSpawnLocOnJoinEnabled.booleanValue()) {
+                        player.teleport(player.getWorld().getSpawnLocation());
+                                }
+                      else if ((Settings.isSaveQuitLocationEnabled.booleanValue()) && (this.database.getAuth(name).getQuitLocY() != 0))
+                                {
+                        this.utils.packCoords(player.getWorld(), this.database.getAuth(name).getQuitLocX(), this.database.getAuth(name).getQuitLocY(), this.database.getAuth(name).getQuitLocZ(), player);
+                                }
+                                else {
+                        if (!world.getChunkAt(limbo.getLoc()).isLoaded())
+                                  {
+                          world.getChunkAt(limbo.getLoc()).load();
+                                  }
+                        player.teleport(limbo.getLoc());
+                                }
+                    
+                      player.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
+                      LimboCache.getInstance().deleteLimboPlayer(name);
+                      if (this.playerCache.doesCacheExist(name)) {
+                        this.playerCache.removeCache(name);
+                                }
+                    
                               }
-                          player.teleport(quitLoc);  
-                          //System.out.println("quit location from db:"+quitLoc);
-                        } else {
-                          //pre-load chunk before teleport player to quit location
-                              if(!world.getChunkAt(limbo.getLoc()).isLoaded()) {
-                                  //System.out.println("Debug chunk insent loaded");
-                                  world.getChunkAt(limbo.getLoc()).load();      
-                              }
-                                player.teleport(limbo.getLoc());
-                                //System.out.println("quit location from bukkit:"+limbo.getLoc()); 
-                                }  
-                        }
-                    } 
-                player.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
-                LimboCache.getInstance().deleteLimboPlayer(name);
-                if(playerCache.doesCacheExist(name)) {
-                        playerCache.removeCache(name);
-                    }   
-                }
                 
                /*
                 *  Little Work Around under Registration Group Switching for admins that
@@ -169,76 +144,63 @@ public class Management {
                 PlayerCache.getInstance().addPlayer(auth);
                 LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
                 if (limbo != null) {
-                    if(Settings.protectInventoryBeforeLogInEnabled) {
+                    if (Settings.protectInventoryBeforeLogInEnabled.booleanValue()) {
                         player.getInventory().setContents(limbo.getInventory());
                         player.getInventory().setArmorContents(limbo.getArmour());
-                    }
-                    player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
-                    player.setOp(limbo.getOperator());
-                    /*                  
-                     * if (limbo.getOperator()) {
-                         System.out.println("player is an operator after login success");
-                    }*/
-                    utils.addNormal(player, limbo.getGroup());
-                   //System.out.println("il gruppo in logincommand "+limbo.getGroup());
-                   //
-                   // TODO: completly rewrite this part, too much if, else ...
-                   // check quit location, check correct spawn, 
-                   //
-                    World world = player.getWorld();
-                    if (Settings.isTeleportToSpawnEnabled && !Settings.isForceSpawnLocOnJoinEnabled) {                  
-                                 // This is initial work around for prevent ppl to quit on bukkit bug
-                                 // take last quit location from database and subtract y from safe spawn             
-                                 // if the error range is smaller then 1, player can come back in his quit location
-                                 // otherwise he try to spawn in a unsafe location!
-                                
-                                 if(Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                                     Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
-                                     //pre-load chunk before teleport player to quit location
-                                     
-                                     if(!world.getChunkAt(quitLoc).isLoaded()) {
-                                         //System.out.println("Debug chunk insent loaded");
-                                         world.getChunkAt(quitLoc).load();
-                                     }
-                                     player.teleport(quitLoc);
-                                     //System.out.println("quit location from db:"+quitLoc);
-                                 } else {
-                                    //pre-load chunk before teleport player to quit location
-                                    if(!world.getChunkAt(limbo.getLoc()).isLoaded())
-                                            world.getChunkAt(limbo.getLoc()).load();                                      
-                                 player.teleport(limbo.getLoc());
-                                 //System.out.println("quit location from bukkit:"+limbo.getLoc());
-                                 } 
-                    } else {
-                        if(Settings.isForceSpawnLocOnJoinEnabled) {
-                            player.teleport(player.getWorld().getSpawnLocation());  
-                        } else {
-                        if ( Settings.isSaveQuitLocationEnabled && database.getAuth(name).getQuitLocY() != 0) {
-                          Location quitLoc = new Location(player.getWorld(),(double)database.getAuth(name).getQuitLocX()+0.5,(double)database.getAuth(name).getQuitLocY()+0.5,(double)database.getAuth(name).getQuitLocZ()+0.5);
-                          //pre-load chunk before teleport player to quit location
-                              if(!world.getChunkAt(quitLoc).isLoaded()) {
-                                  //System.out.println("Debug chunk insent loaded");
-                                  world.getChunkAt(quitLoc).load(); 
+                                }
+                      player.setGameMode(GameMode.getByValue(limbo.getGameMode()));
+                     player.setOp(limbo.getOperator());
+                      
+                      this.utils.addNormal(player, limbo.getGroup());
+                      
+                      World world = player.getWorld();
+                      if ((Settings.isTeleportToSpawnEnabled.booleanValue()) && (!Settings.isForceSpawnLocOnJoinEnabled.booleanValue()))
+                                {
+                        if ((Settings.isSaveQuitLocationEnabled.booleanValue()) && (this.database.getAuth(name).getQuitLocY() != 0)) {
+                          Location quitLoc = new Location(player.getWorld(), this.database.getAuth(name).getQuitLocX() + 0.5D, this.database.getAuth(name).getQuitLocY() + 0.5D, this.database.getAuth(name).getQuitLocZ() + 0.5D);
+                      
+                          if (!world.getChunkAt(quitLoc).isLoaded())
+                                    {
+                            world.getChunkAt(quitLoc).load();
+                                    }
+                          player.teleport(quitLoc);
+                                  }
+                                  else
+                                  {
+                          if (!world.getChunkAt(limbo.getLoc()).isLoaded())
+                            world.getChunkAt(limbo.getLoc()).load();
+                          player.teleport(limbo.getLoc());
+                                  }
+                      
+                                }
+                      else if (Settings.isForceSpawnLocOnJoinEnabled.booleanValue()) {
+                        player.teleport(player.getWorld().getSpawnLocation());
+                                }
+                      else if ((Settings.isSaveQuitLocationEnabled.booleanValue()) && (this.database.getAuth(name).getQuitLocY() != 0)) {
+                        Location quitLoc = new Location(player.getWorld(), this.database.getAuth(name).getQuitLocX() + 0.5D, this.database.getAuth(name).getQuitLocY() + 0.5D, this.database.getAuth(name).getQuitLocZ() + 0.5D);
+                      
+                        if (!world.getChunkAt(quitLoc).isLoaded())
+                                  {
+                          world.getChunkAt(quitLoc).load();
+                                  }
+                        player.teleport(quitLoc);
+                                }
+                                else
+                                {
+                        if (!world.getChunkAt(limbo.getLoc()).isLoaded())
+                                  {
+                          world.getChunkAt(limbo.getLoc()).load();
+                                  }
+                        player.teleport(limbo.getLoc());
+                                }
+                      
+                      player.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
+                      LimboCache.getInstance().deleteLimboPlayer(name);
+                      if (this.playerCache.doesCacheExist(name)) {
+                        this.playerCache.removeCache(name);
+                                }
+                      
                               }
-                          player.teleport(quitLoc);  
-                          //System.out.println("quit location from db:"+quitLoc);
-                        } else {
-                          //pre-load chunk before teleport player to quit location
-                              if(!world.getChunkAt(limbo.getLoc()).isLoaded()) {
-                                  //System.out.println("Debug chunk insent loaded");
-                                  world.getChunkAt(limbo.getLoc()).load();      
-                              }
-                                player.teleport(limbo.getLoc());
-                                //System.out.println("quit location from bukkit:"+limbo.getLoc()); 
-                                }  
-                        }
-                    } 
-                player.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
-                LimboCache.getInstance().deleteLimboPlayer(name);
-                if(playerCache.doesCacheExist(name)) {
-                        playerCache.removeCache(name);
-                    }   
-                }
                 
                /*
                 *  Little Work Around under Registration Group Switching for admins that

@@ -18,6 +18,7 @@ public class SpoutCfg extends CustomConfiguration{
 		save();
 	}
 
+	@SuppressWarnings("serial")
 	private void loadDefaults() {
 		this.set("Spout GUI enabled", true);
 		//Login:

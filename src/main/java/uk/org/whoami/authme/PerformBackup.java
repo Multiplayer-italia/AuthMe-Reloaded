@@ -20,7 +20,7 @@ import uk.org.whoami.authme.settings.Settings;
  * @author stefano
  */
 public class PerformBackup {
-    
+ 
    private String dbName = Settings.getMySQLDatabase;
    private String dbUserName = Settings.getMySQLUsername;
    private String dbPassword = Settings.getMySQLPassword;

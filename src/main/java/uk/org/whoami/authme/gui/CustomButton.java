@@ -2,7 +2,6 @@ package uk.org.whoami.authme.gui;
 
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
-import org.getspout.spoutapi.gui.Widget;
 
 public class CustomButton extends GenericButton
 {

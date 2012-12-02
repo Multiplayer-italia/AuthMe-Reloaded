@@ -17,12 +17,10 @@
 package uk.org.whoami.authme.settings;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class Messages extends CustomConfiguration {
 
     private static Messages singleton = null;
-    private HashMap<String, String> map;
     
 
     public Messages() {
