@@ -171,17 +171,15 @@ public class AdminCommand implements CommandExecutor {
                 sender.sendMessage(m._("error"));
             }
         } else if (args[0].equalsIgnoreCase("convertflattosql")) {
-        	if (sender.isOp()) {
-        			try {
-        				FlatToSql.FlatToSqlConverter();
-        				if (sender instanceof Player)
-        					sender.sendMessage("[AuthMe] FlatFile converted to authme.sql file");
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (NullPointerException ex) {
-						System.out.println(ex.getMessage());
-					}
-        	}
+        		try {
+        			FlatToSql.FlatToSqlConverter();
+        			if (sender instanceof Player)
+        				sender.sendMessage("[AuthMe] FlatFile converted to authme.sql file");
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (NullPointerException ex) {
+					System.out.println(ex.getMessage());
+				}
         	
         } else if (args[0].equalsIgnoreCase("changepassword")) {
             if (args.length != 3) {
