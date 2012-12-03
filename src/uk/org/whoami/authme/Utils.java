@@ -161,7 +161,7 @@ public class Utils {
     		            int current = (int)pl.getLocation().getY();
     	    		     
    		             	if (current != y) {
-   		             		ConsoleLogger.showError("Problems on SpawnLocation: " + pl.getLocation());
+   		             		//ConsoleLogger.showError("Problems on SpawnLocation: " + pl.getLocation());
    		             		pl.teleport(loc);
    		             	}
 					}

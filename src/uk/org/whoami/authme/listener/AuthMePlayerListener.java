@@ -443,55 +443,51 @@ public class AuthMePlayerListener implements Listener {
         player.saveData();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        if (event.getPlayer() == null) {
-            return;
+      if (event.getPlayer() == null) {
+        return;
+      }
+
+      Player player = event.getPlayer();
+
+      if ((CitizensCommunicator.isNPC(player)) || (Utils.getInstance().isUnrestricted(player)) || (CombatTagComunicator.isNPC(player))) {
+        return;
+      }
+
+      if ((Settings.isForceSingleSessionEnabled.booleanValue()) && 
+        (event.getReason().equals("You logged in from another location"))) {
+        event.setCancelled(true);
+        return;
+      }
+
+      String name = player.getName().toLowerCase();
+      if ((PlayerCache.getInstance().isAuthenticated(name)) && (!player.isDead()) && 
+        (Settings.isSaveQuitLocationEnabled.booleanValue())) {
+        PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(), (int)player.getLocation().getX(), (int)player.getLocation().getY(), (int)player.getLocation().getZ());
+        this.data.updateQuitLoc(auth);
+      }
+
+      if (LimboCache.getInstance().hasLimboPlayer(name))
+      {
+        LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
+        if (Settings.protectInventoryBeforeLogInEnabled.booleanValue()) {
+          player.getInventory().setArmorContents(limbo.getArmour());
+          player.getInventory().setContents(limbo.getInventory());
         }
-        
-        Player player = event.getPlayer();
-        
-        
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
-            return;
+        player.teleport(limbo.getLoc());
+        this.utils.addNormal(player, limbo.getGroup());
+        player.setOp(limbo.getOperator());
+
+        this.plugin.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
+        LimboCache.getInstance().deleteLimboPlayer(name);
+        if (this.playerBackup.doesCacheExist(name)) {
+          this.playerBackup.removeCache(name);
         }
-        
-        // Check for Minecraft message kick request on same nickname
-	// Work only for off-line server
-		if (Settings.isForceSingleSessionEnabled) {
-			if (event.getReason().equals("You logged in from another location")) {                        	
-                            event.setCancelled(true); 
-                            return;
-                        }
-                }
-         String name = player.getName().toLowerCase();
-        if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
-            if(Settings.isSaveQuitLocationEnabled) {       
-                PlayerAuth auth = new PlayerAuth(event.getPlayer().getName().toLowerCase(),(int)player.getLocation().getX(),(int)player.getLocation().getY(),(int)player.getLocation().getZ());
-                data.updateQuitLoc(auth);
-            }
-        }              
-       
-        if (LimboCache.getInstance().hasLimboPlayer(name)) {
-            //System.out.println("e' nel kick");
-            LimboPlayer limbo = LimboCache.getInstance().getLimboPlayer(name);
-            if(Settings.protectInventoryBeforeLogInEnabled) {
-                player.getInventory().setArmorContents(limbo.getArmour());
-                player.getInventory().setContents(limbo.getInventory());
-            }
-            player.teleport(limbo.getLoc());
-            utils.addNormal(player, limbo.getGroup());
-            player.setOp(limbo.getOperator());
-            //System.out.println("debug quit group reset "+limbo.getGroup());     
-            plugin.getServer().getScheduler().cancelTask(limbo.getTimeoutTaskId());
-            LimboCache.getInstance().deleteLimboPlayer(name);
-             if(playerBackup.doesCacheExist(name)) {
-                        playerBackup.removeCache(name);
-                    }   
-                
-        }
-        PlayerCache.getInstance().removePlayer(name);
-        player.saveData();
+      }
+
+      PlayerCache.getInstance().removePlayer(name);
+      player.saveData();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

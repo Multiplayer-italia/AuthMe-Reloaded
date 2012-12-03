@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Marco/Desktop/eclipse/Bukkit API/bukkit-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Marco/Desktop/eclipse/Bukkit API/Citizens.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Marco/Desktop/eclipse/Bukkit API/mysql-connector-java-3.0.17-ga-bin.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

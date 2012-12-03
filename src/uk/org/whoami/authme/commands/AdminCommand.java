@@ -18,6 +18,7 @@ package uk.org.whoami.authme.commands;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.bukkit.command.CommandSender;
 
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import uk.org.whoami.authme.AuthMe;
@@ -37,6 +39,7 @@ import uk.org.whoami.authme.ConsoleLogger;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
+import uk.org.whoami.authme.converter.FlatToSql;
 import uk.org.whoami.authme.datasource.DataSource;
 import uk.org.whoami.authme.security.PasswordSecurity;
 import uk.org.whoami.authme.settings.Messages;
@@ -49,6 +52,7 @@ public class AdminCommand implements CommandExecutor {
     private SpoutCfg s = SpoutCfg.getInstance();
     //private Settings settings = Settings.getInstance();
     private DataSource database;
+    private FlatToSql converter;
     
     public AdminCommand(DataSource database) {
         this.database = database;
@@ -166,6 +170,19 @@ public class AdminCommand implements CommandExecutor {
                 ConsoleLogger.showError(ex.getMessage());
                 sender.sendMessage(m._("error"));
             }
+        } else if (args[0].equalsIgnoreCase("convertflattosql")) {
+        	if (sender.isOp()) {
+        			try {
+        				FlatToSql.FlatToSqlConverter();
+        				if (sender instanceof Player)
+        					sender.sendMessage("[AuthMe] FlatFile converted to authme.sql file");
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (NullPointerException ex) {
+						System.out.println(ex.getMessage());
+					}
+        	}
+        	
         } else if (args[0].equalsIgnoreCase("changepassword")) {
             if (args.length != 3) {
                 sender.sendMessage("Usage: /authme changepassword playername newpassword");
