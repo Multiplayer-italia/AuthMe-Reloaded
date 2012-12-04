@@ -1,0 +1,32 @@
+unknown_user: Utilisateur non enregistrer
+unsafe_spawn: Teleportation dans un endroit sur
+not_logged_in: '&cNon connecter!'
+reg_voluntarily: Vous venez d arriver? faites un "/register motdepasse confirmermotdepasse"
+usage_log: '&cUtilisez: /login motdepasse'
+wrong_pwd: '&cMauvais MotDePasse'
+unregistered: '&cVous avez ete desenregistrer!'
+reg_disabled: '&cL enregistrement est desactiver'
+valid_session: '&cVous etes authentifier'
+login: '&cLogin effectuer!'
+vb_nonActiv: Your Account isent Activated yet check your Emails!
+user_regged: '&cCe nom est deja utiliser'
+usage_reg: '&cUtilisez la commande /register motdepasse confirmermotdepasse'
+max_reg: Limite d enregistrement atteinte pour cet account
+no_perm: '&cVous n avez pas la permission'
+error: Une erreur est apparue, veuillez contacter un administrateur
+login_msg: '&cConnectez-vous via un /login motdepasse'
+reg_msg: '&cUtilisez /register motdepasse confirmermotdepasse'
+usage_unreg: '&cUtilisez: /unregister password'
+pwd_changed: '&cMotdePasse changer avec succes!'
+user_unknown: '&c Ce pseudo n est pas enregistrer'
+password_error: Ce mot de passe est incorrect
+unvalid_session: Session invalide, relancez le jeu ou attendez la fin de la session
+reg_only: Seul les joueurs enregistrer sont admis!
+logged_in: '&cVous etes deja connecter!'
+logout: '&cVous avez ete deconnecter'
+same_nick: Une personne ayant ce pseudo joue deja !
+registered: '&cEnregistrement reussi!'
+pass_len: Votre mot de passe ne respecte pas les normes de longueurs
+reload: Config et BDD ont ete relancer
+timeout: Vous avez ete expulser, trop lent pour vous enregistrer !
+usage_changepassword: Commande /changepassword ancienmdp nouveaumdp
