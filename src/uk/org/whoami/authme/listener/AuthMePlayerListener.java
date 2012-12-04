@@ -18,6 +18,7 @@ package uk.org.whoami.authme.listener;
 
 import java.util.Date;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -43,6 +44,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import uk.org.whoami.authme.cache.backup.DataFileCache;
 import uk.org.whoami.authme.cache.backup.FileCache;
+import uk.org.whoami.authme.AuthMe;
 import uk.org.whoami.authme.Utils;
 import uk.org.whoami.authme.cache.auth.PlayerAuth;
 import uk.org.whoami.authme.cache.auth.PlayerCache;
@@ -65,6 +67,7 @@ public class AuthMePlayerListener implements Listener {
     private JavaPlugin plugin;
     private DataSource data;
     private FileCache playerBackup = new FileCache();
+    private AuthMe authme;
 
     public AuthMePlayerListener(JavaPlugin plugin, DataSource data) {
         this.plugin = plugin;
@@ -111,14 +114,14 @@ public class AuthMePlayerListener implements Listener {
     }
     
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler( priority = EventPriority.MONITOR)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled() || event.getPlayer() == null) {
             return;
         }
         
         
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         String name = player.getName().toLowerCase();
 
         if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
@@ -136,15 +139,41 @@ public class AuthMePlayerListener implements Listener {
             event.setCancelled(true);
             return;
         }
-
-        if (data.isAuthAvailable(name)) {
-            player.sendMessage(m._("login_msg"));
+        
+        if (!event.isAsynchronous()) {
+        	if (data.isAuthAvailable(name)) {
+        		player.sendMessage(m._("login_msg"));
+        	} else {
+        		if (!Settings.isForcedRegistrationEnabled) {
+        			return;
+        		}
+        		player.sendMessage(m._("reg_msg"));
+        	}
         } else {
-            if (!Settings.isForcedRegistrationEnabled) {
-                return;
-            }
-            player.sendMessage(m._("reg_msg"));
+        	if (data.isAuthAvailable(name)) {
+        		Bukkit.getScheduler().scheduleSyncDelayedTask(authme, new Runnable()
+        		{
+        			@Override
+        			public void run() {
+        				player.sendMessage(m._("login_msg"));
+        			}
+        		});
+        		
+        	} else {
+        		if (!Settings.isForcedRegistrationEnabled) {
+        			return;
+        		}
+        		Bukkit.getScheduler().scheduleSyncDelayedTask(authme, new Runnable()
+        		{
+        			@Override
+        			public void run() {
+        				player.sendMessage(m._("reg_msg"));
+        			}
+        		});
+        		
+        	}
         }
+
                 
     }
 
@@ -331,9 +360,7 @@ public class AuthMePlayerListener implements Listener {
                 long lastLogin = auth.getLastLogin();
                 long cur = new Date().getTime();
 
-            //
-            // TODO: rewrite how session work!
-            //
+
              if((cur - lastLogin < timeout || timeout == 0) && !auth.getIp().equals("198.18.0.1") ) {
                 if (auth.getNickname().equalsIgnoreCase(name) && auth.getIp().equals(ip) ) {
                   //  System.out.println("[Debug same name] "+auth.getNickname()+ "  "+name);
@@ -346,10 +373,7 @@ public class AuthMePlayerListener implements Listener {
                     return;
                 }
             } else {
-                 // TODO:
-                 // Reset player data when session is ended, possible usses is, that player change ip
-                 // and session isent ended he is kick out for invalid session, even if he is the rigth
-                 // player
+
                 PlayerCache.getInstance().removePlayer(name);
                 LimboCache.getInstance().addLimboPlayer(player , utils.removeAll(player));
                 //LimboCache.getInstance().addLimboPlayer(player);
@@ -410,6 +434,10 @@ public class AuthMePlayerListener implements Listener {
     //
     // Fix for Exact spawn usses that bukkit has
     // Fix for Quit location when player where kicked for timeout
+        
+        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
+            return;
+        }
     
     if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) { 
         if(Settings.isSaveQuitLocationEnabled) {
@@ -417,11 +445,6 @@ public class AuthMePlayerListener implements Listener {
             data.updateQuitLoc(auth);
         }
     } 
-    
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
-            return;
-        }
-
         
         if (LimboCache.getInstance().hasLimboPlayer(name)) {
             //System.out.println("e' nel quit");
@@ -616,34 +639,4 @@ public class AuthMePlayerListener implements Listener {
         }
         event.setCancelled(true);
     }
-
-    /* TODO: hook in Multiverse Custom Event for better checking this situation!
-     * Avoid the situation where player join the server and he is in the portal, 
-     * simple workAround is TeleportUnAtuhToSpawn: true;
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
-        if (event.isCancelled() || event.getPlayer() == null) {
-            return;
-        }
-        
-        Player player = event.getPlayer();
-        String name = player.getName().toLowerCase();
-
-        if (CitizensCommunicator.isNPC(player) || Utils.getInstance().isUnrestricted(player) || CombatTagComunicator.isNPC(player)) {
-            return;
-        }
-        
-        if (PlayerCache.getInstance().isAuthenticated(player.getName().toLowerCase())) {
-            return;
-        }        
-        
-        if(event.getCause().equals(TeleportCause.PLUGIN) || event.getCause().equals(TeleportCause.NETHER_PORTAL)) {
-            return;
-        }
-        
-        event.setCancelled(true);
-    }
-     * 
-     */
-
 }
